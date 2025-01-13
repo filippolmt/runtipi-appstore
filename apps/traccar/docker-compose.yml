@@ -1,7 +1,7 @@
 services:
   traccar:
     container_name: traccar
-    image: traccar/traccar:6.5-ubuntu
+    image: traccar/traccar:6.6-ubuntu
     restart: unless-stopped
     ports:
       - ${APP_PORT}:8082
