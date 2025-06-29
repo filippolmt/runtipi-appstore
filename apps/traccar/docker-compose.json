@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "name": "traccar",
+      "image": "traccar/traccar:6.7-alpine",
+      "isMain": true,
+      "internalPort": 8082,
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/opt/traccar/data"
+        }
+      ]
+    }
+  ]
+}
