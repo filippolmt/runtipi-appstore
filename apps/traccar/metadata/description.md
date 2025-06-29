@@ -24,7 +24,7 @@ To configure Traccar with custom settings, follow these steps:
    ```yaml
    services:
      traccar:
-       image: traccar/traccar:6.5-ubuntu
+       image: traccar/traccar:6.7-alpine
        container_name: traccar
        restart: unless-stopped
        ports:
