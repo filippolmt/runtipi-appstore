@@ -8,7 +8,7 @@
   "categories": ["utilities"],
   "description": "Traccar is a free and open source modern GPS tracking system. Subscribe to the project news and updates at https://www.traccar.org/.",
   "tipi_version": 17,
-  "version": "v6.5",
+  "version": "v6.7",
   "source": "https://github.com/traccar/traccar-docker",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
