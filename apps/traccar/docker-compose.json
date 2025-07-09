@@ -3,7 +3,6 @@
     {
       "name": "traccar",
       "image": "traccar/traccar:6.8-alpine",
-      "isMain": true,
       "internalPort": 8082,
       "addPorts": [
         {
@@ -16,9 +15,13 @@
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/data/traccar",
-          "containerPath": "/opt/traccar/data"
+          "containerPath": "/opt/traccar/data",
+          "readOnly": false,
+          "shared": false,
+          "private": false
         }
-      ]
+      ],
+      "isMain": true
     }
   ]
 }
