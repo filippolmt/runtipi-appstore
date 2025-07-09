@@ -4,7 +4,7 @@
   "available": true,
   "short_desc": "Selenium Chromium Grid",
   "author": "SeleniumHQ",
-  "port": 4444,
+  "port": 8688,
   "categories": ["utilities", "development"],
   "description": "Selenium is a portable software-testing framework for web applications. It provides a playback tool for authoring tests without learning a test scripting language.",
   "tipi_version": 17,
