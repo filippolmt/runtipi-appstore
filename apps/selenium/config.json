@@ -1,0 +1,17 @@
+{
+  "name": "selenium",
+  "id": "selenium",
+  "available": true,
+  "short_desc": "Selenium Grid",
+  "author": "Anton Tananaev",
+  "port": 8687,
+  "categories": ["utilities"],
+  "description": "Selenium Grid is a tool that allows you to run your tests on different machines against different browsers in parallel.",
+  "tipi_version": 17,
+  "version": "3.141.59",
+  "source": "https://github.com/SeleniumHQ/docker-selenium",
+  "exposable": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1691943801422,
+  "updated_at": 1726026707000
+}
