@@ -13,5 +13,17 @@
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1691943801422,
-  "updated_at": 1726026707000
+  "updated_at": 1726026707000,
+  "dynamic_config": true,
+  "requirements": {
+    "ports": [5027]
+  },
+  "form_fields": [
+    {
+      "type": "ip",
+      "label": "Network Interface (default: 0.0.0.0)",
+      "required": false,
+      "env_variable": "NETWORK_INTERFACE"
+    }
+  ]
 }

@@ -5,6 +5,14 @@
       "image": "traccar/traccar:6.8-alpine",
       "isMain": true,
       "internalPort": 8082,
+      "addPorts": [
+        {
+          "hostPort": 5027,
+          "containerPort": 5027,
+          "tcp": true,
+          "udp": false
+        }
+      ],
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/data/traccar",
