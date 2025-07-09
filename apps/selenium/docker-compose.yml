@@ -1,7 +1,7 @@
 services:
   selenium:
     container_name: selenium
-    image: selenium/standalone-chrome:3.141.59
+    image: selenium/standalone-chrome:4.34.0
     restart: unless-stopped
     ports:
       - ${APP_PORT}:4444
