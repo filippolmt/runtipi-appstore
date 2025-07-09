@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "selenium",
-      "image": "selenium/standalone-chrome:3.141.59",
+      "image": "selenium/standalone-chrome:4.34.0",
       "isMain": true,
       "internalPort": 4444
     }
