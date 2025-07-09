@@ -24,13 +24,13 @@ services:
       traefik.http.routers.selenium.service: selenium
       traefik.http.routers.selenium.tls.certresolver: myresolver
       # Local domain
-      traefik.http.routers.selenium-local-insecure.rule: Host(`selenium.${LOCAL_DOMAIN}`)
-      traefik.http.routers.selenium-local-insecure.entrypoints: web
-      traefik.http.routers.selenium-local-insecure.service: selenium
-      traefik.http.routers.selenium-local-insecure.middlewares: selenium-redirect
+      traefik.http.routers.selenium-custom-local-insecure.rule: Host(`selenium.${LOCAL_DOMAIN}`)
+      traefik.http.routers.selenium-custom-local-insecure.entrypoints: web
+      traefik.http.routers.selenium-custom-local-insecure.service: selenium
+      traefik.http.routers.selenium-custom-local-insecure.middlewares: selenium-redirect
       # Local domain secure
-      traefik.http.routers.selenium-local.rule: Host(`selenium.${LOCAL_DOMAIN}`)
-      traefik.http.routers.selenium-local.entrypoints: websecure
-      traefik.http.routers.selenium-local.service: selenium
-      traefik.http.routers.selenium-local.tls: true
+      traefik.http.routers.selenium-custom-local.rule: Host(`selenium.${LOCAL_DOMAIN}`)
+      traefik.http.routers.selenium-custom-local.entrypoints: websecure
+      traefik.http.routers.selenium-custom-local.service: selenium
+      traefik.http.routers.selenium-custom-local.tls: true
       runtipi.managed: true
