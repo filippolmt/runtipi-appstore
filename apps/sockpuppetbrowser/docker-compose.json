@@ -1,0 +1,31 @@
+{
+  "services": [
+    {
+      "name": "sockpuppetbrowser",
+      "image": "dgtlmoon/sockpuppetbrowser:latest",
+      "environment": {
+        "DISPLAY": "${DISPLAY}"
+      },
+      "internalPort": 3000,
+      "addPorts": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "tcp": true,
+          "udp": false
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "/tmp/.X11-unix",
+          "containerPath": "/tmp/.X11-unix",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "capAdd": ["SYS_ADMIN"],
+      "securityOpt": ["seccomp:./chrome.json"]
+    }
+  ]
+}
