@@ -1,7 +1,7 @@
 services:
   traccar:
     container_name: traccar
-    image: traccar/traccar:6.7-alpine
+    image: traccar/traccar:6.8-alpine
     restart: unless-stopped
     ports:
       - ${APP_PORT}:8082
