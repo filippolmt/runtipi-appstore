@@ -1,0 +1,25 @@
+{
+  "name": "sockpuppetbrowser",
+  "id": "sockpuppetbrowser",
+  "available": true,
+  "short_desc": "SockPuppet Browser",
+  "author": "DgtlMoon",
+  "port": 8689,
+  "categories": ["utilities", "development"],
+  "description": "SockPuppet Browser is a lightweight browser designed for testing and automation purposes. It provides a simple interface for web interactions.",
+  "tipi_version": 17,
+  "version": "latest",
+  "source": "https://github.com/DgtlMoon/sockpuppetbrowser",
+  "exposable": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1691943801422,
+  "updated_at": 1726026707000,
+  "form_fields": [
+    {
+      "env_variable": "DISPLAY",
+      "label": "Display",
+      "required": false,
+      "type": "text"
+    }
+  ]
+}
