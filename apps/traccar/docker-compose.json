@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "traccar",
-      "image": "traccar/traccar:6.8-alpine",
+      "image": "traccar/traccar:6.10-alpine",
       "internalPort": 8082,
       "addPorts": [
         {
