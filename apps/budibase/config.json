@@ -1,0 +1,170 @@
+{
+  "name": "Budibase",
+  "id": "budibase",
+  "available": true,
+  "short_desc": "Low-Code Platform",
+  "author": "Budibase",
+  "port": 10000,
+  "categories": ["automation", "development"],
+  "description": "Budibase is an open-source low-code platform that enables you to build internal tools, admin panels, and dashboards quickly and efficiently.",
+  "tipi_version": 17,
+  "version": "v3.20.6",
+  "source": "https://github.com/Budibase/budibase",
+  "exposable": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1691943801422,
+  "updated_at": 1726026707000,
+  "dynamic_config": true,
+  "requirements": {
+    "ports": [10000, 4002, 4003, 4004, 4005, 4006, 6379],
+    "volumes": [
+      "${APP_DATA_DIR}/data/budibase/minio",
+      "${APP_DATA_DIR}/data/budibase/couchdb",
+      "${APP_DATA_DIR}/data/budibase/redis"
+    ]
+  },
+  "form_fields": [
+    {
+      "type": "number",
+      "label": "Main Port",
+      "required": true,
+      "env_variable": "MAIN_PORT",
+      "default": 10000
+    },
+    {
+      "type": "number",
+      "label": "App Port",
+      "required": true,
+      "env_variable": "APP_PORT",
+      "default": 4002
+    },
+    {
+      "type": "number",
+      "label": "Worker Port",
+      "required": true,
+      "env_variable": "WORKER_PORT",
+      "default": 4003
+    },
+    {
+      "type": "number",
+      "label": "MinIO Port",
+      "required": true,
+      "env_variable": "MINIO_PORT",
+      "default": 4004
+    },
+    {
+      "type": "number",
+      "label": "CouchDB Port",
+      "required": true,
+      "env_variable": "COUCH_DB_PORT",
+      "default": 4005
+    },
+    {
+      "type": "number",
+      "label": "CouchDB SQS Port",
+      "required": true,
+      "env_variable": "COUCH_DB_SQS_PORT",
+      "default": 4006
+    },
+    {
+      "type": "number",
+      "label": "Redis Port",
+      "required": true,
+      "env_variable": "REDIS_PORT",
+      "default": 6379
+    },
+    {
+      "type": "text",
+      "label": "Budibase Environment",
+      "required": true,
+      "env_variable": "BUDIBASE_ENVIRONMENT",
+      "default": "PRODUCTION"
+    },
+    {
+      "type": "password",
+      "label": "API Encryption Key",
+      "required": true,
+      "env_variable": "API_ENCRYPTION_KEY",
+      "default": "testsecret"
+    },
+    {
+      "type": "password",
+      "label": "JWT Secret",
+      "required": true,
+      "env_variable": "JWT_SECRET",
+      "default": "testsecret"
+    },
+    {
+      "type": "password",
+      "label": "Internal API Key",
+      "required": true,
+      "env_variable": "INTERNAL_API_KEY",
+      "default": "budibase"
+    },
+    {
+      "type": "text",
+      "label": "CouchDB User",
+      "required": true,
+      "env_variable": "COUCH_DB_USER",
+      "default": "budibase"
+    },
+    {
+      "type": "password",
+      "label": "CouchDB Password",
+      "required": true,
+      "env_variable": "COUCH_DB_PASSWORD",
+      "default": "budibase"
+    },
+    {
+      "type": "password",
+      "label": "Redis Password",
+      "required": true,
+      "env_variable": "REDIS_PASSWORD",
+      "default": "budibase"
+    },
+    {
+      "type": "text",
+      "label": "MinIO Access Key",
+      "required": true,
+      "env_variable": "MINIO_ACCESS_KEY",
+      "default": "budibase"
+    },
+    {
+      "type": "password",
+      "label": "MinIO Secret Key",
+      "required": true,
+      "env_variable": "MINIO_SECRET_KEY",
+      "default": "budibase"
+    },
+    {
+      "type": "number",
+      "label": "SQL Max Rows",
+      "required": false,
+      "env_variable": "SQL_MAX_ROWS"
+    },
+    {
+      "type": "text",
+      "label": "Admin Email",
+      "required": false,
+      "env_variable": "BB_ADMIN_USER_EMAIL"
+    },
+    {
+      "type": "password",
+      "label": "Admin Password",
+      "required": false,
+      "env_variable": "BB_ADMIN_USER_PASSWORD"
+    },
+    {
+      "type": "text",
+      "label": "Plugins Directory",
+      "required": false,
+      "env_variable": "PLUGINS_DIR"
+    },
+    {
+      "type": "number",
+      "label": "Rolling Log Max Size",
+      "required": false,
+      "env_variable": "ROLLING_LOG_MAX_SIZE"
+    }
+  ]
+}
