@@ -2,13 +2,13 @@
   "name": "Traccar",
   "id": "traccar",
   "available": true,
-  "short_desc": "Traccar is a free and open source modern GPS tracking system.",
+  "short_desc": "Open-source GPS tracking platform",
   "author": "Anton Tananaev",
   "port": 8687,
-  "categories": ["utilities"],
+  "categories": ["utilities", "automation"],
   "description": "Traccar is a free and open source modern GPS tracking system. Subscribe to the project news and updates at https://www.traccar.org/.",
   "tipi_version": 17,
-  "version": "v6.8",
+  "version": "v6.10",
   "source": "https://github.com/traccar/traccar-docker",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
@@ -16,7 +16,10 @@
   "updated_at": 1726026707000,
   "dynamic_config": true,
   "requirements": {
-    "ports": [5027]
+    "ports": [8687, 5027],
+    "volumes": [
+      "${APP_DATA_DIR}/data/traccar"
+    ]
   },
   "form_fields": [
     {
