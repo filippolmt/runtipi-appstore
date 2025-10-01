@@ -1,0 +1,38 @@
+{
+  "services": [
+    {
+      "name": "puter",
+      "image": "ghcr.io/heyputer/puter:2.5.1",
+      "internalPort": 4100,
+      "environment": {
+        "TZ": "${TZ:-UTC}",
+        "CONFIG_PATH": "/etc/puter",
+        "PUID": "${PUID:-1000}",
+        "PGID": "${PGID:-1000}"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/puter/config",
+          "containerPath": "/etc/puter",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/puter/data",
+          "containerPath": "/var/puter",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "healthCheck": {
+        "test": "timeout 5s bash -c ':> /dev/tcp/127.0.0.1/4100' || exit 1",
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      },
+      "isMain": true
+    }
+  ]
+}
