@@ -7,15 +7,13 @@
   "addLabels": [
     "renovate"
   ],
-  "enabledManagers": [
-    "custom.regex"
-  ],
+  "enabledManagers": ["regex"],
   "automergeStrategy": "rebase",
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^.*docker-compose\\.json$/"
+      "fileMatch": [
+        "^.*docker-compose\\.json$"
       ],
       "matchStrings": [
         "\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","
