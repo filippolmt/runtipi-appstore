@@ -12,6 +12,12 @@
       },
       "addPorts": [
         {
+          "hostPort": 8025,
+          "containerPort": 8025,
+          "tcp": true,
+          "udp": false
+        },
+        {
           "hostPort": 1025,
           "containerPort": 1025,
           "tcp": true,
