@@ -4,6 +4,7 @@
       "name": "puter",
       "image": "ghcr.io/heyputer/puter:2.5.1",
       "internalPort": 4100,
+      "hostname": "puter",
       "environment": {
         "TZ": "${TZ:-UTC}",
         "CONFIG_PATH": "/etc/puter",
