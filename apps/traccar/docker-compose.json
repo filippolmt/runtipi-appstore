@@ -4,6 +4,7 @@
       "name": "traccar",
       "image": "traccar/traccar:6.10-alpine",
       "internalPort": 8082,
+      "hostname": "traccar",
       "environment": {
         "NETWORK_INTERFACE": "${NETWORK_INTERFACE:-0.0.0.0}"
       },
