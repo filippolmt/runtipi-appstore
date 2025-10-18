@@ -1,0 +1,39 @@
+{
+  "services": [
+    {
+      "name": "mailpit",
+      "image": "axllent/mailpit:v1.27.10",
+      "internalPort": 8025,
+      "environment": {
+        "MP_MAX_MESSAGES": "${MP_MAX_MESSAGES:-5000}",
+        "MP_DATABASE": "/data/mailpit.db",
+        "MP_SMTP_AUTH_ACCEPT_ANY": "1",
+        "MP_SMTP_AUTH_ALLOW_INSECURE": "1"
+      },
+      "addPorts": [
+        {
+          "hostPort": 1025,
+          "containerPort": 1025,
+          "tcp": true,
+          "udp": false
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/mailpit",
+          "containerPath": "/data",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "healthCheck": {
+        "test": "timeout 5s bash -c ':> /dev/tcp/127.0.0.1/8025' || exit 1",
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      },
+      "isMain": true
+    }
+  ]
+}

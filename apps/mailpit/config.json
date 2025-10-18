@@ -1,0 +1,30 @@
+{
+  "name": "Mailpit",
+  "id": "mailpit",
+  "available": true,
+  "short_desc": "Email testing sandbox",
+  "author": "Axllent",
+  "port": 8025,
+  "categories": ["utilities", "development"],
+  "description": "Mailpit is a lightweight email testing tool with a modern web UI, searchable message storage, and SMTP server compatibility for development environments.",
+  "tipi_version": 17,
+  "version": "v1.27.10",
+  "source": "https://github.com/axllent/mailpit",
+  "exposable": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1691943801422,
+  "updated_at": 1726026707000,
+  "requirements": {
+    "ports": [8025, 1025],
+    "volumes": ["${APP_DATA_DIR}/data/mailpit"]
+  },
+  "form_fields": [
+    {
+      "type": "number",
+      "label": "Max Stored Messages",
+      "required": false,
+      "env_variable": "MP_MAX_MESSAGES",
+      "default": 5000
+    }
+  ]
+}
