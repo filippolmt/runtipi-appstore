@@ -105,7 +105,7 @@
     },
     {
       "name": "proxy-service",
-      "image": "budibase/proxy:3.21.1",
+      "image": "budibase/proxy:3.23.29",
       "environment": {
         "PROXY_RATE_LIMIT_WEBHOOKS_PER_SECOND": "10",
         "PROXY_RATE_LIMIT_API_PER_SECOND": "50",
