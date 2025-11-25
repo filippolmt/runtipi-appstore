@@ -1,31 +1,64 @@
 {
+  "$schema": "https://schemas.runtipi.io/dynamic-compose.json",
+  "schemaVersion": 2,
   "services": [
     {
       "name": "traccar",
-      "image": "traccar/traccar:6.10-alpine",
+      "image": "traccar/traccar:6.7.3",
+      "isMain": true,
       "internalPort": 8082,
       "hostname": "traccar",
-      "environment": {
-        "NETWORK_INTERFACE": "${NETWORK_INTERFACE:-0.0.0.0}"
-      },
+      "environment": [],
       "addPorts": [
         {
-          "hostPort": 5027,
-          "containerPort": 5027,
+          "hostPort": 8082,
+          "containerPort": 8082,
           "tcp": true,
           "udp": false
+        },
+        {
+          "hostPort": "5000-5150",
+          "containerPort": "5000-5150",
+          "tcp": true,
+          "udp": false
+        },
+        {
+          "hostPort": "5000-5150",
+          "containerPort": "5000-5150",
+          "tcp": false,
+          "udp": true
         }
       ],
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data/traccar",
+          "hostPath": "${APP_DATA_DIR}/logs",
+          "containerPath": "/opt/traccar/logs",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
           "containerPath": "/opt/traccar/data",
           "readOnly": false,
           "shared": false,
           "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/config/traccar.xml",
+          "containerPath": "/opt/traccar/conf/traccar.xml",
+          "readOnly": true,
+          "shared": false,
+          "private": false
         }
       ],
-      "isMain": true
+      "healthCheck": {
+        "test": "wget --no-verbose --tries=1 --spider http://127.0.0.1:8082 || exit 1",
+        "interval": "30s",
+        "timeout": "5s",
+        "retries": 3,
+        "startPeriod": "30s"
+      }
     }
   ]
 }

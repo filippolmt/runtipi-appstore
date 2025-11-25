@@ -1,16 +1,13 @@
 # Mailpit
 
-Mailpit captures outbound SMTP traffic and presents messages in a clean, searchable web interface, making it ideal for testing email flows during development.
+Mailpit is a lightweight email testing tool with a modern web UI, message search, and SMTP server for catching emails during development.
 
 ## Features
-- Real-time web UI on port 8025 for browsing, reading, and deleting messages
-- SMTP server on port 1025 compatible with most applications and frameworks
-- Persistent storage for message history via the mounted data volume
-- Configurable message retention limits to match your project needs
+- Web inbox on port 8025 with search and message inspection
+- SMTP server on port 1025 for local test deliveries
+- Configurable message limits and auth flags
+- Persistent storage for messages and settings
 
-## Getting Started
-1. Deploy the app and point your application SMTP settings to the exposed SMTP port (default 1025).
-2. Open the Mailpit web UI on the main port (default 8025) to view captured messages.
-3. Adjust the optional `MP_MAX_MESSAGES` limit if you need Mailpit to retain more or fewer messages.
-
-For additional configuration options and API usage, visit the [Mailpit documentation](https://github.com/axllent/mailpit).
+## Tips
+- Point your app's SMTP host to `mailpit` (inside the Tipi network) or your host IP on port `1025`.
+- Keep the UI exposed on port `8025` if you want to open the inbox from your browser.

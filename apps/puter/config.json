@@ -1,48 +1,41 @@
 {
+  "$schema": "../app-info-schema.json",
   "name": "Puter",
   "id": "puter",
   "available": true,
   "short_desc": "Self-hosted cloud computer",
   "author": "HeyPuter",
   "port": 4100,
-  "categories": ["utilities", "development"],
-  "description": "Puter is a self-hosted cloud computer platform that delivers a desktop-like experience in the browser with file management, apps, and collaboration tools.",
-  "tipi_version": 17,
+  "categories": ["productivity", "cloud"],
+  "description": "Puter is a self-hosted cloud computer that brings desktop-like file management, apps, and sharing to your browser.",
+  "tipi_version": 1,
   "version": "v2.5.1",
   "source": "https://github.com/HeyPuter/puter",
+  "website": "https://puter.com/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
-  "created_at": 1691943801422,
-  "updated_at": 1726026707000,
+  "created_at": 1764104562338,
+  "updated_at": 1764104562338,
   "dynamic_config": true,
   "requirements": {
     "ports": [4100],
-    "volumes": [
-      "${APP_DATA_DIR}/data/puter/config",
-      "${APP_DATA_DIR}/data/puter/data"
-    ]
+    "volumes": ["${APP_DATA_DIR}/config", "${APP_DATA_DIR}/data"]
   },
   "form_fields": [
     {
-      "type": "text",
-      "label": "Timezone",
-      "required": false,
-      "env_variable": "TZ",
-      "default": "UTC"
-    },
-    {
       "type": "number",
-      "label": "User ID (PUID)",
+      "label": "PUID",
       "required": false,
       "env_variable": "PUID",
       "default": 1000
     },
     {
       "type": "number",
-      "label": "Group ID (PGID)",
+      "label": "PGID",
       "required": false,
       "env_variable": "PGID",
       "default": 1000
     }
-  ]
+  ],
+  "min_tipi_version": "4.5.0"
 }

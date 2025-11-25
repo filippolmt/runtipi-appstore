@@ -6,14 +6,14 @@
   "author": "Axllent",
   "port": 8025,
   "categories": ["utilities", "development"],
-  "description": "Mailpit is a lightweight email testing tool with a modern web UI, searchable message storage, and SMTP server compatibility for development environments.",
+  "description": "Mailpit provides a modern web UI, searchable message storage, and SMTP server compatibility for capturing test emails in development.",
   "tipi_version": 17,
   "version": "v1.27.10",
   "source": "https://github.com/axllent/mailpit",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
-  "created_at": 1691943801422,
-  "updated_at": 1726026707000,
+  "created_at": 1764104133066,
+  "updated_at": 1764104133066,
   "dynamic_config": true,
   "requirements": {
     "ports": [8025, 1025],
@@ -41,5 +41,6 @@
       "env_variable": "MP_SMTP_AUTH_ALLOW_INSECURE",
       "default": 1
     }
-  ]
+  ],
+  "min_tipi_version": "4.5.0"
 }
