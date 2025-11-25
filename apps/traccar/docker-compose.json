@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "traccar",
-      "image": "traccar/traccar:6.7.3",
+      "image": "traccar/traccar:6.10.0",
       "isMain": true,
       "internalPort": 8082,
       "hostname": "traccar",
