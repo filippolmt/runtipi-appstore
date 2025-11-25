@@ -1,32 +1,26 @@
 {
+  "$schema": "../app-info-schema.json",
   "name": "Traccar",
   "id": "traccar",
   "available": true,
-  "short_desc": "Open-source GPS tracking platform",
-  "author": "Anton Tananaev",
-  "port": 8687,
-  "categories": ["utilities", "automation"],
-  "description": "Traccar is a free and open source modern GPS tracking system. Subscribe to the project news and updates at https://www.traccar.org/.",
-  "tipi_version": 17,
-  "version": "v6.10",
+  "short_desc": "GPS tracking platform",
+  "author": "Traccar",
+  "port": 8082,
+  "categories": ["utilities", "iot"],
+  "description": "Traccar is an open-source GPS tracking platform with web UI, device protocol support, and alerting.",
+  "tipi_version": 1,
+  "version": "6.7.3",
   "source": "https://github.com/traccar/traccar-docker",
+  "website": "https://www.traccar.org/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
-  "created_at": 1691943801422,
-  "updated_at": 1726026707000,
+  "created_at": 1764104673483,
+  "updated_at": 1764104673483,
   "dynamic_config": true,
   "requirements": {
-    "ports": [8687, 5027],
-    "volumes": [
-      "${APP_DATA_DIR}/data/traccar"
-    ]
+    "ports": [8082, "5000-5150"],
+    "volumes": ["${APP_DATA_DIR}/logs", "${APP_DATA_DIR}/data", "${APP_DATA_DIR}/config/traccar.xml"]
   },
-  "form_fields": [
-    {
-      "type": "ip",
-      "label": "Network Interface (default: 0.0.0.0)",
-      "required": false,
-      "env_variable": "NETWORK_INTERFACE"
-    }
-  ]
+  "form_fields": [],
+  "min_tipi_version": "4.5.0"
 }

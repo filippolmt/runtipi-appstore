@@ -1,64 +1,43 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "automerge": false,
-  "extends": [
-    "config:recommended"
-  ],
-  "addLabels": [
-    "renovate"
-  ],
-  "enabledManagers": [
-    "custom.regex"
-  ],
-  "automergeStrategy": "rebase",
+  "prHourlyLimit": 20,
+  "extends": ["config:recommended"],
+  "rebaseWhen": "conflicted",
+  "enabledManagers": ["custom.regex"],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^.*docker-compose\\.json$/"
-      ],
-      "matchStrings": [
-        "\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","
-      ],
+      "managerFilePatterns": ["/^.*docker-compose\\.json$/"],
+      "matchStrings": ["\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","],
       "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "major",
-        "patch",
-        "pin",
-        "digest"
-      ],
-      "automerge": false
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["major"]
     },
     {
-      "matchDepTypes": [
-        "devDependencies"
-      ],
-      "automerge": false
+      "matchUpdateTypes": ["minor", "patch"],
+      "addLabels": ["automerge"]
     },
     {
-      "matchPackageNames": [
-        "mariadb",
-        "mysql",
-        "monogdb",
-        "postgres",
-        "redis"
-      ],
+      "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["n8nio/n8n", "goauthentik/authentik"],
       "enabled": false
     }
   ],
   "postUpgradeTasks": {
     "commands": [
-      "bun ./scripts/update-config.ts {{packageFile}} {{newVersion}}",
+      "bun ./scripts/update-config.ts {{packageFile}} {{newVersion}} {{packageName}}",
+      "bunx @biomejs/biome check --write",
       "bun install && bun run test"
     ],
-    "fileFilters": [
-      "**/*"
-    ],
+    "fileFilters": ["**/*"],
     "executionMode": "update"
   }
 }

@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  traccar:
+    image: traccar/traccar:6.7.3
+    container_name: traccar
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+      - "5000-5150:5000-5150"
+      - "5000-5150:5000-5150/udp"
+    volumes:
+      - ${APP_DATA_DIR}/logs:/opt/traccar/logs
+      - ${APP_DATA_DIR}/data:/opt/traccar/data
+      - ${APP_DATA_DIR}/config/traccar.xml:/opt/traccar/conf/traccar.xml:ro
+    networks:
+      - tipi_main_network
+    labels:
+      runtipi.managed: "true"
+
+networks:
+  tipi_main_network:
+    external: true
