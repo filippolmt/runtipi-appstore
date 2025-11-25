@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "app-service",
-      "image": "budibase/apps:3.21.1",
+      "image": "budibase/apps:3.23.29",
       "hostname": "app-service",
       "environment": {
         "SELF_HOSTED": "1",
