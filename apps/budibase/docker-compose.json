@@ -45,7 +45,7 @@
     },
     {
       "name": "worker-service",
-      "image": "budibase/worker:3.21.1",
+      "image": "budibase/worker:3.23.29",
       "environment": {
         "SELF_HOSTED": "1",
         "PORT": "${WORKER_PORT}",
