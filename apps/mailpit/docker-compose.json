@@ -9,7 +9,7 @@
       "environment": [
         {
           "key": "MP_MAX_MESSAGES",
-          "value": 5000
+          "value": "${MP_MAX_MESSAGES}"
         },
         {
           "key": "MP_DATABASE",
@@ -17,11 +17,11 @@
         },
         {
           "key": "MP_SMTP_AUTH_ACCEPT_ANY",
-          "value": "${MP_SMTP_AUTH_ACCEPT_ANY:-1}"
+          "value": "${MP_SMTP_AUTH_ACCEPT_ANY}"
         },
         {
           "key": "MP_SMTP_AUTH_ALLOW_INSECURE",
-          "value": "${MP_SMTP_AUTH_ALLOW_INSECURE:-1}"
+          "value": "${MP_SMTP_AUTH_ALLOW_INSECURE}"
         }
       ],
       "addPorts": [
