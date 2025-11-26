@@ -47,6 +47,7 @@ Quick guide to creating and publishing new “runtipi” apps with this reposito
 
    - `schemaVersion`: 2.
    - `services[]` key fields: `name`, `image`, `isMain`, `internalPort`, `environment` (array `{key,value}`), `addPorts` (hostPort/containerPort, tcp/udp), `volumes` (hostPath/containerPath, readOnly/shared/private), `healthCheck`, optional `hostname`, `extraLabels`, `networkMode`, `addToMainNetwork`.
+   - Dynamic compose can be minimal (e.g. `schemaVersion`, `services` with `name`/`image`/`internalPort`/`isMain`); add routing labels/network flags only if needed for your deployment.
    - Use the same image tag as the static compose.
    - Keep in sync with `config.json.requirements` (ports/volumes) so users see the right info.
 
@@ -78,6 +79,33 @@ Quick guide to creating and publishing new “runtipi” apps with this reposito
 - `requirements` in `config.json` lists ports and volumes to create/show to users.
 - `force_pull`, `force_expose`, `generate_vapid_keys`, `https`, `no_gui` are optional with defaults defined in the schema.
 - Network exceptions: tests expect `tipi_main_network` by default; only apps listed in `networkExceptions` in `apps/__tests__/apps.test.ts` may omit it.
+
+Reference: full config JSON spec — https://runtipi.io/docs/reference/config-json
+
+### Example `config.json`
+```json
+{
+  "name": "Nginx",
+  "min_tipi_version": "4.5.0",
+  "available": true,
+  "port": 8754,
+  "exposable": true,
+  "dynamic_config": true,
+  "id": "nginx",
+  "description": "Simple webserver to test your tipi install. An alternative to the hello-world app.",
+  "tipi_version": 3,
+  "version": "1.25.3",
+  "categories": ["utilities"],
+  "short_desc": "Open-source simple and fast web server.",
+  "author": "nginx",
+  "source": "https://github.com/nginx/nginx",
+  "website": "https://www.nginx.com/",
+  "form_fields": [],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1691943801422,
+  "updated_at": 1729872794208
+}
+```
 
 ## Minimal example (schemaVersion 2)
 
