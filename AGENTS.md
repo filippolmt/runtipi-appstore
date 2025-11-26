@@ -1,4 +1,4 @@
-# agents.md
+# AGENTS.md
 
 Quick guide to creating and publishing new “runtipi” apps with this repository.
 
