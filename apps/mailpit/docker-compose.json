@@ -7,8 +7,14 @@
       "isMain": true,
       "internalPort": 8025,
       "environment": [
-        { "key": "MP_MAX_MESSAGES", "value": "${MP_MAX_MESSAGES:-5000}" },
-        { "key": "MP_DATABASE", "value": "/data/mailpit.db" },
+        {
+          "key": "MP_MAX_MESSAGES",
+          "value": 5000
+        },
+        {
+          "key": "MP_DATABASE",
+          "value": "/data/mailpit.db"
+        },
         {
           "key": "MP_SMTP_AUTH_ACCEPT_ANY",
           "value": "${MP_SMTP_AUTH_ACCEPT_ANY:-1}"
@@ -20,27 +26,21 @@
       ],
       "addPorts": [
         {
-          "hostPort": 1025,
           "containerPort": 1025,
+          "hostPort": 1025,
           "tcp": true,
           "udp": false
         }
       ],
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data/mailpit",
+          "hostPath": "${APP_DATA_DIR}/data",
           "containerPath": "/data",
           "readOnly": false,
           "shared": false,
           "private": false
         }
-      ],
-      "healthCheck": {
-        "test": "timeout 5s bash -c ':> /dev/tcp/127.0.0.1/8025' || exit 1",
-        "interval": "30s",
-        "timeout": "10s",
-        "retries": 3
-      }
+      ]
     }
   ]
 }
