@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   traccar:
-    image: traccar/traccar:6.7.3
+    image: traccar/traccar:6.10.0
     container_name: traccar
     restart: unless-stopped
     ports:
