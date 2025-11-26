@@ -45,9 +45,6 @@ const dynamicValidatorPromise = (async () => {
     return ajv.compile(localSchema);
   }
 })();
-const dynamicSchemaPath = path.join(process.cwd(), "apps", "dynamic-compose-schema.json");
-const dynamicSchema = JSON.parse(fs.readFileSync(dynamicSchemaPath, "utf-8"));
-const validateDynamic = ajv.compile(dynamicSchema);
 
 describe("each app should have the required files", async () => {
   const apps = await getApps();

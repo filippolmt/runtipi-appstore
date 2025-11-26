@@ -69,38 +69,28 @@ Reference: full config JSON spec — https://runtipi.io/docs/reference/config-js
 
 ```json
 {
-  "name": "Tinyauth Analytics",
-  "id": "tinyauth-analytics",
+  "name": "Nginx",
+  "id": "nginx",
   "available": true,
-  "short_desc": "Tinyauth Analytics Dashboard.",
-  "author": "steveiliop56",
-  "port": 8747,
+  "short_desc": "Open-source simple and fast web server.",
+  "author": "nginx.org",
+  "port": 8754,
   "categories": ["utilities"],
-  "description": "A simple server that periodically fetches data from the analytics server API and displays them in a simple dashboard.",
+  "description": "Simple webserver to test your Tipi install. An alternative to the hello-world app.",
   "tipi_version": 1,
-  "version": "v0.3.0",
-  "source": "https://github.com/steveiliop56/tinyauth-analytics",
+  "version": "1.25.3",
+  "source": "https://github.com/nginx/nginx",
+  "website": "https://www.nginx.com/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
-  "created_at": 1764076646562,
-  "updated_at": 1764076646562,
+  "created_at": 1688169600000,
+  "updated_at": 1706745600000,
   "dynamic_config": true,
-  "form_fields": [
-    {
-      "type": "url",
-      "label": "API Server URL",
-      "required": true,
-      "placeholder": "https://api.tinyauth.app",
-      "env_variable": "TINYAUTH_ANALYTICS_API_SERVER"
-    },
-    {
-      "type": "number",
-      "label": "Refresh Interval",
-      "required": true,
-      "placeholder": "60",
-      "env_variable": "TINYAUTH_ANALYTICS_REFRESH_INTERVAL"
-    }
-  ],
+  "form_fields": [],
+  "min_tipi_version": "4.5.0",
+  "requirements": {
+    "ports": [8754]
+  },
   "$schema": "https://schemas.runtipi.io/v2/app-info.json"
 }
 ```
