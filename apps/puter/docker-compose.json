@@ -1,21 +1,21 @@
 {
-  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
   "schemaVersion": 2,
   "services": [
     {
       "name": "puter",
-      "image": "ghcr.io/heyputer/puter:v2.5.1",
+      "image": "ghcr.io/heyputer/puter:2.5.1",
       "isMain": true,
-      "internalPort": 4100,
-      "environment": [{ "key": "PUID", "value": "${PUID:-1000}" }, { "key": "PGID", "value": "${PGID:-1000}" }],
-      "addPorts": [
+      "environment": [
         {
-          "hostPort": 4100,
-          "containerPort": 4100,
-          "tcp": true,
-          "udp": false
+          "key": "PUID",
+          "value": 1000
+        },
+        {
+          "key": "PGID",
+          "value": 1000
         }
       ],
+      "internalPort": 4100,
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/config",
@@ -31,14 +31,7 @@
           "shared": false,
           "private": false
         }
-      ],
-      "healthCheck": {
-        "test": "wget --no-verbose --tries=1 --spider http://127.0.0.1:4100/test || exit 1",
-        "interval": "30s",
-        "timeout": "3s",
-        "retries": 3,
-        "startPeriod": "30s"
-      }
+      ]
     }
   ]
 }
