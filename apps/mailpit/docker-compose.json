@@ -1,5 +1,4 @@
 {
-  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
   "schemaVersion": 2,
   "services": [
     {
@@ -7,20 +6,19 @@
       "image": "axllent/mailpit:v1.28.0",
       "isMain": true,
       "internalPort": 8025,
-      "hostname": "mailpit",
       "environment": [
         { "key": "MP_MAX_MESSAGES", "value": "${MP_MAX_MESSAGES:-5000}" },
         { "key": "MP_DATABASE", "value": "/data/mailpit.db" },
-        { "key": "MP_SMTP_AUTH_ACCEPT_ANY", "value": "${MP_SMTP_AUTH_ACCEPT_ANY:-1}" },
-        { "key": "MP_SMTP_AUTH_ALLOW_INSECURE", "value": "${MP_SMTP_AUTH_ALLOW_INSECURE:-1}" }
+        {
+          "key": "MP_SMTP_AUTH_ACCEPT_ANY",
+          "value": "${MP_SMTP_AUTH_ACCEPT_ANY:-1}"
+        },
+        {
+          "key": "MP_SMTP_AUTH_ALLOW_INSECURE",
+          "value": "${MP_SMTP_AUTH_ALLOW_INSECURE:-1}"
+        }
       ],
       "addPorts": [
-        {
-          "hostPort": 8025,
-          "containerPort": 8025,
-          "tcp": true,
-          "udp": false
-        },
         {
           "hostPort": 1025,
           "containerPort": 1025,
