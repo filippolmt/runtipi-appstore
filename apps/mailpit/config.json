@@ -8,7 +8,7 @@
   "categories": ["utilities", "development"],
   "description": "Mailpit provides a modern web UI, searchable message storage, and SMTP server compatibility for capturing test emails in development.",
   "tipi_version": 17,
-  "version": "v1.27.10",
+  "version": "v1.28.0",
   "source": "https://github.com/axllent/mailpit",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
