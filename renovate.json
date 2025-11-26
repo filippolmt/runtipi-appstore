@@ -11,6 +11,46 @@
       "managerFilePatterns": ["/^.*docker-compose\\.json$/"],
       "matchStrings": ["\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","],
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/budibase/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "budibase/budibase",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/mailpit/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "axllent/mailpit",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/nginx/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "nginx",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/puter/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "ghcr.io/heyputer/puter",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/traccar/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "traccar/traccar",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -30,14 +70,5 @@
       "matchPackageNames": ["n8nio/n8n", "goauthentik/authentik"],
       "enabled": false
     }
-  ],
-  "postUpgradeTasks": {
-    "commands": [
-      "bun ./scripts/update-config.ts {{packageFile}} {{newVersion}} {{packageName}}",
-      "bunx @biomejs/biome check --write",
-      "bun install && bun run test"
-    ],
-    "fileFilters": ["**/*"],
-    "executionMode": "update"
-  }
+  ]
 }

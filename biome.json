@@ -7,7 +7,7 @@
     "defaultBranch": "origin/master"
   },
   "files": {
-    "includes": ["**/*.ts", "**/*.tsx", "**/*.json", "**/*.js", "**/*.jsx"],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.json", "**/*.js", "**/*.jsx"],
     "ignoreUnknown": false
   },
   "formatter": {
@@ -18,7 +18,7 @@
     "lineWidth": 150,
     "attributePosition": "auto"
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "organizeImports": { "enabled": true },
   "linter": {
     "enabled": true,
     "rules": {

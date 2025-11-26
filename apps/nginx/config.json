@@ -1,10 +1,10 @@
 {
-  "$schema": "../app-info-schema.json",
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
   "name": "Nginx",
   "id": "nginx",
   "available": true,
   "short_desc": "Open-source simple and fast web server.",
-  "author": "nginx",
+  "author": "nginx.org",
   "port": 8754,
   "categories": ["utilities"],
   "description": "Simple webserver to test your Tipi install. An alternative to the hello-world app.",

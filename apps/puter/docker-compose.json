@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schemas.runtipi.io/dynamic-compose.json",
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
   "schemaVersion": 2,
   "services": [
     {
@@ -7,10 +7,7 @@
       "image": "ghcr.io/heyputer/puter:v2.5.1",
       "isMain": true,
       "internalPort": 4100,
-      "environment": [
-        { "key": "PUID", "value": "${PUID:-1000}" },
-        { "key": "PGID", "value": "${PGID:-1000}" }
-      ],
+      "environment": [{ "key": "PUID", "value": "${PUID:-1000}" }, { "key": "PGID", "value": "${PGID:-1000}" }],
       "addPorts": [
         {
           "hostPort": 4100,
