@@ -3,14 +3,16 @@
   "schemaVersion": 2,
   "services": [
     {
-      "name": "budibase",
-      "image": "budibase/budibase:3.23.29",
+      "name": "nginx",
+      "image": "nginx:1.25.3",
       "isMain": true,
       "internalPort": 80,
-      "volumes": [
+      "addPorts": [
         {
-          "hostPath": "${APP_DATA_DIR}",
-          "containerPath": "/data"
+          "hostPort": 8754,
+          "containerPort": 80,
+          "tcp": true,
+          "udp": false
         }
       ]
     }

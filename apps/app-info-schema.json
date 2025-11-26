@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
     "id": {
@@ -8,8 +9,8 @@
       "type": "boolean"
     },
     "deprecated": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "port": {
       "type": "number",
@@ -20,12 +21,12 @@
       "type": "string"
     },
     "description": {
-      "type": "string",
-      "default": ""
+      "default": "",
+      "type": "string"
     },
     "version": {
-      "type": "string",
-      "default": "latest"
+      "default": "latest",
+      "type": "string"
     },
     "tipi_version": {
       "type": "number"
@@ -43,14 +44,15 @@
       "type": "string"
     },
     "force_expose": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "generate_vapid_keys": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "categories": {
+      "default": ["utilities"],
       "type": "array",
       "items": {
         "type": "string",
@@ -71,13 +73,13 @@
           "gaming",
           "ai"
         ]
-      },
-      "default": []
+      }
     },
     "url_suffix": {
       "type": "string"
     },
     "form_fields": {
+      "default": [],
       "type": "array",
       "items": {
         "type": "object",
@@ -113,16 +115,25 @@
                   "type": "string"
                 }
               },
-              "required": ["label", "value"],
-              "additionalProperties": false
+              "required": ["label", "value"]
             }
           },
           "required": {
-            "type": "boolean",
-            "default": false
+            "default": false,
+            "type": "boolean"
           },
           "default": {
-            "type": ["boolean", "string", "number"]
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
           },
           "regex": {
             "type": "string"
@@ -138,24 +149,23 @@
             "enum": ["hex", "base64"]
           }
         },
-        "required": ["type", "label", "env_variable"],
-        "additionalProperties": false
-      },
-      "default": []
+        "required": ["type", "label", "env_variable"]
+      }
     },
     "https": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "exposable": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "no_gui": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "supported_architectures": {
+      "default": ["amd64", "arm64"],
       "type": "array",
       "items": {
         "type": "string",
@@ -169,31 +179,28 @@
       "type": "number"
     },
     "dynamic_config": {
-      "type": "boolean",
-      "default": false
+      "default": false,
+      "type": "boolean"
     },
     "min_tipi_version": {
       "type": "string"
     },
     "created_at": {
+      "default": 0,
       "type": "integer",
       "minimum": 0,
-      "default": 0
+      "maximum": 9007199254740991
     },
     "updated_at": {
+      "default": 0,
       "type": "integer",
       "minimum": 0,
-      "default": 0
+      "maximum": 9007199254740991
     },
     "force_pull": {
-      "type": "boolean",
-      "default": false
-    },
-    "$schema": {
-      "type": "string"
+      "default": false,
+      "type": "boolean"
     }
   },
-  "required": ["id", "available", "name", "tipi_version", "short_desc", "author", "source"],
-  "additionalProperties": false,
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "required": ["id", "available", "name", "tipi_version", "short_desc", "author", "source"]
 }

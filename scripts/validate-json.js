@@ -2,21 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
+import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" assert { type: "json" };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
+ajv.addMetaSchema(draft7MetaSchema);
 
 async function validateJson() {
-  // Fetch the schema
-  const schemaUrl = "https://schemas.runtipi.io/dynamic-compose.json";
-  const response = await fetch(schemaUrl);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch schema: ${response.statusText}`);
-  }
-  const schema = await response.json();
-
+  // Use local schema (aligned with repo format)
+  const schemaPath = path.join(__dirname, "..", "apps", "dynamic-compose-schema.json");
+  const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
   const validate = ajv.compile(schema);
 
   // Find all docker-compose.json files
