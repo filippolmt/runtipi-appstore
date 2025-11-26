@@ -15,6 +15,25 @@ services:
     networks:
       - tipi_main_network
     labels:
+      traefik.enable: true
+      traefik.http.middlewares.traccar-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.traccar.loadbalancer.server.port: 8082
+      traefik.http.routers.traccar-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.traccar-insecure.entrypoints: web
+      traefik.http.routers.traccar-insecure.service: traccar
+      traefik.http.routers.traccar-insecure.middlewares: traccar-web-redirect
+      traefik.http.routers.traccar.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.traccar.entrypoints: websecure
+      traefik.http.routers.traccar.service: traccar
+      traefik.http.routers.traccar.tls.certresolver: myresolver
+      traefik.http.routers.traccar-local-insecure.rule: Host(`traccar.${LOCAL_DOMAIN}`)
+      traefik.http.routers.traccar-local-insecure.entrypoints: web
+      traefik.http.routers.traccar-local-insecure.service: traccar
+      traefik.http.routers.traccar-local-insecure.middlewares: traccar-web-redirect
+      traefik.http.routers.traccar-local.rule: Host(`traccar.${LOCAL_DOMAIN}`)
+      traefik.http.routers.traccar-local.entrypoints: websecure
+      traefik.http.routers.traccar-local.service: traccar
+      traefik.http.routers.traccar-local.tls: true
       runtipi.managed: "true"
 
 networks:

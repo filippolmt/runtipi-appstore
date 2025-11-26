@@ -17,6 +17,25 @@ services:
     networks:
       - tipi_main_network
     labels:
+      traefik.enable: true
+      traefik.http.middlewares.mailpit-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.mailpit.loadbalancer.server.port: 8025
+      traefik.http.routers.mailpit-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.mailpit-insecure.entrypoints: web
+      traefik.http.routers.mailpit-insecure.service: mailpit
+      traefik.http.routers.mailpit-insecure.middlewares: mailpit-web-redirect
+      traefik.http.routers.mailpit.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.mailpit.entrypoints: websecure
+      traefik.http.routers.mailpit.service: mailpit
+      traefik.http.routers.mailpit.tls.certresolver: myresolver
+      traefik.http.routers.mailpit-local-insecure.rule: Host(`mailpit.${LOCAL_DOMAIN}`)
+      traefik.http.routers.mailpit-local-insecure.entrypoints: web
+      traefik.http.routers.mailpit-local-insecure.service: mailpit
+      traefik.http.routers.mailpit-local-insecure.middlewares: mailpit-web-redirect
+      traefik.http.routers.mailpit-local.rule: Host(`mailpit.${LOCAL_DOMAIN}`)
+      traefik.http.routers.mailpit-local.entrypoints: websecure
+      traefik.http.routers.mailpit-local.service: mailpit
+      traefik.http.routers.mailpit-local.tls: true
       runtipi.managed: "true"
 
 networks:
