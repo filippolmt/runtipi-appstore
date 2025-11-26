@@ -35,6 +35,26 @@
       "required": false,
       "env_variable": "PGID",
       "default": 1000
+    },
+    {
+      "type": "text",
+      "label": "Timezone",
+      "required": false,
+      "env_variable": "TZ",
+      "default": "Europe/Rome"
+    },
+    {
+      "type": "text",
+      "label": "Domain",
+      "required": true,
+      "env_variable": "DOMAIN"
+    },
+    {
+      "type": "boolean",
+      "label": "Allow All Host Values",
+      "required": false,
+      "env_variable": "ALLOW_ALL_HOST_VALUES",
+      "default": false
     }
   ],
   "min_tipi_version": "4.5.0"

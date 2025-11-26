@@ -8,11 +8,23 @@
       "environment": [
         {
           "key": "PUID",
-          "value": 1000
+          "value": "${PUID}"
         },
         {
           "key": "PGID",
-          "value": 1000
+          "value": "${PGID}"
+        },
+        {
+          "key": "TZ",
+          "value": "${TZ}"
+        },
+        {
+          "key": "DOMAIN",
+          "value": "${DOMAIN}"
+        },
+        {
+          "key": "ALLOW_ALL_HOST_VALUES",
+          "value": "${ALLOW_ALL_HOST_VALUES}"
         }
       ],
       "internalPort": 4100,
