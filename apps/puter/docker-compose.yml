@@ -15,6 +15,25 @@ services:
     networks:
       - tipi_main_network
     labels:
+      traefik.enable: true
+      traefik.http.middlewares.puter-web-redirect.redirectscheme.scheme: https
+      traefik.http.services.puter.loadbalancer.server.port: 4100
+      traefik.http.routers.puter-insecure.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.puter-insecure.entrypoints: web
+      traefik.http.routers.puter-insecure.service: puter
+      traefik.http.routers.puter-insecure.middlewares: puter-web-redirect
+      traefik.http.routers.puter.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.puter.entrypoints: websecure
+      traefik.http.routers.puter.service: puter
+      traefik.http.routers.puter.tls.certresolver: myresolver
+      traefik.http.routers.puter-local-insecure.rule: Host(`puter.${LOCAL_DOMAIN}`)
+      traefik.http.routers.puter-local-insecure.entrypoints: web
+      traefik.http.routers.puter-local-insecure.service: puter
+      traefik.http.routers.puter-local-insecure.middlewares: puter-web-redirect
+      traefik.http.routers.puter-local.rule: Host(`puter.${LOCAL_DOMAIN}`)
+      traefik.http.routers.puter-local.entrypoints: websecure
+      traefik.http.routers.puter-local.service: puter
+      traefik.http.routers.puter-local.tls: true
       runtipi.managed: "true"
 
 networks:
