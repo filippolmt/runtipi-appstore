@@ -22,6 +22,14 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/kitchenowl/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "tombursch/kitchenowl",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/mailpit/config.json"],
       "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
       "depNameTemplate": "axllent/mailpit",

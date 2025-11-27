@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "kitchenowl",
+      "image": "tombursch/kitchenowl:v0.7.4",
+      "isMain": true,
+      "internalPort": 8080,
+      "environment": [
+        {
+          "key": "JWT_SECRET_KEY",
+          "value": "${JWT_SECRET_KEY}"
+        },
+        {
+          "key": "FRONT_URL",
+          "value": "${FRONT_URL}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/data",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ]
+    }
+  ]
+}
