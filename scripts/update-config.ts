@@ -20,7 +20,7 @@ const updateAppConfig = async (packageFile: string, newVersion: string) => {
 
     configParsed.tipi_version = configParsed.tipi_version + 1;
     configParsed.version = newVersion;
-    configParsed.updated_at = new Date().getTime();
+    configParsed.updated_at = Date.now();
 
     await fs.writeFile(configPath, JSON.stringify(configParsed, null, 2));
   } catch (e) {

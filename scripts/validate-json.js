@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
-import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" assert { type: "json" };
+import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" with { type: "json" };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

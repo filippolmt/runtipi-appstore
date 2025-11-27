@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { appInfoSchema } from "@runtipi/common/schemas";
 import Ajv2020 from "ajv/dist/2020.js";
-import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" assert { type: "json" };
+import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" with { type: "json" };
 import { fromError } from "zod-validation-error";
 
 const getApps = async () => {
@@ -23,7 +23,7 @@ const getFile = async (app: string, file: string) => {
   try {
     const file = await fs.promises.readFile(filePath, "utf-8");
     return file;
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };
