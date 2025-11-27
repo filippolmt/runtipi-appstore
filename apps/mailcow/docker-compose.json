@@ -1,0 +1,960 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "unbound-mailcow",
+      "image": "ghcr.io/mailcow/unbound:1.24",
+      "environment": [{ "key": "TZ", "value": "${TZ}" }, { "key": "SKIP_UNBOUND_HEALTHCHECK", "value": "${SKIP_UNBOUND_HEALTHCHECK:-n}" }],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/hooks/unbound",
+          "containerPath": "/hooks",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/unbound/unbound.conf",
+          "containerPath": "/etc/unbound/unbound.conf",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "tty": true,
+      "addToMainNetwork": true
+    },
+    {
+      "name": "mysql-mailcow",
+      "image": "mariadb:10.11",
+      "environment": [
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "MYSQL_ROOT_PASSWORD", "value": "${DBROOT}" },
+        { "key": "MYSQL_DATABASE", "value": "${DBNAME}" },
+        { "key": "MYSQL_USER", "value": "${DBUSER}" },
+        { "key": "MYSQL_PASSWORD", "value": "${DBPASS}" },
+        { "key": "MYSQL_INITDB_SKIP_TZINFO", "value": "1" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql",
+          "containerPath": "/var/lib/mysql/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/mysql",
+          "containerPath": "/etc/mysql/conf.d/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "stopGracePeriod": "45s",
+      "dependsOn": ["unbound-mailcow", "netfilter-mailcow"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "redis-mailcow",
+      "image": "redis:7.4.6-alpine",
+      "environment": [
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "REDISMASTERPASS", "value": "${REDISMASTERPASS:-}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/redis",
+          "containerPath": "/data/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/redis/redis-conf.sh",
+          "containerPath": "/redis-conf.sh",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "entrypoint": ["/bin/sh", "/redis-conf.sh"],
+      "sysctls": {},
+      "dependsOn": ["netfilter-mailcow"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "clamd-mailcow",
+      "image": "ghcr.io/mailcow/clamd:1.71",
+      "environment": [{ "key": "TZ", "value": "${TZ}" }, { "key": "SKIP_CLAMD", "value": "${SKIP_CLAMD:-n}" }],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/clamav",
+          "containerPath": "/etc/clamav/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/clamd-db",
+          "containerPath": "/var/lib/clamav",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "dependsOn": {
+        "unbound-mailcow": { "condition": "service_healthy" }
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "rspamd-mailcow",
+      "image": "ghcr.io/mailcow/rspamd:2.4",
+      "environment": [
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "IPV6_NETWORK", "value": "${IPV6_NETWORK:-fd4d:6169:6c63:6f77::/64}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "SPAMHAUS_DQS_KEY", "value": "${SPAMHAUS_DQS_KEY:-}" }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/hooks/rspamd", "containerPath": "/hooks", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/custom",
+          "containerPath": "/etc/rspamd/custom",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/override.d",
+          "containerPath": "/etc/rspamd/override.d",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/local.d",
+          "containerPath": "/etc/rspamd/local.d",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/plugins.d",
+          "containerPath": "/etc/rspamd/plugins.d",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/lua",
+          "containerPath": "/etc/rspamd/lua/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/rspamd.conf.local",
+          "containerPath": "/etc/rspamd/rspamd.conf.local",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/rspamd.conf.override",
+          "containerPath": "/etc/rspamd/rspamd.conf.override",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/rspamd", "containerPath": "/var/lib/rspamd", "readOnly": false, "shared": false, "private": false }
+      ],
+      "hostname": "rspamd",
+      "stopGracePeriod": "30s",
+      "dependsOn": ["dovecot-mailcow", "clamd-mailcow"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "php-fpm-mailcow",
+      "image": "ghcr.io/mailcow/phpfpm:1.94",
+      "command": "php-fpm -d date.timezone=${TZ} -d expose_php=0",
+      "environment": [
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "MAILCOW_PASS_SCHEME", "value": "${MAILCOW_PASS_SCHEME:-BLF-CRYPT}" },
+        { "key": "IMAP_PORT", "value": "${IMAP_PORT:-143}" },
+        { "key": "IMAPS_PORT", "value": "${IMAPS_PORT:-993}" },
+        { "key": "POP_PORT", "value": "${POP_PORT:-110}" },
+        { "key": "POPS_PORT", "value": "${POPS_PORT:-995}" },
+        { "key": "SIEVE_PORT", "value": "${SIEVE_PORT:-4190}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "IPV6_NETWORK", "value": "${IPV6_NETWORK:-fd4d:6169:6c63:6f77::/64}" },
+        { "key": "SUBMISSION_PORT", "value": "${SUBMISSION_PORT:-587}" },
+        { "key": "SMTPS_PORT", "value": "${SMTPS_PORT:-465}" },
+        { "key": "SMTP_PORT", "value": "${SMTP_PORT:-25}" },
+        { "key": "API_KEY", "value": "${API_KEY:-invalid}" },
+        { "key": "API_KEY_READ_ONLY", "value": "${API_KEY_READ_ONLY:-invalid}" },
+        { "key": "API_ALLOW_FROM", "value": "${API_ALLOW_FROM:-invalid}" },
+        { "key": "COMPOSE_PROJECT_NAME", "value": "${COMPOSE_PROJECT_NAME:-mailcow-dockerized}" },
+        { "key": "SKIP_FTS", "value": "${SKIP_FTS:-y}" },
+        { "key": "SKIP_CLAMD", "value": "${SKIP_CLAMD:-n}" },
+        { "key": "SKIP_OLEFY", "value": "${SKIP_OLEFY:-n}" },
+        { "key": "SKIP_SOGO", "value": "${SKIP_SOGO:-n}" },
+        { "key": "ALLOW_ADMIN_EMAIL_LOGIN", "value": "${ALLOW_ADMIN_EMAIL_LOGIN:-n}" },
+        { "key": "MASTER", "value": "${MASTER:-y}" },
+        { "key": "DEV_MODE", "value": "${DEV_MODE:-n}" },
+        { "key": "DEMO_MODE", "value": "${DEMO_MODE:-n}" },
+        { "key": "WEBAUTHN_ONLY_TRUSTED_VENDORS", "value": "${WEBAUTHN_ONLY_TRUSTED_VENDORS:-n}" },
+        { "key": "CLUSTERMODE", "value": "${CLUSTERMODE:-}" },
+        { "key": "ADDITIONAL_SERVER_NAMES", "value": "${ADDITIONAL_SERVER_NAMES:-}" }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/hooks/phpfpm", "containerPath": "/hooks", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/web", "containerPath": "/web", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/dynmaps", "containerPath": "/dynmaps", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/custom",
+          "containerPath": "/rspamd_custom_maps",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/dovecot/auth/mailcowauth.php",
+          "containerPath": "/mailcowauth/mailcowauth.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.inc.php",
+          "containerPath": "/mailcowauth/functions.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.auth.inc.php",
+          "containerPath": "/mailcowauth/functions.auth.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/sessions.inc.php",
+          "containerPath": "/mailcowauth/sessions.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.mailbox.inc.php",
+          "containerPath": "/mailcowauth/functions.mailbox.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.ratelimit.inc.php",
+          "containerPath": "/mailcowauth/functions.ratelimit.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.acl.inc.php",
+          "containerPath": "/mailcowauth/functions.acl.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/rspamd", "containerPath": "/var/lib/rspamd", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/sogo", "containerPath": "/etc/sogo/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/meta_exporter",
+          "containerPath": "/meta_exporter",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/crons", "containerPath": "/crons", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/sogo-sso",
+          "containerPath": "/etc/sogo-sso/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/php-fpm.d/pools.conf",
+          "containerPath": "/usr/local/etc/php-fpm.d/z-pools.conf",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/php-conf.d/opcache-recommended.ini",
+          "containerPath": "/usr/local/etc/php/conf.d/opcache-recommended.ini",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/php-conf.d/upload.ini",
+          "containerPath": "/usr/local/etc/php/conf.d/upload.ini",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/php-conf.d/other.ini",
+          "containerPath": "/usr/local/etc/php/conf.d/zzz-other.ini",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/dovecot/global_sieve_before",
+          "containerPath": "/global_sieve/before",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/dovecot/global_sieve_after",
+          "containerPath": "/global_sieve/after",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/templates", "containerPath": "/tpls", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/nginx", "containerPath": "/etc/nginx/conf.d/", "readOnly": false, "shared": false, "private": false }
+      ],
+      "dependsOn": ["redis-mailcow"],
+      "extraLabels": {
+        "ofelia.enabled": "true",
+        "ofelia.job-exec.phpfpm_keycloak_sync.schedule": "@every 1m",
+        "ofelia.job-exec.phpfpm_keycloak_sync.no-overlap": "true",
+        "ofelia.job-exec.phpfpm_keycloak_sync.command": "/bin/bash -c \"php /crons/keycloak-sync.php || exit 0\"",
+        "ofelia.job-exec.phpfpm_ldap_sync.schedule": "@every 1m",
+        "ofelia.job-exec.phpfpm_ldap_sync.no-overlap": "true",
+        "ofelia.job-exec.phpfpm_ldap_sync.command": "/bin/bash -c \"php /crons/ldap-sync.php || exit 0\""
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "sogo-mailcow",
+      "image": "ghcr.io/mailcow/sogo:1.136",
+      "environment": [
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "MAILCOW_PASS_SCHEME", "value": "${MAILCOW_PASS_SCHEME:-BLF-CRYPT}" },
+        { "key": "ACL_ANYONE", "value": "${ACL_ANYONE:-disallow}" },
+        { "key": "ALLOW_ADMIN_EMAIL_LOGIN", "value": "${ALLOW_ADMIN_EMAIL_LOGIN:-n}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "SOGO_EXPIRE_SESSION", "value": "${SOGO_EXPIRE_SESSION:-480}" },
+        { "key": "SOGO_URL_ENCRYPTION_KEY", "value": "${SOGO_URL_ENCRYPTION_KEY:-SOGoSuperSecret0}" },
+        { "key": "SKIP_SOGO", "value": "${SKIP_SOGO:-n}" },
+        { "key": "MASTER", "value": "${MASTER:-y}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/hooks/sogo", "containerPath": "/hooks", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/sogo", "containerPath": "/etc/sogo/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/init_db.inc.php",
+          "containerPath": "/init_db.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-favicon.ico",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/img/sogo.ico",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-shortlogo.svg",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/img/sogo-compact.svg",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-fulllogo.svg",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/img/sogo-full.svg",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-fulllogo.png",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/img/sogo-logo.png",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-theme.js",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/js/theme.js",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/sogo/custom-sogo.js",
+          "containerPath": "/usr/lib/GNUstep/SOGo/WebServerResources/js/custom-sogo.js",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/sogo-web", "containerPath": "/sogo_web", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/volumes/sogo-backup", "containerPath": "/sogo_backup", "readOnly": false, "shared": false, "private": false }
+      ],
+      "extraLabels": {
+        "ofelia.enabled": "true",
+        "ofelia.job-exec.sogo_sessions.schedule": "@every 1m",
+        "ofelia.job-exec.sogo_sessions.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu sogo /usr/sbin/sogo-tool -v expire-sessions $${SOGO_EXPIRE_SESSION} || exit 0\"",
+        "ofelia.job-exec.sogo_ealarms.schedule": "@every 1m",
+        "ofelia.job-exec.sogo_ealarms.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu sogo /usr/sbin/sogo-ealarms-notify -p /etc/sogo/cron.creds || exit 0\"",
+        "ofelia.job-exec.sogo_eautoreply.schedule": "@every 5m",
+        "ofelia.job-exec.sogo_eautoreply.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu sogo /usr/sbin/sogo-tool update-autoreply -p /etc/sogo/cron.creds || exit 0\"",
+        "ofelia.job-exec.sogo_backup.schedule": "@every 24h",
+        "ofelia.job-exec.sogo_backup.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu sogo /usr/sbin/sogo-tool backup /sogo_backup ALL || exit 0\""
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "dovecot-mailcow",
+      "image": "ghcr.io/mailcow/dovecot:2.35",
+      "environment": [
+        { "key": "DOVECOT_MASTER_USER", "value": "${DOVECOT_MASTER_USER:-}" },
+        { "key": "DOVECOT_MASTER_PASS", "value": "${DOVECOT_MASTER_PASS:-}" },
+        { "key": "MAILCOW_REPLICA_IP", "value": "${MAILCOW_REPLICA_IP:-}" },
+        { "key": "DOVEADM_REPLICA_PORT", "value": "${DOVEADM_REPLICA_PORT:-}" },
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "MAILCOW_PASS_SCHEME", "value": "${MAILCOW_PASS_SCHEME:-BLF-CRYPT}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "ALLOW_ADMIN_EMAIL_LOGIN", "value": "${ALLOW_ADMIN_EMAIL_LOGIN:-n}" },
+        { "key": "MAILDIR_GC_TIME", "value": "${MAILDIR_GC_TIME:-7200}" },
+        { "key": "ACL_ANYONE", "value": "${ACL_ANYONE:-disallow}" },
+        { "key": "SKIP_FTS", "value": "${SKIP_FTS:-y}" },
+        { "key": "FTS_HEAP", "value": "${FTS_HEAP:-512}" },
+        { "key": "FTS_PROCS", "value": "${FTS_PROCS:-3}" },
+        { "key": "MAILDIR_SUB", "value": "${MAILDIR_SUB:-}" },
+        { "key": "MASTER", "value": "${MASTER:-y}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "COMPOSE_PROJECT_NAME", "value": "${COMPOSE_PROJECT_NAME:-mailcow-dockerized}" }
+      ],
+      "internalPort": 143,
+      "addPorts": [
+        { "containerPort": 993, "hostPort": "${IMAPS_PORT:-993}", "tcp": true, "udp": false },
+        { "containerPort": 110, "hostPort": "${POP_PORT:-110}", "tcp": true, "udp": false },
+        { "containerPort": 995, "hostPort": "${POPS_PORT:-995}", "tcp": true, "udp": false },
+        { "containerPort": 4190, "hostPort": "${SIEVE_PORT:-4190}", "tcp": true, "udp": false }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/hooks/dovecot", "containerPath": "/hooks", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/dovecot", "containerPath": "/etc/dovecot", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/ssl", "containerPath": "/etc/ssl/mail/", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/sogo", "containerPath": "/etc/sogo/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/phpfpm/sogo-sso",
+          "containerPath": "/etc/phpfpm/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/vmail", "containerPath": "/var/vmail", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/vmail-index",
+          "containerPath": "/var/vmail_index",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/crypt", "containerPath": "/mail_crypt/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/custom",
+          "containerPath": "/etc/rspamd/custom",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/templates", "containerPath": "/templates", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/volumes/rspamd", "containerPath": "/var/lib/rspamd", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "tty": true,
+      "capAdd": ["NET_BIND_SERVICE"],
+      "ulimits": { "nproc": 65535, "nofile": { "soft": 20000, "hard": 40000 } },
+      "dependsOn": ["mysql-mailcow", "netfilter-mailcow", "redis-mailcow"],
+      "extraLabels": {
+        "ofelia.enabled": "true",
+        "ofelia.job-exec.dovecot_imapsync_runner.schedule": "@every 1m",
+        "ofelia.job-exec.dovecot_imapsync_runner.no-overlap": "true",
+        "ofelia.job-exec.dovecot_imapsync_runner.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu nobody /usr/local/bin/imapsync_runner.pl || exit 0\"",
+        "ofelia.job-exec.dovecot_trim_logs.schedule": "@every 1m",
+        "ofelia.job-exec.dovecot_trim_logs.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu vmail /usr/local/bin/trim_logs.sh || exit 0\"",
+        "ofelia.job-exec.dovecot_quarantine.schedule": "@every 20m",
+        "ofelia.job-exec.dovecot_quarantine.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu vmail /usr/local/bin/quarantine_notify.py || exit 0\"",
+        "ofelia.job-exec.dovecot_clean_q_aged.schedule": "@every 24h",
+        "ofelia.job-exec.dovecot_clean_q_aged.command": "/bin/bash -c \"[[ $${MASTER} == y ]] && /usr/local/bin/gosu vmail /usr/local/bin/clean_q_aged.sh || exit 0\"",
+        "ofelia.job-exec.dovecot_maildir_gc.schedule": "@every 30m",
+        "ofelia.job-exec.dovecot_maildir_gc.command": "/bin/bash -c \"source /source_env.sh ; /usr/local/bin/gosu vmail /usr/local/bin/maildir_gc.sh\"",
+        "ofelia.job-exec.dovecot_sarules.schedule": "@every 24h",
+        "ofelia.job-exec.dovecot_sarules.command": "/bin/bash -c \"/usr/local/bin/sa-rules.sh\"",
+        "ofelia.job-exec.dovecot_fts.schedule": "@every 24h",
+        "ofelia.job-exec.dovecot_fts.command": "/bin/bash -c \"/usr/local/bin/gosu vmail /usr/local/bin/optimize-fts.sh\"",
+        "ofelia.job-exec.dovecot_repl_health.schedule": "@every 5m",
+        "ofelia.job-exec.dovecot_repl_health.command": "/bin/bash -c \"/usr/local/bin/gosu vmail /usr/local/bin/repl_health.sh\""
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "postfix-mailcow",
+      "image": "ghcr.io/mailcow/postfix:1.81",
+      "environment": [
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "SPAMHAUS_DQS_KEY", "value": "${SPAMHAUS_DQS_KEY:-}" }
+      ],
+      "internalPort": 25,
+      "addPorts": [
+        { "containerPort": 465, "hostPort": "${SMTPS_PORT:-465}", "tcp": true, "udp": false },
+        { "containerPort": 587, "hostPort": "${SUBMISSION_PORT:-587}", "tcp": true, "udp": false }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/hooks/postfix", "containerPath": "/hooks", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/postfix",
+          "containerPath": "/opt/postfix/conf",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/ssl", "containerPath": "/etc/ssl/mail/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/postfix",
+          "containerPath": "/var/spool/postfix",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/volumes/crypt", "containerPath": "/var/lib/zeyple", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/volumes/rspamd", "containerPath": "/var/lib/rspamd", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "capAdd": ["NET_BIND_SERVICE"],
+      "dependsOn": {
+        "mysql-mailcow": { "condition": "service_started" },
+        "unbound-mailcow": { "condition": "service_healthy" },
+        "postfix-tlspol-mailcow": { "condition": "service_started" }
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "postfix-tlspol-mailcow",
+      "image": "ghcr.io/mailcow/postfix-tlspol:1.0",
+      "environment": [
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "DEV_MODE", "value": "${DEV_MODE:-n}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/postfix-tlspol",
+          "containerPath": "/var/lib/postfix-tlspol",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "dependsOn": {
+        "unbound-mailcow": { "condition": "service_healthy" }
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "memcached-mailcow",
+      "image": "memcached:alpine",
+      "environment": [{ "key": "TZ", "value": "${TZ}" }],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "nginx-mailcow",
+      "image": "ghcr.io/mailcow/nginx:1.05",
+      "isMain": true,
+      "internalPort": 443,
+      "addPorts": [
+        { "containerPort": 443, "hostPort": "${HTTPS_PORT:-9443}", "tcp": true, "udp": false },
+        { "containerPort": 80, "hostPort": "${HTTP_PORT:-9080}", "tcp": true, "udp": false }
+      ],
+      "environment": [
+        { "key": "HTTPS_PORT", "value": "${HTTPS_PORT:-9443}" },
+        { "key": "HTTP_PORT", "value": "${HTTP_PORT:-9080}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "ADDITIONAL_SERVER_NAMES", "value": "${ADDITIONAL_SERVER_NAMES:-}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "SKIP_SOGO", "value": "${SKIP_SOGO:-n}" },
+        { "key": "SKIP_RSPAMD", "value": "${SKIP_RSPAMD:-n}" },
+        { "key": "ENABLE_IPV6", "value": "${ENABLE_IPV6:-true}" },
+        { "key": "HTTP_REDIRECT", "value": "${HTTP_REDIRECT:-n}" },
+        { "key": "PHPFPMHOST", "value": "${PHPFPMHOST:-}" },
+        { "key": "SOGOHOST", "value": "${SOGOHOST:-}" },
+        { "key": "RSPAMDHOST", "value": "${RSPAMDHOST:-}" },
+        { "key": "REDISHOST", "value": "${REDISHOST:-}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "NGINX_USE_PROXY_PROTOCOL", "value": "${NGINX_USE_PROXY_PROTOCOL:-n}" },
+        { "key": "TRUSTED_PROXIES", "value": "${TRUSTED_PROXIES:-}" }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/data/web", "containerPath": "/web", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/dynmaps", "containerPath": "/dynmaps", "readOnly": false, "shared": false, "private": false },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/ssl", "containerPath": "/etc/ssl/mail/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/nginx",
+          "containerPath": "/etc/nginx/conf.d/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/rspamd/meta_exporter",
+          "containerPath": "/meta_exporter",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/conf/dovecot/auth/mailcowauth.php",
+          "containerPath": "/mailcowauth/mailcowauth.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.inc.php",
+          "containerPath": "/mailcowauth/functions.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/functions.auth.inc.php",
+          "containerPath": "/mailcowauth/functions.auth.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/inc/sessions.inc.php",
+          "containerPath": "/mailcowauth/sessions.inc.php",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/sogo-web",
+          "containerPath": "/usr/lib/GNUstep/SOGo/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "dependsOn": ["redis-mailcow", "php-fpm-mailcow", "sogo-mailcow", "rspamd-mailcow"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "acme-mailcow",
+      "image": "ghcr.io/mailcow/acme:1.94",
+      "environment": [
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "ADDITIONAL_SAN", "value": "${ADDITIONAL_SAN}" },
+        { "key": "AUTODISCOVER_SAN", "value": "${AUTODISCOVER_SAN:-y}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "SKIP_LETS_ENCRYPT", "value": "${SKIP_LETS_ENCRYPT:-n}" },
+        { "key": "COMPOSE_PROJECT_NAME", "value": "${COMPOSE_PROJECT_NAME:-mailcow-dockerized}" },
+        { "key": "DIRECTORY_URL", "value": "${DIRECTORY_URL:-}" },
+        { "key": "ENABLE_SSL_SNI", "value": "${ENABLE_SSL_SNI:-n}" },
+        { "key": "SKIP_IP_CHECK", "value": "${SKIP_IP_CHECK:-n}" },
+        { "key": "SKIP_HTTP_VERIFICATION", "value": "${SKIP_HTTP_VERIFICATION:-n}" },
+        { "key": "ONLY_MAILCOW_HOSTNAME", "value": "${ONLY_MAILCOW_HOSTNAME:-n}" },
+        { "key": "LE_STAGING", "value": "${LE_STAGING:-n}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "SNAT_TO_SOURCE", "value": "${SNAT_TO_SOURCE:-n}" },
+        { "key": "SNAT6_TO_SOURCE", "value": "${SNAT6_TO_SOURCE:-n}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/web/.well-known/acme-challenge",
+          "containerPath": "/var/www/acme",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/ssl", "containerPath": "/var/lib/acme/", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/assets/ssl-example",
+          "containerPath": "/var/lib/ssl-example/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "dependsOn": {
+        "nginx-mailcow": { "condition": "service_started" },
+        "unbound-mailcow": { "condition": "service_healthy" }
+      },
+      "addToMainNetwork": true
+    },
+    {
+      "name": "netfilter-mailcow",
+      "image": "ghcr.io/mailcow/netfilter:1.63",
+      "environment": [
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "IPV6_NETWORK", "value": "${IPV6_NETWORK:-fd4d:6169:6c63:6f77::/64}" },
+        { "key": "SNAT_TO_SOURCE", "value": "${SNAT_TO_SOURCE:-n}" },
+        { "key": "SNAT6_TO_SOURCE", "value": "${SNAT6_TO_SOURCE:-n}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "MAILCOW_REPLICA_IP", "value": "${MAILCOW_REPLICA_IP:-}" },
+        { "key": "DISABLE_NETFILTER_ISOLATION_RULE", "value": "${DISABLE_NETFILTER_ISOLATION_RULE:-n}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "/lib/modules",
+          "containerPath": "/lib/modules",
+          "readOnly": true,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "networkMode": "host",
+      "stopGracePeriod": "30s",
+      "privileged": true,
+      "addToMainNetwork": true
+    },
+    {
+      "name": "watchdog-mailcow",
+      "image": "ghcr.io/mailcow/watchdog:2.09",
+      "environment": [
+        { "key": "IPV6_NETWORK", "value": "${IPV6_NETWORK:-fd4d:6169:6c63:6f77::/64}" },
+        { "key": "LOG_LINES", "value": "${LOG_LINES:-9999}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "DBNAME", "value": "${DBNAME}" },
+        { "key": "DBUSER", "value": "${DBUSER}" },
+        { "key": "DBPASS", "value": "${DBPASS}" },
+        { "key": "DBROOT", "value": "${DBROOT}" },
+        { "key": "USE_WATCHDOG", "value": "${USE_WATCHDOG:-n}" },
+        { "key": "WATCHDOG_NOTIFY_EMAIL", "value": "${WATCHDOG_NOTIFY_EMAIL:-}" },
+        { "key": "WATCHDOG_NOTIFY_BAN", "value": "${WATCHDOG_NOTIFY_BAN:-y}" },
+        { "key": "WATCHDOG_NOTIFY_START", "value": "${WATCHDOG_NOTIFY_START:-y}" },
+        { "key": "WATCHDOG_SUBJECT", "value": "${WATCHDOG_SUBJECT:-Watchdog ALERT}" },
+        { "key": "WATCHDOG_NOTIFY_WEBHOOK", "value": "${WATCHDOG_NOTIFY_WEBHOOK:-}" },
+        { "key": "WATCHDOG_NOTIFY_WEBHOOK_BODY", "value": "${WATCHDOG_NOTIFY_WEBHOOK_BODY:-}" },
+        { "key": "WATCHDOG_EXTERNAL_CHECKS", "value": "${WATCHDOG_EXTERNAL_CHECKS:-n}" },
+        { "key": "WATCHDOG_MYSQL_REPLICATION_CHECKS", "value": "${WATCHDOG_MYSQL_REPLICATION_CHECKS:-n}" },
+        { "key": "WATCHDOG_VERBOSE", "value": "${WATCHDOG_VERBOSE:-n}" },
+        { "key": "MAILCOW_HOSTNAME", "value": "${MAILCOW_HOSTNAME}" },
+        { "key": "COMPOSE_PROJECT_NAME", "value": "${COMPOSE_PROJECT_NAME:-mailcow-dockerized}" },
+        { "key": "IPV4_NETWORK", "value": "${IPV4_NETWORK:-172.22.1}" },
+        { "key": "IP_BY_DOCKER_API", "value": "${IP_BY_DOCKER_API:-0}" },
+        { "key": "CHECK_UNBOUND", "value": "${CHECK_UNBOUND:-1}" },
+        { "key": "SKIP_CLAMD", "value": "${SKIP_CLAMD:-n}" },
+        { "key": "SKIP_OLEFY", "value": "${SKIP_OLEFY:-n}" },
+        { "key": "SKIP_LETS_ENCRYPT", "value": "${SKIP_LETS_ENCRYPT:-n}" },
+        { "key": "SKIP_SOGO", "value": "${SKIP_SOGO:-n}" },
+        { "key": "HTTPS_PORT", "value": "${HTTPS_PORT:-443}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" },
+        { "key": "EXTERNAL_CHECKS_THRESHOLD", "value": "${EXTERNAL_CHECKS_THRESHOLD:-1}" },
+        { "key": "NGINX_THRESHOLD", "value": "${NGINX_THRESHOLD:-5}" },
+        { "key": "UNBOUND_THRESHOLD", "value": "${UNBOUND_THRESHOLD:-5}" },
+        { "key": "REDIS_THRESHOLD", "value": "${REDIS_THRESHOLD:-5}" },
+        { "key": "MYSQL_THRESHOLD", "value": "${MYSQL_THRESHOLD:-5}" },
+        { "key": "MYSQL_REPLICATION_THRESHOLD", "value": "${MYSQL_REPLICATION_THRESHOLD:-1}" },
+        { "key": "SOGO_THRESHOLD", "value": "${SOGO_THRESHOLD:-3}" },
+        { "key": "POSTFIX_THRESHOLD", "value": "${POSTFIX_THRESHOLD:-8}" },
+        { "key": "POSTFIX_TLSPOL_THRESHOLD", "value": "${POSTFIX_TLSPOL_THRESHOLD:-8}" },
+        { "key": "CLAMD_THRESHOLD", "value": "${CLAMD_THRESHOLD:-15}" },
+        { "key": "DOVECOT_THRESHOLD", "value": "${DOVECOT_THRESHOLD:-12}" },
+        { "key": "DOVECOT_REPL_THRESHOLD", "value": "${DOVECOT_REPL_THRESHOLD:-20}" },
+        { "key": "PHPFPM_THRESHOLD", "value": "${PHPFPM_THRESHOLD:-5}" },
+        { "key": "RATELIMIT_THRESHOLD", "value": "${RATELIMIT_THRESHOLD:-1}" },
+        { "key": "FAIL2BAN_THRESHOLD", "value": "${FAIL2BAN_THRESHOLD:-1}" },
+        { "key": "ACME_THRESHOLD", "value": "${ACME_THRESHOLD:-1}" },
+        { "key": "RSPAMD_THRESHOLD", "value": "${RSPAMD_THRESHOLD:-5}" },
+        { "key": "OLEFY_THRESHOLD", "value": "${OLEFY_THRESHOLD:-5}" },
+        { "key": "MAILQ_THRESHOLD", "value": "${MAILQ_THRESHOLD:-20}" },
+        { "key": "MAILQ_CRIT", "value": "${MAILQ_CRIT:-30}" },
+        { "key": "DEV_MODE", "value": "${DEV_MODE:-n}" }
+      ],
+      "volumes": [
+        { "hostPath": "${APP_DATA_DIR}/volumes/rspamd", "containerPath": "/var/lib/rspamd", "readOnly": false, "shared": false, "private": false },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/mysql-socket",
+          "containerPath": "/var/run/mysqld/",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/volumes/postfix",
+          "containerPath": "/var/spool/postfix",
+          "readOnly": false,
+          "shared": false,
+          "private": false
+        },
+        { "hostPath": "${APP_DATA_DIR}/data/assets/ssl", "containerPath": "/etc/ssl/mail/", "readOnly": false, "shared": false, "private": false }
+      ],
+      "dependsOn": ["postfix-mailcow", "dovecot-mailcow", "mysql-mailcow", "acme-mailcow", "redis-mailcow"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "dockerapi-mailcow",
+      "image": "ghcr.io/mailcow/dockerapi:2.11",
+      "environment": [
+        { "key": "DBROOT", "value": "${DBROOT}" },
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "REDIS_SLAVEOF_IP", "value": "${REDIS_SLAVEOF_IP:-}" },
+        { "key": "REDIS_SLAVEOF_PORT", "value": "${REDIS_SLAVEOF_PORT:-}" },
+        { "key": "REDISPASS", "value": "${REDISPASS}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "/var/run/docker.sock",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": true,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "securityOpt": ["label=disable"],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "olefy-mailcow",
+      "image": "ghcr.io/mailcow/olefy:1.15",
+      "environment": [
+        { "key": "TZ", "value": "${TZ}" },
+        { "key": "OLEFY_BINDADDRESS", "value": "0.0.0.0" },
+        { "key": "OLEFY_BINDPORT", "value": "10055" },
+        { "key": "OLEFY_TMPDIR", "value": "/tmp" },
+        { "key": "OLEFY_PYTHON_PATH", "value": "/usr/bin/python3" },
+        { "key": "OLEFY_OLEVBA_PATH", "value": "/usr/bin/olevba" },
+        { "key": "OLEFY_LOGLVL", "value": "20" },
+        { "key": "OLEFY_MINLENGTH", "value": "500" },
+        { "key": "OLEFY_DEL_TMP", "value": "1" },
+        { "key": "SKIP_OLEFY", "value": "${SKIP_OLEFY:-n}" }
+      ],
+      "addToMainNetwork": true
+    },
+    {
+      "name": "ofelia-mailcow",
+      "image": "mcuadros/ofelia:latest",
+      "command": "daemon --docker -f label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}",
+      "environment": [{ "key": "TZ", "value": "${TZ}" }, { "key": "COMPOSE_PROJECT_NAME", "value": "${COMPOSE_PROJECT_NAME}" }],
+      "volumes": [
+        {
+          "hostPath": "/var/run/docker.sock",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": true,
+          "shared": false,
+          "private": false
+        }
+      ],
+      "securityOpt": ["label=disable"],
+      "dependsOn": ["sogo-mailcow", "dovecot-mailcow"],
+      "extraLabels": { "ofelia.enabled": "true" },
+      "addToMainNetwork": true
+    }
+  ]
+}

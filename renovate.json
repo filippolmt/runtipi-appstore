@@ -22,6 +22,14 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/mailcow/config.json"],
+      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "depNameTemplate": "ghcr.io/mailcow/nginx",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/kitchenowl/config.json"],
       "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
       "depNameTemplate": "tombursch/kitchenowl",
