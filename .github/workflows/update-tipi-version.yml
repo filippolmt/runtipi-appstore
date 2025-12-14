@@ -1,7 +1,8 @@
 name: Update tipi_version on Renovate PR
 
 on:
-  pull_request:
+  pull_request_target:
+    types: [opened, synchronize]
     paths:
       - 'apps/**/docker-compose.json'
 
@@ -11,20 +12,31 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup git remote
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
 
       - uses: oven-sh/setup-bun@v2
 
       - name: Get changed files
         id: changed
         run: |
-          echo "files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'docker-compose.json' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | grep 'docker-compose.json' || true)
+          echo "files=$files" >> $GITHUB_OUTPUT
+          echo "Changed docker-compose.json files: $files"
 
       - name: Update config.json for each changed app
+        if: steps.changed.outputs.files != ''
         run: |
           for file in ${{ steps.changed.outputs.files }}; do
             if [[ -f "$file" ]]; then
@@ -32,18 +44,20 @@ jobs:
               config_file="$app_dir/config.json"
 
               if [[ -f "$config_file" ]]; then
-                # Extract new version from docker-compose.json (first image)
+                # Extract new version from docker-compose.json (first image tag)
                 new_version=$(grep -oP '"image":\s*"[^:]+:\K[^"]+' "$file" | head -1)
 
                 if [[ -n "$new_version" ]]; then
-                  echo "Updating $config_file with version $new_version"
+                  echo "Updating $config_file: version=$new_version"
                   bun run scripts/update-config.ts "$file" "$new_version"
+                  echo "Updated tipi_version and updated_at in $config_file"
                 fi
               fi
             fi
           done
 
-      - name: Commit changes
+      - name: Commit and push changes
+        if: steps.changed.outputs.files != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -51,6 +65,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: update tipi_version and timestamps"
-            git push
+            git commit -m "chore: bump tipi_version for updated dependencies"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi

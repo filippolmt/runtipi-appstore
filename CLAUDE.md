@@ -64,9 +64,19 @@ Uses Biome with double quotes, 2-space indent, 150 char line width. Run `bun run
 
 Renovate monitors `docker-compose.json` and `config.json` files for Docker image updates.
 
-When a new version is detected:
-1. Renovate creates a PR updating image tags in `docker-compose.json` and version in `config.json`
-2. GitHub Action (`.github/workflows/update-tipi-version.yml`) automatically updates `tipi_version` and `updated_at`
+**Update flow:**
+1. Renovate detects new Docker image version
+2. Renovate creates PR updating image tags in `docker-compose.json` and version in `config.json`
+3. GitHub Action (`update-tipi-version.yml`) triggers on PR and:
+   - Runs `scripts/update-config.ts` to increment `tipi_version` (+1) and update `updated_at` timestamp
+   - Commits changes back to the Renovate PR branch
+
+**Why `pull_request_target`:** The workflow uses `pull_request_target` instead of `pull_request` because `GITHUB_TOKEN` doesn't have permission to push to branches created by external actors (like Renovate bot). `pull_request_target` runs in the base repo context with write access.
+
+**Safety mechanisms (no infinite loops):**
+- Workflow condition: `if: github.actor == 'renovate[bot]'`
+- When workflow commits, actor becomes `github-actions[bot]` → workflow won't re-trigger
+- Renovate config has `rebaseWhen: "conflicted"` → won't overwrite workflow commits
 
 **Test Renovate configuration:**
 ```bash
