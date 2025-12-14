@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "workout-cool",
-      "image": "ghcr.io/snouzy/workout-cool:v1.3.2",
+      "image": "ghcr.io/snouzy/workout-cool:1.3.2",
       "isMain": true,
       "internalPort": 3000,
       "dependsOn": {
