@@ -5,60 +5,18 @@
   "extends": ["config:recommended"],
   "rebaseWhen": "conflicted",
   "enabledManagers": ["custom.regex"],
+  "allowedPostUpgradeCommands": ["^bun"],
+  "postUpgradeTasks": {
+    "commands": ["bun run scripts/update-config.ts {{{packageFileDir}}}/docker-compose.json {{{newVersion}}}"],
+    "fileFilters": ["**/config.json"],
+    "executionMode": "branch"
+  },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^.*docker-compose\\.json$/"],
-      "matchStrings": ["\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","],
+      "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
+      "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/budibase/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "budibase/budibase",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/kitchenowl/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "tombursch/kitchenowl",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/mailpit/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "axllent/mailpit",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/nginx/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "nginx",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/puter/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "ghcr.io/heyputer/puter",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["apps/traccar/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
-      "depNameTemplate": "traccar/traccar",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
     }
   ],
   "packageRules": [
