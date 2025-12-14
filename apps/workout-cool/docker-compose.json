@@ -28,6 +28,14 @@
         {
           "key": "SEED_SAMPLE_DATA",
           "value": "${SEED_SAMPLE_DATA}"
+        },
+        {
+          "key": "GOOGLE_CLIENT_ID",
+          "value": "${GOOGLE_CLIENT_ID}"
+        },
+        {
+          "key": "GOOGLE_CLIENT_SECRET",
+          "value": "${GOOGLE_CLIENT_SECRET}"
         }
       ],
       "volumes": [
