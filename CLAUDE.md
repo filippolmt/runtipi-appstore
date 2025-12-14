@@ -62,14 +62,22 @@ Uses Biome with double quotes, 2-space indent, 150 char line width. Run `bun run
 
 ## Renovate (Automatic Updates)
 
-Renovate monitors `docker-compose.json` files for Docker image updates. When a new version is detected:
-1. Updates the image tag in `docker-compose.json`
-2. Runs `scripts/update-config.ts` to update `config.json` (version, tipi_version +1, updated_at)
+Renovate monitors `docker-compose.json` and `config.json` files for Docker image updates.
+
+When a new version is detected:
+1. Renovate creates a PR updating image tags in `docker-compose.json` and version in `config.json`
+2. GitHub Action (`.github/workflows/update-tipi-version.yml`) automatically updates `tipi_version` and `updated_at`
 
 **Test Renovate configuration:**
 ```bash
 make renovate-test
 ```
+
+**Configuration structure** (`renovate.json`):
+- First customManager matches ALL `docker-compose.json` files (extracts image name dynamically)
+- Per-app customManagers match `config.json` files to update version field
+- Uses current syntax: `customType: "regex"`, `managerFilePatterns`, `matchStrings`
+- PostgreSQL/MySQL/Redis images are disabled (won't auto-update)
 
 Note: Renovate only sees files committed to git.
 
@@ -83,6 +91,17 @@ Note: Renovate only sees files committed to git.
 
 2. For apps with databases, add a second service in `docker-compose.json` with `dependsOn` and `healthCheck`
 
-3. Run `make test` to validate
+3. Add entry to `renovate.json` customManagers for the new app's `config.json`:
+   ```json
+   {
+     "customType": "regex",
+     "managerFilePatterns": ["apps/<app-id>/config.json"],
+     "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+     "depNameTemplate": "<docker-image-name>",
+     "datasourceTemplate": "docker"
+   }
+   ```
 
-4. Commit files (Renovate needs them in git to detect updates)
+4. Run `make test` and `make renovate-test` to validate
+
+5. Commit files (Renovate needs them in git to detect updates)
