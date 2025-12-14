@@ -2,38 +2,70 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "automerge": false,
   "prHourlyLimit": 20,
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
   "rebaseWhen": "conflicted",
-  "enabledManagers": ["custom.regex"],
-  "allowedPostUpgradeCommands": ["^bun"],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "allowedCommands": [
+    "^bun"
+  ],
   "postUpgradeTasks": {
-    "commands": ["bun run scripts/update-config.ts {{{packageFileDir}}}/docker-compose.json {{{newVersion}}}"],
-    "fileFilters": ["**/config.json"],
+    "commands": [
+      "bun run scripts/update-config.ts {{{packageFileDir}}}/docker-compose.json {{{newVersion}}}"
+    ],
+    "fileFilters": [
+      "**/config.json"
+    ],
     "executionMode": "branch"
   },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
-      "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
+      "managerFilePatterns": [
+        "/apps/.*/docker-compose\\.json$/"
+      ],
+      "matchStrings": [
+        "\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""
+      ],
       "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
-      "addLabels": ["major"]
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major"
+      ]
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "addLabels": ["automerge"]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "addLabels": [
+        "automerge"
+      ]
     },
     {
-      "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
+      "matchPackageNames": [
+        "mariadb",
+        "mysql",
+        "mongodb",
+        "postgres",
+        "redis"
+      ],
       "enabled": false
     },
     {
-      "matchPackageNames": ["n8nio/n8n", "goauthentik/authentik"],
+      "matchPackageNames": [
+        "n8nio/n8n",
+        "goauthentik/authentik"
+      ],
       "enabled": false
     }
   ]
