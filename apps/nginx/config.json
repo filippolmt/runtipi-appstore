@@ -5,20 +5,27 @@
   "short_desc": "Open-source simple and fast web server.",
   "author": "nginx.org",
   "port": 8754,
-  "categories": ["utilities"],
+  "categories": [
+    "utilities"
+  ],
   "description": "Simple webserver to test your Tipi install. An alternative to the hello-world app.",
-  "tipi_version": 1,
-  "version": "1.29.3",
+  "tipi_version": 2,
+  "version": "1.29.4",
   "source": "https://github.com/nginx/nginx",
   "website": "https://www.nginx.com/",
   "exposable": true,
   "dynamic_config": true,
-  "supported_architectures": ["arm64", "amd64"],
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
   "created_at": 1688169600000,
-  "updated_at": 1706745600000,
+  "updated_at": 1765750051561,
   "form_fields": [],
   "min_tipi_version": "4.5.0",
   "requirements": {
-    "ports": [8754]
+    "ports": [
+      8754
+    ]
   }
 }
