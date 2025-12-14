@@ -8,7 +8,7 @@
   "port": 3000,
   "categories": ["utilities"],
   "description": "Modern fitness coaching platform to create workout plans, track progress, and access a comprehensive exercise database with detailed instructions and video demonstrations.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "1.3.2",
   "source": "https://github.com/Snouzy/workout-cool",
   "website": "https://workout.cool",
@@ -40,6 +40,22 @@
       "env_variable": "SEED_SAMPLE_DATA",
       "default": true,
       "hint": "Populate the database with sample exercises on first start"
+    },
+    {
+      "type": "text",
+      "label": "Google Client ID",
+      "required": false,
+      "env_variable": "GOOGLE_CLIENT_ID",
+      "default": "disabled",
+      "hint": "OAuth 2.0 Client ID from Google Cloud Console (leave default to disable Google login)"
+    },
+    {
+      "type": "password",
+      "label": "Google Client Secret",
+      "required": false,
+      "env_variable": "GOOGLE_CLIENT_SECRET",
+      "default": "disabled",
+      "hint": "OAuth 2.0 Client Secret from Google Cloud Console (leave default to disable Google login)"
     }
   ]
 }
