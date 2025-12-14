@@ -1,0 +1,56 @@
+name: Update tipi_version on Renovate PR
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**/docker-compose.json'
+
+jobs:
+  update-tipi-version:
+    if: github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Get changed files
+        id: changed
+        run: |
+          echo "files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'docker-compose.json' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Update config.json for each changed app
+        run: |
+          for file in ${{ steps.changed.outputs.files }}; do
+            if [[ -f "$file" ]]; then
+              app_dir=$(dirname "$file")
+              config_file="$app_dir/config.json"
+
+              if [[ -f "$config_file" ]]; then
+                # Extract new version from docker-compose.json (first image)
+                new_version=$(grep -oP '"image":\s*"[^:]+:\K[^"]+' "$file" | head -1)
+
+                if [[ -n "$new_version" ]]; then
+                  echo "Updating $config_file with version $new_version"
+                  bun run scripts/update-config.ts "$file" "$new_version"
+                fi
+              fi
+            fi
+          done
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update tipi_version and timestamps"
+            git push
+          fi

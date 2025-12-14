@@ -8,57 +8,58 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^.*docker-compose\\.json$/"],
-      "matchStrings": ["\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","],
+      "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
+      "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/budibase/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "budibase/budibase",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/kitchenowl/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "tombursch/kitchenowl",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/mailpit/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "axllent/mailpit",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/nginx/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "nginx",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/puter/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "ghcr.io/heyputer/puter",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",
       "managerFilePatterns": ["apps/traccar/config.json"],
-      "matchStrings": ["\"version\": \"(?<currentValue>.*?)\""],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "traccar/traccar",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "docker"
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/workout-cool/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/snouzy/workout-cool",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -72,10 +73,6 @@
     },
     {
       "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
-      "enabled": false
-    },
-    {
-      "matchPackageNames": ["n8nio/n8n", "goauthentik/authentik"],
       "enabled": false
     }
   ]
