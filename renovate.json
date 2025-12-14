@@ -5,17 +5,60 @@
   "extends": ["config:recommended"],
   "rebaseWhen": "conflicted",
   "enabledManagers": ["custom.regex"],
-  "allowedPostUpgradeCommands": ["^bun"],
-  "postUpgradeTasks": {
-    "commands": ["bun run scripts/update-config.ts {{{packageFileDir}}}/docker-compose.json {{{newVersion}}}"],
-    "fileFilters": ["**/config.json"],
-    "executionMode": "branch"
-  },
   "customManagers": [
     {
       "customType": "regex",
       "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
       "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/budibase/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "budibase/budibase",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/kitchenowl/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "tombursch/kitchenowl",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/mailpit/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "axllent/mailpit",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/nginx/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "nginx",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/puter/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/heyputer/puter",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/traccar/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "traccar/traccar",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/workout-cool/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/snouzy/workout-cool",
       "datasourceTemplate": "docker"
     }
   ],
@@ -30,10 +73,6 @@
     },
     {
       "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
-      "enabled": false
-    },
-    {
-      "matchPackageNames": ["n8nio/n8n", "goauthentik/authentik"],
       "enabled": false
     }
   ]

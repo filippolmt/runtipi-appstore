@@ -16,7 +16,7 @@ renovate-test:
   	-e LOG_LEVEL=$(RENOVATE_LOG_LEVEL) \
   	-v "$(PWD)":/tmp/app \
   	--entrypoint bash \
-  	$(RENOVATE_IMAGE) -lc "set -eo pipefail; cp -a /tmp/app /usr/src; cd /usr/src/app; jq 'del(.extends)' /tmp/app/renovate.json >/usr/src/app/renovate.json; renovate --platform=local --dry-run"
+  	$(RENOVATE_IMAGE) -lc "set -eo pipefail; cp -a /tmp/app /usr/src; cd /usr/src/app; jq 'del(.extends)' /tmp/app/renovate.json >/usr/src/app/renovate.json; renovate --platform=local --dry-run=full"
 
 bun-shell:
 	docker run --rm -it -v $(PWD):/app -w /app $(BUN_IMAGE) bash
