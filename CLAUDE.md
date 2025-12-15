@@ -139,3 +139,33 @@ wger is the most complex app with 5 services:
 - **wger-celery-beat** - Scheduled tasks (syncs exercises/ingredients from wger.de)
 
 User-configurable: Secret Key, JWT Signing Key, DB Password (all auto-generated), Timezone, Allow Registration, Allow Guest Users
+
+**Required environment variables:** All wger services (main, celery-worker, celery-beat) require `DJANGO_CACHE_TIMEOUT=1296000` (15 days). Missing this causes container crash with `ImproperlyConfigured` error.
+
+## Production VM Debugging
+
+A production VM is available for testing app installations and debugging Docker issues.
+
+**Access:** SSH credentials are stored in `~/.claude-mem/private-notes.md` (local file, not in repo).
+
+**Runtipi installation path:** `/mnt/data/runtipi`
+
+**Useful debugging commands:**
+```bash
+# Check container status
+sudo docker ps -a --filter 'name=<app-name>'
+
+# View container logs
+sudo docker logs <container-name> --tail 100
+
+# Check if image tag exists
+sudo docker manifest inspect <image>:<tag>
+
+# Restart an app's containers
+cd /mnt/data/runtipi && sudo docker compose -f app-data/<app-id>/docker-compose.yml restart
+```
+
+**Common issues:**
+- `manifest unknown` - Docker image tag doesn't exist (check Docker Hub/GHCR for available tags)
+- `container is unhealthy` - Check logs for missing environment variables or configuration errors
+- Transient network errors - Retry installation
