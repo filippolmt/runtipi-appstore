@@ -115,3 +115,27 @@ Note: Renovate only sees files committed to git.
 4. Run `make test` and `make renovate-test` to validate
 
 5. Commit files (Renovate needs them in git to detect updates)
+
+## Current Apps
+
+| App | Services | Description |
+|-----|----------|-------------|
+| budibase | 1 | Low-code platform for business apps |
+| kitchenowl | 1 | Grocery list and recipe manager |
+| mailpit | 1 | Email testing tool for developers |
+| nginx | 1 | Web server and reverse proxy |
+| puter | 1 | Cloud desktop environment |
+| traccar | 1 | GPS tracking system |
+| wger | 5 | Fitness/workout tracking (web + db + redis + celery worker + celery beat) |
+| workout-cool | 2 | Fitness coaching platform (web + db) |
+
+### Complex App: wger
+
+wger is the most complex app with 5 services:
+- **wger** - Main Django web server (port 8000)
+- **wger-db** - PostgreSQL 15 database
+- **wger-cache** - Redis (caching + Celery broker)
+- **wger-celery-worker** - Background task processing
+- **wger-celery-beat** - Scheduled tasks (syncs exercises/ingredients from wger.de)
+
+User-configurable: Secret Key, JWT Signing Key, DB Password (all auto-generated), Timezone, Allow Registration, Allow Guest Users
