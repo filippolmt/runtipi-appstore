@@ -9,11 +9,13 @@ This is a Runtipi App Store repository containing self-hosted application defini
 ## Commands
 
 **Full validation (Docker-based, CI equivalent):**
+
 ```bash
 make test
 ```
 
 **Local development:**
+
 ```bash
 bun install --ignore-scripts
 bun run lint          # Biome check with auto-fix
@@ -22,11 +24,13 @@ bun run scripts/validate-json.js  # Validate docker-compose.json files
 ```
 
 **Generate README from apps:**
+
 ```bash
 make readme
 ```
 
 **Interactive shell:**
+
 ```bash
 make bun-shell
 ```
@@ -34,16 +38,20 @@ make bun-shell
 ## App Structure
 
 Each app lives in `apps/<app-id>/` with:
+
 - `config.json` - App metadata (validated against `apps/app-info-schema.json` and `@runtipi/common` schemas)
 - `docker-compose.json` - Container definition using schemaVersion 2 (validated against `apps/dynamic-compose-schema.json`)
 - `metadata/logo.jpg` - App logo
 - `metadata/description.md` - Full description
 
 ### config.json Required Fields
+
 - `id`, `name`, `available`, `tipi_version`, `short_desc`, `author`, `source`
 
 ### docker-compose.json Format
+
 Uses dynamic compose schema v2 with `schemaVersion: 2` and a `services` array. Key differences from standard docker-compose:
+
 - `internalPort` instead of exposed ports
 - `isMain: true` marks the primary service
 - `hostPath`/`containerPath` for volumes using `${APP_DATA_DIR}` variable
@@ -52,6 +60,7 @@ Uses dynamic compose schema v2 with `schemaVersion: 2` and a `services` array. K
 ## Validation
 
 Tests in `apps/__tests__/apps.test.ts` verify:
+
 1. Required files exist for each app
 2. `config.json` validates against `@runtipi/common` appInfoSchema
 3. `docker-compose.json` validates against dynamic-compose schema (fetched from https://schemas.runtipi.io/v2/dynamic-compose.json with local fallback)
@@ -65,6 +74,7 @@ Uses Biome with double quotes, 2-space indent, 150 char line width. Run `bun run
 Renovate monitors `docker-compose.json` and `config.json` files for Docker image updates.
 
 **Update flow:**
+
 1. Renovate detects new Docker image version
 2. Renovate creates PR updating image tags in `docker-compose.json` and version in `config.json`
 3. GitHub Action (`update-tipi-version.yml`) triggers on PR and:
@@ -74,16 +84,19 @@ Renovate monitors `docker-compose.json` and `config.json` files for Docker image
 **Why `pull_request_target`:** The workflow uses `pull_request_target` instead of `pull_request` because `GITHUB_TOKEN` doesn't have permission to push to branches created by external actors (like Renovate bot). `pull_request_target` runs in the base repo context with write access.
 
 **Safety mechanisms (no infinite loops):**
+
 - Workflow condition: `if: github.actor == 'renovate[bot]'`
 - When workflow commits, actor becomes `github-actions[bot]` → workflow won't re-trigger
 - Renovate config has `rebaseWhen: "conflicted"` → won't overwrite workflow commits
 
 **Test Renovate configuration:**
+
 ```bash
 make renovate-test
 ```
 
 **Configuration structure** (`renovate.json`):
+
 - First customManager matches ALL `docker-compose.json` files (extracts image name dynamically)
 - Per-app customManagers match `config.json` files to update version field
 - Uses current syntax: `customType: "regex"`, `managerFilePatterns`, `matchStrings`
@@ -94,6 +107,7 @@ Note: Renovate only sees files committed to git.
 ## Adding a New App
 
 1. Create `apps/<app-id>/` directory with:
+
    - `config.json` - App metadata
    - `docker-compose.json` - Container definition (schemaVersion: 2)
    - `metadata/logo.jpg` - Logo image (convert from PNG if needed: `sips -s format jpeg input.png --out logo.jpg`)
@@ -102,6 +116,7 @@ Note: Renovate only sees files committed to git.
 2. For apps with databases, add a second service in `docker-compose.json` with `dependsOn` and `healthCheck`
 
 3. Add entry to `renovate.json` customManagers for the new app's `config.json`:
+
    ```json
    {
      "customType": "regex",
@@ -118,20 +133,21 @@ Note: Renovate only sees files committed to git.
 
 ## Current Apps
 
-| App | Services | Description |
-|-----|----------|-------------|
-| budibase | 1 | Low-code platform for business apps |
-| kitchenowl | 1 | Grocery list and recipe manager |
-| mailpit | 1 | Email testing tool for developers |
-| nginx | 1 | Web server and reverse proxy |
-| puter | 1 | Cloud desktop environment |
-| traccar | 1 | GPS tracking system |
-| wger | 5 | Fitness/workout tracking (web + db + redis + celery worker + celery beat) |
-| workout-cool | 2 | Fitness coaching platform (web + db) |
+| App          | Services | Description                                                               |
+| ------------ | -------- | ------------------------------------------------------------------------- |
+| budibase     | 1        | Low-code platform for business apps                                       |
+| kitchenowl   | 1        | Grocery list and recipe manager                                           |
+| mailpit      | 1        | Email testing tool for developers                                         |
+| nginx        | 1        | Web server and reverse proxy                                              |
+| puter        | 1        | Cloud desktop environment                                                 |
+| traccar      | 1        | GPS tracking system                                                       |
+| wger         | 5        | Fitness/workout tracking (web + db + redis + celery worker + celery beat) |
+| workout-cool | 2        | Fitness coaching platform (web + db)                                      |
 
 ### Complex App: wger
 
 wger is the most complex app with 5 services:
+
 - **wger** - Main Django web server (port 8000)
 - **wger-db** - PostgreSQL 15 database
 - **wger-cache** - Redis (caching + Celery broker)
@@ -140,7 +156,12 @@ wger is the most complex app with 5 services:
 
 User-configurable: Secret Key, JWT Signing Key, DB Password (all auto-generated), Timezone, Allow Registration, Allow Guest Users
 
-**Required environment variables:** All wger services (main, celery-worker, celery-beat) require `DJANGO_CACHE_TIMEOUT=1296000` (15 days). Missing this causes container crash with `ImproperlyConfigured` error.
+**Required environment variables:** All wger services (main, celery-worker, celery-beat) require:
+
+- `DJANGO_CACHE_TIMEOUT=1296000` (15 days)
+- `DJANGO_CACHE_CLIENT_CLASS=django_redis.client.DefaultClient`
+
+Missing these causes container crash with `ImproperlyConfigured` error.
 
 ## Production VM Debugging
 
@@ -151,6 +172,7 @@ A production VM is available for testing app installations and debugging Docker 
 **Runtipi installation path:** `/mnt/data/runtipi`
 
 **Useful debugging commands:**
+
 ```bash
 # Check container status
 sudo docker ps -a --filter 'name=<app-name>'
@@ -166,6 +188,7 @@ cd /mnt/data/runtipi && sudo docker compose -f app-data/<app-id>/docker-compose.
 ```
 
 **Common issues:**
+
 - `manifest unknown` - Docker image tag doesn't exist (check Docker Hub/GHCR for available tags)
 - `container is unhealthy` - Check logs for missing environment variables or configuration errors
 - Transient network errors - Retry installation
