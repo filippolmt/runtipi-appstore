@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "wger",
-      "image": "wger/server:2.4-dev",
+      "image": "wger/server:latest",
       "isMain": true,
       "internalPort": 8000,
       "dependsOn": {
@@ -119,7 +119,7 @@
     },
     {
       "name": "wger-celery-worker",
-      "image": "wger/server:2.4-dev",
+      "image": "wger/server:latest",
       "command": "/start-worker",
       "dependsOn": {
         "wger": {
@@ -171,7 +171,7 @@
     },
     {
       "name": "wger-celery-beat",
-      "image": "wger/server:2.4-dev",
+      "image": "wger/server:latest",
       "command": "/start-beat",
       "dependsOn": {
         "wger-celery-worker": {
