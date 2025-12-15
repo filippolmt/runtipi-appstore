@@ -1,0 +1,184 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "wger",
+      "image": "wger/server:2.4-dev",
+      "isMain": true,
+      "internalPort": 8000,
+      "dependsOn": {
+        "wger-db": {
+          "condition": "service_healthy"
+        },
+        "wger-cache": {
+          "condition": "service_healthy"
+        }
+      },
+      "environment": [
+        { "key": "SECRET_KEY", "value": "${SECRET_KEY}" },
+        { "key": "SIGNING_KEY", "value": "${SIGNING_KEY}" },
+        { "key": "TIME_ZONE", "value": "${TIME_ZONE}" },
+        { "key": "TZ", "value": "${TIME_ZONE}" },
+        { "key": "SITE_URL", "value": "https://${APP_DOMAIN}" },
+        { "key": "CSRF_TRUSTED_ORIGINS", "value": "https://${APP_DOMAIN}" },
+        { "key": "ALLOW_REGISTRATION", "value": "${ALLOW_REGISTRATION}" },
+        { "key": "ALLOW_GUEST_USERS", "value": "${ALLOW_GUEST_USERS}" },
+        { "key": "DJANGO_DB_ENGINE", "value": "django.db.backends.postgresql" },
+        { "key": "DJANGO_DB_DATABASE", "value": "wger" },
+        { "key": "DJANGO_DB_USER", "value": "wger" },
+        { "key": "DJANGO_DB_PASSWORD", "value": "${DB_PASSWORD}" },
+        { "key": "DJANGO_DB_HOST", "value": "wger-db" },
+        { "key": "DJANGO_DB_PORT", "value": "5432" },
+        { "key": "DJANGO_PERFORM_MIGRATIONS", "value": "True" },
+        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
+        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
+        { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
+        { "key": "USE_CELERY", "value": "True" },
+        { "key": "WGER_INSTANCE", "value": "https://wger.de" },
+        { "key": "SYNC_EXERCISES_CELERY", "value": "True" },
+        { "key": "SYNC_EXERCISE_IMAGES_CELERY", "value": "True" },
+        { "key": "SYNC_EXERCISE_VIDEOS_CELERY", "value": "True" },
+        { "key": "SYNC_INGREDIENTS_CELERY", "value": "True" },
+        { "key": "DOWNLOAD_INGREDIENTS_FROM", "value": "WGER" },
+        { "key": "DJANGO_DEBUG", "value": "False" },
+        { "key": "WGER_USE_GUNICORN", "value": "True" },
+        { "key": "AXES_ENABLED", "value": "True" },
+        { "key": "AXES_FAILURE_LIMIT", "value": "10" },
+        { "key": "AXES_COOLOFF_TIME", "value": "30" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/static",
+          "containerPath": "/home/wger/static"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/media",
+          "containerPath": "/home/wger/media"
+        }
+      ],
+      "healthCheck": {
+        "test": "wget --no-verbose --tries=1 --spider http://localhost:8000 || exit 1",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "60s"
+      }
+    },
+    {
+      "name": "wger-db",
+      "image": "postgres:15-alpine",
+      "environment": [
+        { "key": "POSTGRES_USER", "value": "wger" },
+        { "key": "POSTGRES_PASSWORD", "value": "${DB_PASSWORD}" },
+        { "key": "POSTGRES_DB", "value": "wger" },
+        { "key": "TZ", "value": "${TIME_ZONE}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/db",
+          "containerPath": "/var/lib/postgresql/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "pg_isready -U wger",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "30s"
+      }
+    },
+    {
+      "name": "wger-cache",
+      "image": "redis:7-alpine",
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/redis",
+          "containerPath": "/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "redis-cli ping",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "10s"
+      }
+    },
+    {
+      "name": "wger-celery-worker",
+      "image": "wger/server:2.4-dev",
+      "command": "/start-worker",
+      "dependsOn": {
+        "wger": {
+          "condition": "service_healthy"
+        }
+      },
+      "environment": [
+        { "key": "SECRET_KEY", "value": "${SECRET_KEY}" },
+        { "key": "SIGNING_KEY", "value": "${SIGNING_KEY}" },
+        { "key": "TIME_ZONE", "value": "${TIME_ZONE}" },
+        { "key": "TZ", "value": "${TIME_ZONE}" },
+        { "key": "DJANGO_DB_ENGINE", "value": "django.db.backends.postgresql" },
+        { "key": "DJANGO_DB_DATABASE", "value": "wger" },
+        { "key": "DJANGO_DB_USER", "value": "wger" },
+        { "key": "DJANGO_DB_PASSWORD", "value": "${DB_PASSWORD}" },
+        { "key": "DJANGO_DB_HOST", "value": "wger-db" },
+        { "key": "DJANGO_DB_PORT", "value": "5432" },
+        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
+        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
+        { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
+        { "key": "USE_CELERY", "value": "True" },
+        { "key": "WGER_INSTANCE", "value": "https://wger.de" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/media",
+          "containerPath": "/home/wger/media"
+        }
+      ],
+      "healthCheck": {
+        "test": "celery -A wger inspect ping",
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 5,
+        "startPeriod": "60s"
+      }
+    },
+    {
+      "name": "wger-celery-beat",
+      "image": "wger/server:2.4-dev",
+      "command": "/start-beat",
+      "dependsOn": {
+        "wger-celery-worker": {
+          "condition": "service_healthy"
+        }
+      },
+      "environment": [
+        { "key": "SECRET_KEY", "value": "${SECRET_KEY}" },
+        { "key": "SIGNING_KEY", "value": "${SIGNING_KEY}" },
+        { "key": "TIME_ZONE", "value": "${TIME_ZONE}" },
+        { "key": "TZ", "value": "${TIME_ZONE}" },
+        { "key": "DJANGO_DB_ENGINE", "value": "django.db.backends.postgresql" },
+        { "key": "DJANGO_DB_DATABASE", "value": "wger" },
+        { "key": "DJANGO_DB_USER", "value": "wger" },
+        { "key": "DJANGO_DB_PASSWORD", "value": "${DB_PASSWORD}" },
+        { "key": "DJANGO_DB_HOST", "value": "wger-db" },
+        { "key": "DJANGO_DB_PORT", "value": "5432" },
+        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
+        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
+        { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
+        { "key": "USE_CELERY", "value": "True" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/celery-beat",
+          "containerPath": "/home/wger/beat"
+        }
+      ]
+    }
+  ]
+}
