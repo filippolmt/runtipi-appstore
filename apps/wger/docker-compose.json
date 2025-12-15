@@ -31,9 +31,19 @@
         { "key": "DJANGO_DB_HOST", "value": "wger-db" },
         { "key": "DJANGO_DB_PORT", "value": "5432" },
         { "key": "DJANGO_PERFORM_MIGRATIONS", "value": "True" },
-        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
-        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        {
+          "key": "DJANGO_CACHE_BACKEND",
+          "value": "django_redis.cache.RedisCache"
+        },
+        {
+          "key": "DJANGO_CACHE_LOCATION",
+          "value": "redis://wger-cache:6379/1"
+        },
         { "key": "DJANGO_CACHE_TIMEOUT", "value": "1296000" },
+        {
+          "key": "DJANGO_CACHE_CLIENT_CLASS",
+          "value": "django_redis.client.DefaultClient"
+        },
         { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
         { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
         { "key": "USE_CELERY", "value": "True" },
@@ -127,9 +137,19 @@
         { "key": "DJANGO_DB_PASSWORD", "value": "${DB_PASSWORD}" },
         { "key": "DJANGO_DB_HOST", "value": "wger-db" },
         { "key": "DJANGO_DB_PORT", "value": "5432" },
-        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
-        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        {
+          "key": "DJANGO_CACHE_BACKEND",
+          "value": "django_redis.cache.RedisCache"
+        },
+        {
+          "key": "DJANGO_CACHE_LOCATION",
+          "value": "redis://wger-cache:6379/1"
+        },
         { "key": "DJANGO_CACHE_TIMEOUT", "value": "1296000" },
+        {
+          "key": "DJANGO_CACHE_CLIENT_CLASS",
+          "value": "django_redis.client.DefaultClient"
+        },
         { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
         { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
         { "key": "USE_CELERY", "value": "True" },
@@ -169,9 +189,19 @@
         { "key": "DJANGO_DB_PASSWORD", "value": "${DB_PASSWORD}" },
         { "key": "DJANGO_DB_HOST", "value": "wger-db" },
         { "key": "DJANGO_DB_PORT", "value": "5432" },
-        { "key": "DJANGO_CACHE_BACKEND", "value": "django_redis.cache.RedisCache" },
-        { "key": "DJANGO_CACHE_LOCATION", "value": "redis://wger-cache:6379/1" },
+        {
+          "key": "DJANGO_CACHE_BACKEND",
+          "value": "django_redis.cache.RedisCache"
+        },
+        {
+          "key": "DJANGO_CACHE_LOCATION",
+          "value": "redis://wger-cache:6379/1"
+        },
         { "key": "DJANGO_CACHE_TIMEOUT", "value": "1296000" },
+        {
+          "key": "DJANGO_CACHE_CLIENT_CLASS",
+          "value": "django_redis.client.DefaultClient"
+        },
         { "key": "CELERY_BROKER", "value": "redis://wger-cache:6379/2" },
         { "key": "CELERY_BACKEND", "value": "redis://wger-cache:6379/2" },
         { "key": "USE_CELERY", "value": "True" }
