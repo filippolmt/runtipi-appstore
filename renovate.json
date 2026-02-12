@@ -63,9 +63,9 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["apps/wger/config.json"],
+      "managerFilePatterns": ["apps/n8n/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "wger/server",
+      "depNameTemplate": "n8nio/n8n",
       "datasourceTemplate": "docker"
     }
   ],

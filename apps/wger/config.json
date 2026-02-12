@@ -8,21 +8,20 @@
   "port": 8000,
   "categories": ["utilities"],
   "description": "wger is a free, open-source web application that helps you manage your personal workouts, weight, and diet plans. It includes a REST API for integrations and mobile apps.",
-  "tipi_version": 3,
+  "tipi_version": 4,
   "version": "latest",
   "source": "https://github.com/wger-project/wger",
   "website": "https://wger.de",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1734278400000,
-  "updated_at": 1734278400000,
+  "updated_at": 1770934181000,
   "dynamic_config": true,
   "min_tipi_version": "4.5.0",
   "form_fields": [
     {
       "type": "random",
       "label": "Secret Key",
-      "required": true,
       "env_variable": "SECRET_KEY",
       "min": 50,
       "hint": "Django secret key for cryptographic signing"
@@ -30,7 +29,6 @@
     {
       "type": "random",
       "label": "JWT Signing Key",
-      "required": true,
       "env_variable": "SIGNING_KEY",
       "min": 50,
       "hint": "JWT signing key (should differ from Secret Key)"
@@ -38,7 +36,6 @@
     {
       "type": "random",
       "label": "Database Password",
-      "required": true,
       "env_variable": "DB_PASSWORD",
       "min": 24
     },
