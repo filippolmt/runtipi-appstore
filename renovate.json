@@ -8,6 +8,12 @@
   "customManagers": [
     {
       "customType": "regex",
+      "managerFilePatterns": ["Makefile"],
+      "matchStrings": ["BUN_IMAGE\\s*\\?=\\s*(?<depName>[^:]+):(?<currentValue>[^\\s]+)"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
       "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "docker"
