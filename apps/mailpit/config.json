@@ -5,19 +5,30 @@
   "short_desc": "Email testing sandbox",
   "author": "Axllent",
   "port": 8025,
-  "categories": ["utilities", "development"],
+  "categories": [
+    "utilities",
+    "development"
+  ],
   "description": "Mailpit provides a modern web UI, searchable message storage, and SMTP server compatibility for capturing test emails in development.",
-  "tipi_version": 17,
+  "tipi_version": 18,
   "version": "v1.29.0",
   "source": "https://github.com/axllent/mailpit",
   "exposable": true,
-  "supported_architectures": ["arm64", "amd64"],
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
   "created_at": 1764104133066,
-  "updated_at": 1764104133066,
+  "updated_at": 1770932432397,
   "dynamic_config": true,
   "requirements": {
-    "ports": [8025, 1025],
-    "volumes": ["${APP_DATA_DIR}/data/mailpit"]
+    "ports": [
+      8025,
+      1025
+    ],
+    "volumes": [
+      "${APP_DATA_DIR}/data/mailpit"
+    ]
   },
   "form_fields": [
     {
