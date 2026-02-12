@@ -14,7 +14,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -26,6 +26,9 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
 
       - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --ignore-scripts
 
       - name: Get changed files
         id: changed
@@ -44,17 +47,23 @@ jobs:
               config_file="$app_dir/config.json"
 
               if [[ -f "$config_file" ]]; then
-                # Extract new version from docker-compose.json (first image tag)
-                new_version=$(grep -oP '"image":\s*"[^:]+:\K[^"]+' "$file" | head -1)
+                # Extract package name and new version from docker-compose.json (first image)
+                image_line=$(grep -oP '"image":\s*"[^"]+"' "$file" | head -1)
+                package_name=$(echo "$image_line" | grep -oP '"image":\s*"\K[^:]+')
+                new_version=$(echo "$image_line" | grep -oP ':\K[^"]+')
 
                 if [[ -n "$new_version" ]]; then
-                  echo "Updating $config_file: version=$new_version"
-                  bun run scripts/update-config.ts "$file" "$new_version"
+                  echo "Updating $config_file: version=$new_version, package=$package_name"
+                  bun run scripts/update-config.ts "$file" "$new_version" "$package_name"
                   echo "Updated tipi_version and updated_at in $config_file"
                 fi
               fi
             fi
           done
+
+      - name: Format updated files
+        if: steps.changed.outputs.files != ''
+        run: bun run lint
 
       - name: Commit and push changes
         if: steps.changed.outputs.files != ''
