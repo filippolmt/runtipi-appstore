@@ -139,6 +139,9 @@
         }
       ],
       "dependsOn": {
+        "n8n": {
+          "condition": "service_started"
+        },
         "n8n-db": {
           "condition": "service_healthy"
         },

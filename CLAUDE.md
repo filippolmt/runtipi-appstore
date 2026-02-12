@@ -65,7 +65,7 @@ Uses dynamic compose schema v2 (`schemaVersion: 2`) with a `services` array. Key
 - `isMain: true` marks the primary service (also used by `scripts/update-config.ts` to determine which image version maps to `config.json` version)
 - `hostPath`/`containerPath` for volumes using `${APP_DATA_DIR}` variable
 - Environment as array of `{key, value}` objects (not key=value strings)
-- `dependsOn` uses object form with `condition: "service_healthy"` for database dependencies
+- `dependsOn` uses object form with `condition: "service_healthy"` for database dependencies or `condition: "service_started"` for service ordering (e.g., worker waiting for main service to start migrations)
 - User-configurable values reference `${VARIABLE_NAME}` from `config.json` `form_fields`
 
 ## Validation
@@ -137,5 +137,5 @@ Both Renovate and the workflow update `config.json` version for redundancy - if 
 **Gotchas:**
 
 - When adding apps with Redis caching (e.g., Django apps), ensure all services that use the cache include required client configuration environment variables. Missing cache config causes `ImproperlyConfigured` container crashes that only appear at runtime, not during validation.
-- For queue-mode apps (e.g., n8n), the main service and workers must share the same encryption key and image version. Workers use `command: "worker"` and need identical DB/Redis environment variables as the main service.
+- For queue-mode apps (e.g., n8n), the main service and workers must share the same encryption key and image version. Workers use `command: "worker"` and need identical DB/Redis environment variables as the main service. Workers should `dependsOn` the main service with `condition: "service_started"` so database migrations complete before the worker starts.
 - Apps using `version: "latest"` in config.json (e.g., wger) don't need a per-app customManager in `renovate.json` since there's no semver to track.
