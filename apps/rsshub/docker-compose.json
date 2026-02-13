@@ -1,0 +1,86 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "rsshub",
+      "image": "diygod/rsshub:2026-02-13",
+      "isMain": true,
+      "internalPort": 1200,
+      "environment": [
+        {
+          "key": "TZ",
+          "value": "${RSSHUB_TZ}"
+        },
+        {
+          "key": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "key": "CACHE_TYPE",
+          "value": "redis"
+        },
+        {
+          "key": "REDIS_URL",
+          "value": "redis://rsshub-redis:6379/"
+        },
+        {
+          "key": "PUPPETEER_WS_ENDPOINT",
+          "value": "ws://rsshub-browserless:3000"
+        },
+        {
+          "key": "ACCESS_KEY",
+          "value": "${ACCESS_KEY}"
+        },
+        {
+          "key": "GITHUB_ACCESS_TOKEN",
+          "value": "${GITHUB_ACCESS_TOKEN}"
+        },
+        {
+          "key": "YOUTUBE_KEY",
+          "value": "${YOUTUBE_KEY}"
+        },
+        {
+          "key": "TELEGRAM_TOKEN",
+          "value": "${TELEGRAM_TOKEN}"
+        },
+        {
+          "key": "TWITTER_COOKIE",
+          "value": "${TWITTER_COOKIE}"
+        },
+        {
+          "key": "PROXY_URI",
+          "value": "${PROXY_URI}"
+        }
+      ],
+      "dependsOn": {
+        "rsshub-redis": {
+          "condition": "service_started"
+        },
+        "rsshub-browserless": {
+          "condition": "service_started"
+        }
+      }
+    },
+    {
+      "name": "rsshub-browserless",
+      "image": "browserless/chrome:latest",
+      "ulimits": {
+        "core": {
+          "soft": 0,
+          "hard": 0
+        }
+      }
+    },
+    {
+      "name": "rsshub-redis",
+      "image": "redis:alpine",
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/redis",
+          "containerPath": "/data"
+        }
+      ]
+    }
+  ]
+}
