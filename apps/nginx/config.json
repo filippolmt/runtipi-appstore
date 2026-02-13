@@ -8,7 +8,7 @@
   "categories": ["utilities"],
   "description": "Simple webserver to test your Tipi install. An alternative to the hello-world app.",
   "tipi_version": 2,
-  "version": "1.29.4",
+  "version": "1.29.5",
   "source": "https://github.com/nginx/nginx",
   "website": "https://www.nginx.com/",
   "exposable": true,
