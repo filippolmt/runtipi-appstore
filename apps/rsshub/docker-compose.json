@@ -45,8 +45,8 @@
           "value": "${TELEGRAM_TOKEN}"
         },
         {
-          "key": "TWITTER_COOKIE",
-          "value": "${TWITTER_COOKIE}"
+          "key": "TWITTER_AUTH_TOKEN",
+          "value": "${TWITTER_AUTH_TOKEN}"
         },
         {
           "key": "PROXY_URI",

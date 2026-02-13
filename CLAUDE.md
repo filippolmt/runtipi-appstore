@@ -48,6 +48,7 @@ Each app lives in `apps/<app-id>/` with:
 - `docker-compose.json` - Container definition using schemaVersion 2 (validated against `apps/dynamic-compose-schema.json` via AJV and `parseComposeJson` from `@runtipi/common`)
 - `metadata/logo.jpg` - App logo
 - `metadata/description.md` - Full description
+- `CLAUDE.md` (optional) - App-specific notes and architecture details
 
 ### config.json Required Fields
 
@@ -65,8 +66,9 @@ Uses dynamic compose schema v2 (`schemaVersion: 2`) with a `services` array. Key
 - `isMain: true` marks the primary service (also used by `scripts/update-config.ts` to determine which image version maps to `config.json` version)
 - `hostPath`/`containerPath` for volumes using `${APP_DATA_DIR}` variable
 - Environment as array of `{key, value}` objects (not key=value strings)
-- `dependsOn` uses object form with `condition: "service_healthy"` for database dependencies or `condition: "service_started"` for service ordering (e.g., worker waiting for main service to start migrations)
+- `dependsOn` uses object form with `condition: "service_healthy"` for database dependencies or `condition: "service_started"` for service ordering
 - User-configurable values reference `${VARIABLE_NAME}` from `config.json` `form_fields`
+- Service names must be prefixed with the app-id (e.g., `rsshub-redis`, `n8n-db`)
 
 ## Validation
 
@@ -101,7 +103,7 @@ Both Renovate and the workflow update `config.json` version for redundancy - if 
 
 **Configuration structure** (`renovate.json`):
 
-- First customManager matches ALL `docker-compose.json` files (extracts image name dynamically)
+- First customManager matches ALL `docker-compose.json` files with digest support: `(?<currentValue>[^@"]+)(?:@(?<currentDigest>[^"]+))?`
 - Per-app customManagers match `config.json` files to update version field
 - PostgreSQL/MySQL/Redis images are disabled (won't auto-update)
 - Uses `pull_request_target` event so the workflow can push back to Renovate branches
@@ -110,15 +112,11 @@ Both Renovate and the workflow update `config.json` version for redundancy - if 
 
 ## Adding a New App
 
-1. Create `apps/<app-id>/` directory with:
-   - `config.json` - App metadata
-   - `docker-compose.json` - Container definition (`schemaVersion: 2`)
-   - `metadata/logo.jpg` - Logo image (convert from PNG: `sips -s format jpeg input.png --out logo.jpg`)
-   - `metadata/description.md` - Markdown description
+1. Create `apps/<app-id>/` directory with required files (see App Structure above)
 
-2. For apps with databases, add a second service in `docker-compose.json` with `dependsOn` and `healthCheck` (see `apps/workout-cool/docker-compose.json` for a clean 2-service example, or `apps/n8n/docker-compose.json` for a 4-service setup with PostgreSQL, Redis, and a worker)
+2. For multi-service apps, add services with `dependsOn` and `healthCheck`
 
-3. Add entry to `renovate.json` customManagers for the new app's `config.json`:
+3. Add entry to `renovate.json` customManagers for the new app's `config.json` (skip for `version: "latest"` apps):
 
    ```json
    {
@@ -134,8 +132,8 @@ Both Renovate and the workflow update `config.json` version for redundancy - if 
 
 5. Commit files (Renovate needs them in git to detect updates)
 
-**Gotchas:**
+## General Gotchas
 
-- When adding apps with Redis caching (e.g., Django apps), ensure all services that use the cache include required client configuration environment variables. Missing cache config causes `ImproperlyConfigured` container crashes that only appear at runtime, not during validation.
-- For queue-mode apps (e.g., n8n), the main service and workers must share the same encryption key and image version. Workers use `command: "worker"` and need identical DB/Redis environment variables as the main service. Workers should `dependsOn` the main service with `condition: "service_started"` so database migrations complete before the worker starts.
-- Apps using `version: "latest"` in config.json (e.g., wger) don't need a per-app customManager in `renovate.json` since there's no semver to track.
+- When adding apps with Redis caching, ensure `CACHE_TYPE` is explicitly set (e.g., `CACHE_TYPE=redis`). Missing cache config causes silent fallback to in-memory cache.
+- Prefer `form_fields` in `config.json` over `data/app.env` for user-configurable environment variables. Form fields are editable from the Tipi UI and are guaranteed to be injected. Infrastructure variables (database URLs, cache config tied to service names) should be hardcoded in `docker-compose.json`.
+- Apps using `version: "latest"` don't need a per-app customManager in `renovate.json`. For digest pinning, add a `pinDigests: true` packageRule and include `@sha256:<digest>` in the image reference.
