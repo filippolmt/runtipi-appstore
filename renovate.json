@@ -15,7 +15,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["/apps/.*/docker-compose\\.json$/"],
-      "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^\"]+)\""],
+      "matchStrings": ["\"image\":\\s*\"(?<depName>[^:]+):(?<currentValue>[^@\"]+)(?:@(?<currentDigest>[^\"]+))?\""],
       "datasourceTemplate": "docker"
     },
     {
@@ -87,6 +87,10 @@
     {
       "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["rssbridge/rss-bridge"],
+      "pinDigests": true
     }
   ]
 }
