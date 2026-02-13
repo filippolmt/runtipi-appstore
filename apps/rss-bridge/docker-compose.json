@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "rss-bridge",
+      "image": "rssbridge/rss-bridge:latest@sha256:0d4acbd058edd566cb337b661d76bbb272405350f91a35634606356149671f6b",
+      "isMain": true,
+      "internalPort": 80,
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/config",
+          "containerPath": "/config"
+        }
+      ]
+    }
+  ]
+}
