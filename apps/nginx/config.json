@@ -7,7 +7,7 @@
   "port": 8754,
   "categories": ["utilities"],
   "description": "Simple webserver to test your Tipi install. An alternative to the hello-world app.",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "1.29.5",
   "source": "https://github.com/nginx/nginx",
   "website": "https://www.nginx.com/",
@@ -15,7 +15,7 @@
   "dynamic_config": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1688169600000,
-  "updated_at": 1765750051561,
+  "updated_at": 1770971696487,
   "form_fields": [],
   "min_tipi_version": "4.5.0",
   "requirements": {
