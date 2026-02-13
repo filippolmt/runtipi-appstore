@@ -67,6 +67,10 @@
         {
           "key": "QUEUE_BULL_REDIS_PASSWORD",
           "value": "${N8N_REDIS_PASSWORD}"
+        },
+        {
+          "key": "NODE_FUNCTION_ALLOW_BUILTIN",
+          "value": "crypto"
         }
       ],
       "dependsOn": {
@@ -136,6 +140,10 @@
         {
           "key": "QUEUE_BULL_REDIS_PASSWORD",
           "value": "${N8N_REDIS_PASSWORD}"
+        },
+        {
+          "key": "NODE_FUNCTION_ALLOW_BUILTIN",
+          "value": "crypto"
         }
       ],
       "dependsOn": {
