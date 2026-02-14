@@ -49,6 +49,10 @@
           "value": "${TWITTER_AUTH_TOKEN}"
         },
         {
+          "key": "UA",
+          "value": "${UA}"
+        },
+        {
           "key": "PROXY_URI",
           "value": "${PROXY_URI}"
         }

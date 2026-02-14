@@ -14,7 +14,9 @@ RSS feed generator for 1000+ websites.
 
 - `CACHE_TYPE=redis` must be explicitly set, otherwise defaults to `memory` and Redis is unused
 - `TZ` is a Node.js/Linux system variable (not in RSSHub's config.ts) but works at container level
-- User-configurable fields via Tipi UI: timezone, access key, GitHub token, YouTube key, Telegram token, Twitter cookie, proxy URI
+- User-configurable fields via Tipi UI: timezone, access key, GitHub token, YouTube key, Telegram token, Twitter auth token, User Agent, proxy URI
+- `UA` (User Agent): Custom User-Agent string to bypass 403 Forbidden errors (e.g., for ProductHunt). Use browser UA like Chrome/Firefox
+- `PROXY_URI`: Optional HTTP/SOCKS5 proxy URL. Recommended: install separate **sing-box** app and use `http://singbox:8888`
 - Infrastructure env vars (`REDIS_URL`, `PUPPETEER_WS_ENDPOINT`, `NODE_ENV`, `CACHE_TYPE`) are hardcoded
 - Uses date-based versioning (e.g., `2026-02-13`)
 

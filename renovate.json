@@ -80,6 +80,13 @@
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "diygod/rsshub",
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/singbox/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/sagernet/sing-box",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
