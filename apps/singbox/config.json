@@ -1,0 +1,21 @@
+{
+  "id": "singbox",
+  "name": "sing-box",
+  "available": true,
+  "exposable": true,
+  "port": 8081,
+  "categories": ["utilities"],
+  "description": "Universal proxy platform supporting HTTP, SOCKS5, and advanced routing",
+  "short_desc": "Universal proxy platform for bypassing network restrictions",
+  "author": "SagerNet",
+  "source": "https://github.com/SagerNet/sing-box",
+  "website": "https://sing-box.sagernet.org/",
+  "version": "1.12.21",
+  "tipi_version": 1,
+  "supported_architectures": ["amd64", "arm64"],
+  "dynamic_config": false,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [],
+  "created_at": 1739628000000,
+  "updated_at": 1739628000000
+}

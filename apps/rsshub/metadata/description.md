@@ -8,6 +8,34 @@ RSSHub can be used with browser extension [RSSHub Radar](https://github.com/DIYg
 
 [English docs](https://docs.rsshub.app/) | [Telegram Group](https://t.me/rsshub) | [Telegram Channel](https://t.me/awesomeRSSHub) | [Twitter](https://twitter.com/intent/follow?screen_name=_RSSHub)
 
+## Proxy Configuration
+
+To bypass 403 Forbidden errors (e.g., ProductHunt, Twitter), configure a proxy:
+
+### Option 1: sing-box (Recommended)
+
+Install the **sing-box** app from the Tipi store:
+
+1. Go to Tipi App Store
+2. Search for "sing-box"
+3. Click Install
+4. RSSHub will automatically use sing-box (pre-configured to `http://singbox:8888`)
+
+No additional configuration needed - works out of the box!
+
+### Option 2: Custom Proxy
+
+If you have an existing proxy server:
+
+1. In RSSHub settings, set **Proxy URI** to your proxy URL
+2. Examples:
+   - HTTP proxy: `http://proxy.example.com:8080`
+   - SOCKS5 proxy: `socks5://proxy.example.com:1080`
+
+### Option 3: Disable Proxy
+
+Leave **Proxy URI** empty to connect directly (no proxy).
+
 ## Usage
 
 In order to generate a feed, a valid URL with parameters has to be appended to the main domain for your RSSHub instance, varying with each different app. More on the how-to's for each supported service or app can be found on [https://docs.rsshub.app/guide/](https://docs.rsshub.app/guide/), and on [https://docs.rsshub.app/guide/parameters](https://docs.rsshub.app/guide/parameters) for filtering/sorting/limiting your feed in a given URL.
