@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "singbox",
-      "image": "ghcr.io/sagernet/sing-box:v1.12.21",
+      "image": "ghcr.io/sagernet/sing-box:v1.12.22",
       "isMain": true,
       "internalPort": 8888,
       "command": "run -c /etc/sing-box/config.json",
