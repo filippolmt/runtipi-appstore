@@ -11,11 +11,11 @@
   "source": "https://github.com/SagerNet/sing-box",
   "website": "https://sing-box.sagernet.org/",
   "version": "1.12.22",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "supported_architectures": ["amd64", "arm64"],
   "dynamic_config": false,
   "min_tipi_version": "4.5.0",
   "form_fields": [],
   "created_at": 1739628000000,
-  "updated_at": 1739628000000
+  "updated_at": 1771228806136
 }
