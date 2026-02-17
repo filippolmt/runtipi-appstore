@@ -1,0 +1,5 @@
+{
+    "config_name": "tipi",
+    "$requires": ["config.json"],
+    "allow_all_host_values": true
+}
