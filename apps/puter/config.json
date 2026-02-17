@@ -14,48 +14,18 @@
   "website": "https://puter.com/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
-  "created_at": 1764104562338,
-  "updated_at": 1764104562338,
+  "created_at": 1771286400000,
+  "updated_at": 1771286400000,
   "dynamic_config": true,
-  "requirements": {
-    "ports": [4100],
-    "volumes": ["${APP_DATA_DIR}/config", "${APP_DATA_DIR}/data"]
-  },
+  "min_tipi_version": "4.5.0",
   "form_fields": [
-    {
-      "type": "number",
-      "label": "PUID",
-      "required": false,
-      "env_variable": "PUID",
-      "default": 1000
-    },
-    {
-      "type": "number",
-      "label": "PGID",
-      "required": false,
-      "env_variable": "PGID",
-      "default": 1000
-    },
     {
       "type": "text",
       "label": "Timezone",
       "required": false,
       "env_variable": "TZ",
-      "default": "Europe/Rome"
-    },
-    {
-      "type": "text",
-      "label": "Domain",
-      "required": true,
-      "env_variable": "DOMAIN"
-    },
-    {
-      "type": "boolean",
-      "label": "Allow All Host Values",
-      "required": false,
-      "env_variable": "ALLOW_ALL_HOST_VALUES",
-      "default": false
+      "default": "Europe/Rome",
+      "hint": "Timezone for the application (e.g. Europe/Rome, America/New_York)"
     }
-  ],
-  "min_tipi_version": "4.5.0"
+  ]
 }
