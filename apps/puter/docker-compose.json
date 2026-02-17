@@ -12,6 +12,10 @@
         {
           "key": "TZ",
           "value": "${TZ}"
+        },
+        {
+          "key": "PUTER_CONFIG_PROFILE",
+          "value": "tipi"
         }
       ],
       "volumes": [
