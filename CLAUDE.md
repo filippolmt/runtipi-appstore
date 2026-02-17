@@ -48,7 +48,6 @@ Each app lives in `apps/<app-id>/` with:
 - `docker-compose.json` - Container definition using schemaVersion 2 (validated against `apps/dynamic-compose-schema.json` via AJV and `parseComposeJson` from `@runtipi/common`)
 - `metadata/logo.jpg` - App logo
 - `metadata/description.md` - Full description
-- `CLAUDE.md` (optional) - App-specific notes and architecture details
 
 ### config.json Required Fields
 

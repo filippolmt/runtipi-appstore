@@ -62,13 +62,6 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": ["apps/workout-cool/config.json"],
-      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "ghcr.io/snouzy/workout-cool",
-      "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
       "managerFilePatterns": ["apps/n8n/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "n8nio/n8n",
