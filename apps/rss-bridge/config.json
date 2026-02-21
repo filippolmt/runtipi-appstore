@@ -8,13 +8,13 @@
   "port": 3001,
   "categories": ["utilities"],
   "description": "RSS-Bridge is a PHP web application that generates RSS/Atom feeds for websites that don't provide one. It supports over 400 bridges for popular sites including YouTube, Twitter, Reddit, Instagram, and many more.",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "latest",
   "source": "https://github.com/RSS-Bridge/rss-bridge",
   "website": "https://rss-bridge.org",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1739487600000,
-  "updated_at": 1771228804197,
+  "updated_at": 1771666016336,
   "dynamic_config": true
 }
