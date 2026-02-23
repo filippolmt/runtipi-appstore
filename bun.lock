@@ -10,7 +10,7 @@
         "zod-validation-error": "^5.0.0",
       },
       "devDependencies": {
-        "@biomejs/biome": "^2.4.3",
+        "@biomejs/biome": "^2.4.4",
         "@types/bun": "latest",
         "@types/node": "^25.3.0",
         "ajv": "^8.18.0",
