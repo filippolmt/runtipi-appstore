@@ -9,7 +9,7 @@
   "categories": ["utilities"],
   "description": "Traccar is an open-source GPS tracking platform with web UI, device protocol support, and alerting.",
   "tipi_version": 3,
-  "version": "6.12.1",
+  "version": "6.12.2",
   "source": "https://github.com/traccar/traccar-docker",
   "website": "https://www.traccar.org/",
   "exposable": true,
