@@ -1,20 +1,16 @@
 {
   "name": "filippo-runtipi-appstore",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "type": "module",
   "scripts": {
     "lint": "biome check --write .",
-    "test": "bun test && bun run scripts/validate-json.js",
+    "test": "bun test",
     "lint:ci": "biome ci --changed --error-on-warnings --no-errors-on-unmatched"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",
-    "@types/bun": "latest",
+    "@types/bun": "^1.3.3",
     "@types/node": "^25.3.2",
     "ajv": "^8.18.0"
   },

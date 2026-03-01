@@ -78,7 +78,7 @@
     },
     {
       "name": "rsshub-redis",
-      "image": "redis:alpine",
+      "image": "redis:8-alpine",
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/data/redis",
