@@ -8,36 +8,16 @@ This is a Runtipi App Store repository containing self-hosted application defini
 
 ## Commands
 
-**Full validation (Docker-based, CI equivalent):**
-
 ```bash
-make test
-```
+make test             # Full validation in Docker (CI equivalent: install + lint + test)
+make readme           # Regenerate README.md from app list
+make renovate-test    # Dry-run Renovate against local config
+make bun-shell        # Interactive bun shell in Docker container
 
-**Local development:**
-
-```bash
 bun install --ignore-scripts
 bun run lint          # Biome check with auto-fix
-bun test              # Run tests + validate JSON schemas
-```
-
-**Run a single test (by app name):**
-
-```bash
-bun test --test-name-pattern "nginx"
-```
-
-**Generate README from apps:**
-
-```bash
-make readme
-```
-
-**Test Renovate configuration:**
-
-```bash
-make renovate-test
+bun test              # Run tests (includes JSON schema validation)
+bun test --test-name-pattern "nginx"   # Single app test
 ```
 
 ## App Structure
@@ -48,6 +28,9 @@ Each app lives in `apps/<app-id>/` with:
 - `docker-compose.json` - Container definition using schemaVersion 2 (validated against `apps/dynamic-compose-schema.json` via AJV and `parseComposeJson` from `@runtipi/common`)
 - `metadata/logo.jpg` - App logo
 - `metadata/description.md` - Full description
+- `data/` (optional) - Init scripts or default config files mounted into the container
+
+See `AGENTS.md` for detailed examples of `config.json` and `docker-compose.json`, including a minimal template.
 
 ### config.json Required Fields
 
@@ -59,7 +42,7 @@ Optional but common: `port`, `categories`, `version`, `website`, `exposable`, `d
 
 ### docker-compose.json Format
 
-Uses dynamic compose schema v2 (`schemaVersion: 2`) with a `services` array. Key differences from standard docker-compose:
+Uses dynamic compose schema v2 (`schemaVersion: 2`) with a `services` array. Include `"$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json"` for IDE validation. Key differences from standard docker-compose:
 
 - `internalPort` instead of exposed ports
 - `isMain: true` marks the primary service (also used by `scripts/update-config.ts` to determine which image version maps to `config.json` version)
@@ -68,6 +51,8 @@ Uses dynamic compose schema v2 (`schemaVersion: 2`) with a `services` array. Key
 - `dependsOn` uses object form with `condition: "service_healthy"` for database dependencies or `condition: "service_started"` for service ordering
 - User-configurable values reference `${VARIABLE_NAME}` from `config.json` `form_fields`
 - Service names must be prefixed with the app-id (e.g., `rsshub-redis`, `n8n-db`)
+
+**Available template variables:** `${APP_DATA_DIR}` (persistence), `${APP_PORT}` (user-configurable port), `${APP_DOMAIN}` / `${LOCAL_DOMAIN}` (Traefik routing), `${PUID}` / `${PGID}` (filesystem ownership).
 
 ## Validation
 
@@ -80,9 +65,7 @@ Tests in `apps/__tests__/apps.test.ts` check:
 5. All apps have valid `created_at` and `updated_at` timestamps
 6. Random form fields are not marked as required
 
-The `test` script also runs `scripts/validate-json.js` which validates all `docker-compose.json` files against the local schema.
-
-CI runs `bun test` and `bun run lint:ci` (Biome, only changed files, warnings as errors) on every PR and push to master.
+CI runs `bun test` and `bun run lint:ci` (Biome, only changed files, warnings as errors) on every PR and push to main.
 
 ## Code Style
 
@@ -98,7 +81,7 @@ Renovate (GitHub App hosted) monitors `docker-compose.json` and `config.json` fi
 2. Renovate creates PR updating image tags in `docker-compose.json` AND version in `config.json` (via per-app customManagers)
 3. GitHub Action (`update-tipi-version.yml`) triggers on the PR, runs `scripts/update-config.ts` to update `version` (only for `isMain` service), increment `tipi_version` (+1), update `updated_at`, and lint the result
 
-Both Renovate and the workflow update `config.json` version for redundancy - if either fails, the other covers it.
+Both Renovate and the workflow update `config.json` version for redundancy - if either fails, the other covers it. Minor/patch PRs get an "automerge" label (auto-merged via squash); major PRs get a "major" label for manual review.
 
 **Configuration structure** (`renovate.json`):
 
@@ -130,6 +113,10 @@ Both Renovate and the workflow update `config.json` version for redundancy - if 
 4. Run `make test` and `make renovate-test` to validate
 
 5. Commit files (Renovate needs them in git to detect updates)
+
+## Critical Rule: tipi_version Bumping
+
+**Any manual change to files inside `apps/<app-id>/` requires incrementing `tipi_version` by 1 and updating `updated_at` to `Date.now()` in that app's `config.json`.** This is how Runtipi detects app definition changes. Renovate PRs are exempt (the `update-tipi-version.yml` workflow handles those). Multiple edits to the same app in one session = one bump.
 
 ## General Gotchas
 

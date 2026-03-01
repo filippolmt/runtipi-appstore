@@ -49,21 +49,9 @@ const getFile = (app: string, file: string): string | null => {
 
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 ajv.addMetaSchema(draft7MetaSchema);
-const dynamicSchemaUrl = "https://schemas.runtipi.io/v2/dynamic-compose.json";
 const localDynamicSchemaPath = path.join(process.cwd(), "apps", "dynamic-compose-schema.json");
-
-const dynamicValidatorPromise = (async () => {
-  try {
-    const res = await fetch(dynamicSchemaUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const remoteSchema = await res.json();
-    return ajv.compile(remoteSchema);
-  } catch (err) {
-    console.warn(`Falling back to local dynamic-compose schema (${localDynamicSchemaPath}): ${err}`);
-    const localSchema = JSON.parse(fs.readFileSync(localDynamicSchemaPath, "utf-8"));
-    return ajv.compile(localSchema);
-  }
-})();
+const localSchema = JSON.parse(fs.readFileSync(localDynamicSchemaPath, "utf-8"));
+const validateDynamic = ajv.compile(localSchema);
 
 describe("each app should have the required files", () => {
   const apps = getApps();
@@ -99,9 +87,8 @@ describe("each app should have a valid config.json", () => {
   }
 });
 
-describe("each app should have a valid docker-compose.json", async () => {
+describe("each app should have a valid docker-compose.json", () => {
   const apps = getApps();
-  const validateDynamic = await dynamicValidatorPromise;
 
   for (const app of apps) {
     test(`app ${app} should have a valid docker-compose.json`, () => {

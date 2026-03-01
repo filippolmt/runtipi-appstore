@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "biome-validator": {
+      "source": "shipshitdev/library",
+      "sourceType": "github",
+      "computedHash": "7bdeaa580d0fe81ed2a9ab493c0047c2aa8867e57c9dd06664d5a7b593936425"
+    },
+    "bun-test": {
+      "source": "daleseo/bun-skills",
+      "sourceType": "github",
+      "computedHash": "1b2368cad9b61944aec3781f81d012ba7e6ab31f09fb8f927c6f9d60c979ad0a"
+    }
+  }
+}

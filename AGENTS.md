@@ -8,8 +8,8 @@ Quick guide to creating and publishing new “runtipi” apps with this reposito
 - `apps/<app-id>/docker-compose.json`: dynamic manifest schemaVersion 2 (`$schema` https://schemas.runtipi.io/v2/dynamic-compose.json) consumed by Tipi via `@runtipi/common` and validated against the Tipi schema.
 - `apps/<app-id>/metadata/description.md` and `logo.jpg`: required description and logo (tests expect them).
 - `apps/docker-compose.common.yml`: shared network `runtipi_tipi_main_network`.
-- Scripts/tests: `bun test` runs `apps/__tests__/apps.test.ts` (consistency checks); `scripts/validate-json.js` validates dynamic manifests against the remote schema.
-- `Makefile`: `make test` runs `bun install --ignore-scripts && bun test && bun run scripts/validate-json.js` inside the `BUN_IMAGE` container (defaults to `oven/bun:1.2.2`).
+- Scripts/tests: `bun test` runs `apps/__tests__/apps.test.ts` (consistency checks and JSON schema validation against `apps/dynamic-compose-schema.json`).
+- `Makefile`: `make test` runs `bun install --ignore-scripts && bun run lint && bun test` inside the `BUN_IMAGE` container.
 
 ## Minimum requirements for a new app
 
@@ -46,9 +46,8 @@ Quick guide to creating and publishing new “runtipi” apps with this reposito
 3. Update `docker-compose.json` (dynamic manifest).
 4. Write `metadata/description.md` and add `logo.jpg`.
 5. Verify locally:
-   - `make test` (runs bun install, tests, and JSON validation in Docker), or manually:
-     - `bun test` (checks config, compose json, metadata, unique ids/ports).
-     - `bun run scripts/validate-json.js` (validates `docker-compose.json` against the Tipi schema; remote fetch with local fallback).
+   - `make test` (runs bun install, lint, and tests in Docker), or manually:
+     - `bun test` (checks config, compose json, metadata, unique ids/ports, and validates schema).
 6. If the app is exposable, ensure `form_fields` cover all env vars used in the manifests.
 7. Add Renovate regex entries: whenever you add a new app, create a matching `customManager` in `renovate.json` that updates both the image tag in `docker-compose.json` and the `version` field in that app’s `config.json` (pattern like the existing entries for budibase, mailpit, nginx, puter, traccar).
 
