@@ -70,7 +70,31 @@
         },
         {
           "key": "NODE_FUNCTION_ALLOW_BUILTIN",
-          "value": "crypto"
+          "value": "*"
+        },
+        {
+          "key": "N8N_PROXY_HOPS",
+          "value": "1"
+        },
+        {
+          "key": "GENERIC_TIMEZONE",
+          "value": "${N8N_GENERIC_TIMEZONE}"
+        },
+        {
+          "key": "N8N_DIAGNOSTICS_ENABLED",
+          "value": "${N8N_DIAGNOSTICS_ENABLED}"
+        },
+        {
+          "key": "N8N_VERSION_NOTIFICATIONS_ENABLED",
+          "value": "${N8N_VERSION_NOTIFICATIONS_ENABLED}"
+        },
+        {
+          "key": "N8N_TEMPLATES_ENABLED",
+          "value": "${N8N_TEMPLATES_ENABLED}"
+        },
+        {
+          "key": "NODE_FUNCTION_ALLOW_EXTERNAL",
+          "value": "${N8N_NODE_FUNCTION_ALLOW_EXTERNAL}"
         }
       ],
       "dependsOn": {
@@ -143,7 +167,15 @@
         },
         {
           "key": "NODE_FUNCTION_ALLOW_BUILTIN",
-          "value": "crypto"
+          "value": "*"
+        },
+        {
+          "key": "GENERIC_TIMEZONE",
+          "value": "${N8N_GENERIC_TIMEZONE}"
+        },
+        {
+          "key": "NODE_FUNCTION_ALLOW_EXTERNAL",
+          "value": "${N8N_NODE_FUNCTION_ALLOW_EXTERNAL}"
         }
       ],
       "dependsOn": {
