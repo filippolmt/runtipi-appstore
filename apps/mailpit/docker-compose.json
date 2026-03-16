@@ -3,7 +3,7 @@
   "services": [
     {
       "name": "mailpit",
-      "image": "axllent/mailpit:v1.29.2",
+      "image": "axllent/mailpit:v1.29.3",
       "isMain": true,
       "internalPort": 8025,
       "environment": [
