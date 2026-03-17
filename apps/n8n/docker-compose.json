@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "n8n",
-      "image": "n8nio/n8n:2.12.2",
+      "image": "n8nio/n8n:2.13.0",
       "isMain": true,
       "internalPort": 5678,
       "environment": [
@@ -114,7 +114,7 @@
     },
     {
       "name": "n8n-worker",
-      "image": "n8nio/n8n:2.12.2",
+      "image": "n8nio/n8n:2.13.0",
       "command": "worker",
       "environment": [
         {
