@@ -105,6 +105,10 @@
     {
       "matchPackageNames": ["rssbridge/rss-bridge"],
       "pinDigests": true
+    },
+    {
+      "matchPackageNames": ["n8nio/n8n", "n8nio/runners"],
+      "groupName": "n8n"
     }
   ]
 }
