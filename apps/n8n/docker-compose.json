@@ -95,6 +95,30 @@
         {
           "key": "NODE_FUNCTION_ALLOW_EXTERNAL",
           "value": "${N8N_NODE_FUNCTION_ALLOW_EXTERNAL}"
+        },
+        {
+          "key": "OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS",
+          "value": "true"
+        },
+        {
+          "key": "N8N_RUNNERS_ENABLED",
+          "value": "true"
+        },
+        {
+          "key": "N8N_RUNNERS_MODE",
+          "value": "external"
+        },
+        {
+          "key": "N8N_RUNNERS_BROKER_LISTEN_ADDRESS",
+          "value": "0.0.0.0"
+        },
+        {
+          "key": "N8N_RUNNERS_AUTH_TOKEN",
+          "value": "${N8N_RUNNERS_AUTH_TOKEN}"
+        },
+        {
+          "key": "N8N_NATIVE_PYTHON_RUNNER",
+          "value": "true"
         }
       ],
       "dependsOn": {
@@ -176,6 +200,26 @@
         {
           "key": "NODE_FUNCTION_ALLOW_EXTERNAL",
           "value": "${N8N_NODE_FUNCTION_ALLOW_EXTERNAL}"
+        },
+        {
+          "key": "N8N_RUNNERS_ENABLED",
+          "value": "true"
+        },
+        {
+          "key": "N8N_RUNNERS_MODE",
+          "value": "external"
+        },
+        {
+          "key": "N8N_RUNNERS_BROKER_LISTEN_ADDRESS",
+          "value": "0.0.0.0"
+        },
+        {
+          "key": "N8N_RUNNERS_AUTH_TOKEN",
+          "value": "${N8N_RUNNERS_AUTH_TOKEN}"
+        },
+        {
+          "key": "N8N_NATIVE_PYTHON_RUNNER",
+          "value": "true"
         }
       ],
       "dependsOn": {
@@ -261,6 +305,58 @@
           "value": "${N8N_REDIS_PASSWORD}"
         }
       ]
+    },
+    {
+      "name": "n8n-task-runner",
+      "image": "n8nio/runners:2.13.0",
+      "environment": [
+        {
+          "key": "N8N_RUNNERS_TASK_BROKER_URI",
+          "value": "http://n8n:5679"
+        },
+        {
+          "key": "N8N_RUNNERS_AUTH_TOKEN",
+          "value": "${N8N_RUNNERS_AUTH_TOKEN}"
+        }
+      ],
+      "dependsOn": {
+        "n8n": {
+          "condition": "service_started"
+        }
+      },
+      "healthCheck": {
+        "test": "wget -qO- http://localhost:5680/healthz || exit 1",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "15s"
+      }
+    },
+    {
+      "name": "n8n-worker-task-runner",
+      "image": "n8nio/runners:2.13.0",
+      "environment": [
+        {
+          "key": "N8N_RUNNERS_TASK_BROKER_URI",
+          "value": "http://n8n-worker:5679"
+        },
+        {
+          "key": "N8N_RUNNERS_AUTH_TOKEN",
+          "value": "${N8N_RUNNERS_AUTH_TOKEN}"
+        }
+      ],
+      "dependsOn": {
+        "n8n-worker": {
+          "condition": "service_started"
+        }
+      },
+      "healthCheck": {
+        "test": "wget -qO- http://localhost:5680/healthz || exit 1",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "15s"
+      }
     }
   ]
 }

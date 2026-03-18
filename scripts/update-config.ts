@@ -32,14 +32,18 @@ const updateAppConfig = async (packageFile: string, newVersion: string, packageN
     const config = await readJsonFile<AppConfig>(configPath);
     const dockerComposeJson = await readJsonFile<DockerComposeJson>(dockerComposeJsonPath);
 
-    if (packageName && dockerComposeJson) {
-      for (const service of dockerComposeJson.services) {
-        if (service.image === `${packageName}:${newVersion}` && service.isMain) {
-          config.version = newVersion;
+    // Skip version update for digest-only changes (e.g. latest@sha256:...)
+    const isDigestOnly = newVersion.includes("@");
+    if (!isDigestOnly) {
+      if (packageName && dockerComposeJson) {
+        for (const service of dockerComposeJson.services) {
+          if (service.image === `${packageName}:${newVersion}` && service.isMain) {
+            config.version = newVersion;
+          }
         }
+      } else {
+        config.version = newVersion;
       }
-    } else {
-      config.version = newVersion;
     }
 
     config.tipi_version = config.tipi_version + 1;
