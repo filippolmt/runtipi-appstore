@@ -107,6 +107,10 @@
       "pinDigests": true
     },
     {
+      "matchPackageNames": ["diygod/rsshub"],
+      "versioning": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$"
+    },
+    {
       "matchPackageNames": ["n8nio/n8n", "n8nio/runners"],
       "groupName": "n8n"
     }
