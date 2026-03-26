@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "n8n",
-      "image": "n8nio/n8n:2.14.1",
+      "image": "n8nio/n8n:2.14.2",
       "isMain": true,
       "internalPort": 5678,
       "environment": [
@@ -134,7 +134,7 @@
     },
     {
       "name": "n8n-worker",
-      "image": "n8nio/n8n:2.14.1",
+      "image": "n8nio/n8n:2.14.2",
       "command": "worker",
       "environment": [
         {
@@ -300,7 +300,7 @@
     },
     {
       "name": "n8n-worker-task-runner",
-      "image": "n8nio/runners:2.14.1",
+      "image": "n8nio/runners:2.14.2",
       "environment": [
         {
           "key": "N8N_RUNNERS_TASK_BROKER_URI",
