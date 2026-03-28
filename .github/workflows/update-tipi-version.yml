@@ -2,28 +2,46 @@ name: Update tipi_version on Renovate PR
 
 on:
   pull_request_target:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
     paths:
       - 'apps/**/docker-compose.json'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to re-apply tipi_version bump'
+        required: true
+        type: number
 
 jobs:
   update-tipi-version:
-    if: github.actor == 'renovate[bot]'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.actor == 'renovate[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
+      - name: Get PR info for workflow_dispatch
+        id: pr
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          pr_data=$(gh pr view ${{ inputs.pr_number }} --repo ${{ github.repository }} --json headRefName)
+          echo "head_ref=$(echo "$pr_data" | jq -r '.headRefName')" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
+          repository: ${{ github.event_name == 'workflow_dispatch' && github.repository || github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup git remote
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
+          repo=${{ github.event_name == 'workflow_dispatch' && github.repository || github.event.pull_request.head.repo.full_name }}
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${repo}.git"
 
       - uses: oven-sh/setup-bun@v2
 
@@ -33,8 +51,9 @@ jobs:
       - name: Get changed files
         id: changed
         run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | grep 'docker-compose.json' || true)
+          base_ref=${{ github.event_name == 'workflow_dispatch' && 'main' || github.event.pull_request.base.ref }}
+          git fetch origin "$base_ref"
+          files=$(git diff --name-only "origin/${base_ref}...HEAD" | grep 'docker-compose.json' | tr '\n' ' ')
           echo "files=$files" >> $GITHUB_OUTPUT
           echo "Changed docker-compose.json files: $files"
 
@@ -47,10 +66,10 @@ jobs:
               config_file="$app_dir/config.json"
 
               if [[ -f "$config_file" ]]; then
-                # Extract package name and new version from docker-compose.json (first image)
-                image_line=$(grep -oP '"image":\s*"[^"]+"' "$file" | head -1)
-                package_name=$(echo "$image_line" | grep -oP '"image":\s*"\K[^:]+')
-                new_version=$(echo "$image_line" | grep -oP ':\K[^"]+')
+                # Extract package name and new version from the isMain service
+                main_image=$(jq -r '.services[] | select(.isMain == true) | .image' "$file")
+                package_name=$(echo "$main_image" | cut -d: -f1)
+                new_version=$(echo "$main_image" | cut -d: -f2-)
 
                 if [[ -n "$new_version" ]]; then
                   echo "Updating $config_file: version=$new_version, package=$package_name"
@@ -68,12 +87,13 @@ jobs:
       - name: Commit and push changes
         if: steps.changed.outputs.files != ''
         run: |
+          head_ref=${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
+          git add apps/*/config.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git commit -m "chore: bump tipi_version for updated dependencies"
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+            git push origin "HEAD:${head_ref}"
           fi

@@ -1,0 +1,154 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "twenty",
+      "image": "twentycrm/twenty:v1.19",
+      "isMain": true,
+      "internalPort": 3000,
+      "environment": [
+        {
+          "key": "SERVER_URL",
+          "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}"
+        },
+        {
+          "key": "APP_SECRET",
+          "value": "${TWENTY_APP_SECRET}"
+        },
+        {
+          "key": "PG_DATABASE_URL",
+          "value": "postgres://twenty:${TWENTY_DB_PASSWORD}@twenty-db:5432/twenty"
+        },
+        {
+          "key": "REDIS_URL",
+          "value": "redis://:${TWENTY_REDIS_PASSWORD}@twenty-redis:6379"
+        },
+        {
+          "key": "STORAGE_TYPE",
+          "value": "local"
+        },
+        {
+          "key": "DISABLE_CRON_JOBS_REGISTRATION",
+          "value": "false"
+        }
+      ],
+      "dependsOn": {
+        "twenty-db": {
+          "condition": "service_healthy"
+        },
+        "twenty-redis": {
+          "condition": "service_healthy"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/server",
+          "containerPath": "/app/packages/twenty-server/.local-storage"
+        }
+      ]
+    },
+    {
+      "name": "twenty-worker",
+      "image": "twentycrm/twenty:v1.19",
+      "command": "yarn worker:prod",
+      "environment": [
+        {
+          "key": "SERVER_URL",
+          "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}"
+        },
+        {
+          "key": "APP_SECRET",
+          "value": "${TWENTY_APP_SECRET}"
+        },
+        {
+          "key": "PG_DATABASE_URL",
+          "value": "postgres://twenty:${TWENTY_DB_PASSWORD}@twenty-db:5432/twenty"
+        },
+        {
+          "key": "REDIS_URL",
+          "value": "redis://:${TWENTY_REDIS_PASSWORD}@twenty-redis:6379"
+        },
+        {
+          "key": "STORAGE_TYPE",
+          "value": "local"
+        },
+        {
+          "key": "DISABLE_DB_MIGRATIONS",
+          "value": "true"
+        }
+      ],
+      "dependsOn": {
+        "twenty": {
+          "condition": "service_started"
+        },
+        "twenty-db": {
+          "condition": "service_healthy"
+        },
+        "twenty-redis": {
+          "condition": "service_healthy"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/server",
+          "containerPath": "/app/packages/twenty-server/.local-storage"
+        }
+      ]
+    },
+    {
+      "name": "twenty-db",
+      "image": "postgres:16.8",
+      "environment": [
+        {
+          "key": "POSTGRES_USER",
+          "value": "twenty"
+        },
+        {
+          "key": "POSTGRES_PASSWORD",
+          "value": "${TWENTY_DB_PASSWORD}"
+        },
+        {
+          "key": "POSTGRES_DB",
+          "value": "twenty"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/postgres",
+          "containerPath": "/var/lib/postgresql/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "pg_isready -h localhost -U twenty -d twenty",
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 10
+      }
+    },
+    {
+      "name": "twenty-redis",
+      "image": "redis:7.4-alpine",
+      "command": "redis-server --requirepass ${TWENTY_REDIS_PASSWORD}",
+      "environment": [
+        {
+          "key": "TWENTY_REDIS_PASSWORD",
+          "value": "${TWENTY_REDIS_PASSWORD}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/redis",
+          "containerPath": "/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "redis-cli -a $$TWENTY_REDIS_PASSWORD ping | grep PONG",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "10s"
+      }
+    }
+  ]
+}
