@@ -1,0 +1,39 @@
+{
+  "name": "Twenty CRM",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 3000,
+  "id": "twenty",
+  "tipi_version": 1,
+  "version": "v1.19",
+  "categories": ["automation"],
+  "description": "Twenty is a modern, open-source CRM platform that gives you full control of your customer relationship data. It offers a clean interface inspired by Notion and Figma, with powerful features like pipeline management, contact tracking, task automation, and API-first extensibility.",
+  "short_desc": "Open-source CRM. Modern alternative to Salesforce",
+  "author": "Twenty",
+  "source": "https://github.com/twentyhq/twenty",
+  "website": "https://twenty.com/",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "App Secret",
+      "min": 32,
+      "env_variable": "TWENTY_APP_SECRET"
+    },
+    {
+      "type": "random",
+      "label": "Database Password",
+      "min": 32,
+      "env_variable": "TWENTY_DB_PASSWORD"
+    },
+    {
+      "type": "random",
+      "label": "Redis Password",
+      "min": 32,
+      "env_variable": "TWENTY_REDIS_PASSWORD"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1743116400000,
+  "updated_at": 1743116400000
+}

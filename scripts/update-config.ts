@@ -49,9 +49,10 @@ const updateAppConfig = async (packageFile: string, newVersion: string, packageN
     config.tipi_version = config.tipi_version + 1;
     config.updated_at = Date.now();
 
-    await fs.writeFile(configPath, JSON.stringify(config, null, 2));
+    await fs.writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`);
   } catch (e) {
     console.error(`Failed to update app config, error: ${e}`);
+    process.exit(1);
   }
 };
 

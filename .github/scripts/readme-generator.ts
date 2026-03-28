@@ -1,92 +1,103 @@
-import { exec } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-type App = {
+const REPO_RAW_URL = "https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main";
+
+type AppConfig = {
   id: string;
   name: string;
-  description: string;
+  short_desc: string;
   source: string;
-  port: number;
-  dynamic: boolean;
+  website?: string;
+  port?: number;
+  version?: string;
+  categories?: string[];
+  dynamic_config?: boolean;
+  supported_architectures?: string[];
+  deprecated?: boolean;
 };
 
-const appsDir = `${__dirname}/../../apps`;
-const baseReadmePath = `${__dirname}/../../templates/README.md`;
-const finalReadmePath = `${__dirname}/../../README.md`;
+const appsDir = path.resolve(__dirname, "../../apps");
+const templatePath = path.resolve(__dirname, "../../templates/README.md");
+const outputPath = path.resolve(__dirname, "../../README.md");
 
-const getAppsList = async () => {
-  const apps: Record<string, App> = {};
+const categoryLabels: Record<string, { emoji: string; label: string }> = {
+  automation: { emoji: "🤖", label: "Automation" },
+  development: { emoji: "🛠️", label: "Development" },
+  media: { emoji: "📺", label: "Media" },
+  utilities: { emoji: "🧰", label: "Utilities" },
+};
 
-  const appNames = fs.readdirSync(appsDir);
+function loadApps(): AppConfig[] {
+  return fs
+    .readdirSync(appsDir)
+    .filter((name) => {
+      const appPath = path.join(appsDir, name);
+      return fs.statSync(appPath).isDirectory() && fs.existsSync(path.join(appPath, "config.json"));
+    })
+    .map((name) => {
+      const raw = fs.readFileSync(path.join(appsDir, name, "config.json"), "utf8");
+      return JSON.parse(raw) as AppConfig;
+    })
+    .filter((app) => !app.deprecated)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
 
-  for (const app of appNames) {
-    try {
-      const appPath = path.join(appsDir, app);
-      const configPath = path.join(appPath, "config.json");
+function archBadges(archs?: string[]): string {
+  if (!archs || archs.length === 0) return "";
+  return archs.map((a) => `\`${a}\``).join(" ");
+}
 
-      const isDir = fs.statSync(appPath).isDirectory();
-      const hasConfig = fs.existsSync(configPath);
+function appRow(app: AppConfig): string {
+  const logo = `<img src="${REPO_RAW_URL}/apps/${app.id}/metadata/logo.jpg" width="24" height="24">`;
+  const name = `[${app.name}](${app.source})`;
+  const version = app.version ?? "-";
+  const port = app.port ?? "-";
+  const archs = archBadges(app.supported_architectures);
+  return `| ${logo} | ${name} | ${app.short_desc} | ${version} | ${port} | ${archs} |`;
+}
 
-      if (!isDir || !hasConfig) {
-        continue;
-      }
+function buildCategorySection(category: string, apps: AppConfig[]): string {
+  const info = categoryLabels[category] ?? { emoji: "📦", label: category };
+  const lines: string[] = [];
+  lines.push(`### ${info.emoji} ${info.label}`);
+  lines.push("");
+  lines.push("| | Name | Description | Version | Port | Arch |");
+  lines.push("|-|------|-------------|---------|------|------|");
+  for (const app of apps) {
+    lines.push(appRow(app));
+  }
+  return lines.join("\n");
+}
 
-      const appConfig = fs.readFileSync(configPath, "utf8");
-      const appConfigJson = JSON.parse(appConfig);
+function main() {
+  const apps = loadApps();
 
-      if (!appConfigJson.deprecated) {
-        apps[app] = {
-          id: appConfigJson.id,
-          name: appConfigJson.name,
-          description: appConfigJson.short_desc,
-          source: appConfigJson.source,
-          port: appConfigJson.port,
-          dynamic: appConfigJson.dynamic_config,
-        };
-      }
-    } catch (_) {
-      console.error(`Error parsing config for ${app}`);
-    }
+  const grouped: Record<string, AppConfig[]> = {};
+  for (const app of apps) {
+    const cat = app.categories?.[0] ?? "other";
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(app);
   }
 
-  return { apps };
-};
-
-const appToReadme = async (app: App) => {
-  return `| [${app.name}](${app.source}) | ${app.description} | ${app.port} | ${app.dynamic ? "yes" : "no"} |`;
-};
-
-const writeToReadme = (appsList: string, count: number, dynamicConfigCount: number) => {
-  const baseReadme = fs.readFileSync(baseReadmePath, "utf8");
-  let finalReadme = baseReadme.replace("<!appsList>", appsList);
-  finalReadme = finalReadme.replace("<!appsCount>", count.toString());
-  finalReadme = finalReadme.replace("<!dynamicConfigCount>", dynamicConfigCount.toString());
-  fs.writeFileSync(finalReadmePath, finalReadme);
-};
-
-const main = async () => {
-  const { apps } = await getAppsList();
-  const appKeys = Object.keys(apps).sort();
-  let appsList = "";
-
-  for (let i = 0; i < appKeys.length; i++) {
-    const appFinal = await appToReadme(apps[appKeys[i]]);
-    appsList = `${appsList}${appFinal}\n`;
-  }
-
-  const count = appKeys.length;
-  const dynamicConfigCount = appKeys.filter((key) => apps[key].dynamic).length;
-
-  writeToReadme(appsList, count, dynamicConfigCount);
-
-  exec(`bunx prettier ${finalReadmePath} --write`, (stdout, stderr) => {
-    if (stderr) {
-      console.error(stderr);
-    } else if (stdout) {
-      console.log(stdout);
-    }
+  const categoryOrder = Object.keys(categoryLabels);
+  const sortedCategories = Object.keys(grouped).sort((a, b) => {
+    const ia = categoryOrder.indexOf(a);
+    const ib = categoryOrder.indexOf(b);
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
   });
-};
+
+  const sections = sortedCategories.map((cat) => buildCategorySection(cat, grouped[cat]));
+  const appsList = sections.join("\n\n");
+
+  const template = fs.readFileSync(templatePath, "utf8");
+  const readme = template
+    .replace("<!appsCount>", apps.length.toString())
+    .replace("<!categoryCount>", sortedCategories.length.toString())
+    .replace("<!appsList>", appsList);
+
+  fs.writeFileSync(outputPath, readme);
+  console.log(`README generated: ${apps.length} apps in ${sortedCategories.length} categories`);
+}
 
 main();
