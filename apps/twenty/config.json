@@ -6,7 +6,7 @@
   "port": 3000,
   "id": "twenty",
   "tipi_version": 1,
-  "version": "v1.19",
+  "version": "v1.20",
   "categories": ["automation"],
   "description": "Twenty is a modern, open-source CRM platform that gives you full control of your customer relationship data. It offers a clean interface inspired by Notion and Figma, with powerful features like pipeline management, contact tracking, task automation, and API-first extensibility.",
   "short_desc": "Open-source CRM. Modern alternative to Salesforce",
