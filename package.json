@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "biome check --write .",
     "test": "bun test",
-    "lint:ci": "biome ci --changed --error-on-warnings --no-errors-on-unmatched"
+    "lint:ci": "biome ci --error-on-warnings"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",

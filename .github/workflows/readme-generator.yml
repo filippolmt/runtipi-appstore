@@ -12,11 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Install Bun
-        uses: oven-sh/setup-bun@v2
-
       - name: Generate new README.md file
-        run: bun .github/scripts/readme-generator.ts
+        run: make readme
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
@@ -29,4 +26,4 @@ jobs:
           branch: bot/readme-update
           title: |
             readme-generator: update readme
-          labels: bot
+          labels: bot, automerge
