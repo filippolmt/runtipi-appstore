@@ -8,14 +8,14 @@
   "port": 8080,
   "categories": ["utilities"],
   "description": "KitchenOwl keeps grocery lists and recipes organized with shared access, meal planning, and a responsive web UI.",
-  "tipi_version": 3,
+  "tipi_version": 4,
   "version": "v0.7.7",
   "source": "https://github.com/TomBursch/kitchenowl",
   "website": "https://kitchenowl.org/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1764229240412,
-  "updated_at": 1775243590559,
+  "updated_at": 1775394828393,
   "dynamic_config": true,
   "requirements": {
     "ports": [8080],
@@ -23,9 +23,9 @@
   },
   "form_fields": [
     {
-      "type": "password",
+      "type": "random",
       "label": "JWT Secret Key",
-      "required": true,
+      "min": 32,
       "env_variable": "JWT_SECRET_KEY"
     },
     {
@@ -33,7 +33,7 @@
       "label": "Frontend URL",
       "required": true,
       "env_variable": "FRONT_URL",
-      "default": "https://${APP_DOMAIN}"
+      "hint": "Full URL where KitchenOwl is accessed (e.g., https://kitchenowl.example.com)"
     }
   ],
   "min_tipi_version": "4.5.0"
