@@ -141,6 +141,7 @@ describe("each app should have timestamps", () => {
       expect(config.created_at).toBeGreaterThan(0);
       expect(config.updated_at).toBeDefined();
       expect(config.updated_at).toBeGreaterThan(0);
+      expect(config.updated_at).toBeLessThanOrEqual(Date.now());
     });
   }
 });
