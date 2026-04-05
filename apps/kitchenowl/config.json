@@ -33,7 +33,7 @@
       "label": "Frontend URL",
       "required": true,
       "env_variable": "FRONT_URL",
-      "hint": "Full URL where KitchenOwl is accessed (e.g., https://kitchenowl.example.com)"
+      "hint": "Full URL where KitchenOwl is accessed. Must match exactly the domain configured in Runtipi (e.g., https://kitchenowl.example.com for exposed apps, or http://kitchenowl.local for local network)"
     }
   ],
   "min_tipi_version": "4.5.0"
