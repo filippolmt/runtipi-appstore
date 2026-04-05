@@ -15,9 +15,9 @@
   "website": "https://twenty.com/",
   "form_fields": [
     {
-      "type": "text",
+      "type": "url",
       "label": "Server URL",
-      "hint": "Full URL to access Twenty. Must match exactly the domain configured in Runtipi (e.g., https://twenty.example.com for exposed apps, or http://twenty.local for local network)",
+      "hint": "Must start with http:// or https:// and match exactly the domain configured in Runtipi (e.g., https://twenty.example.com or http://twenty.local)",
       "required": true,
       "env_variable": "TWENTY_SERVER_URL"
     },
