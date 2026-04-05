@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 Runtipi App Store — self-hosted app definitions in JSON format (dynamic compose schema v2).
 
 ## Commands
@@ -21,7 +23,7 @@ Each app in `apps/<app-id>/`:
 - `docker-compose.json` — schema v2, services array, `isMain: true` on primary service
 - `metadata/logo.jpg` + `metadata/description.md`
 
-See `AGENTS.md` for full examples and templates.
+Schemas: `@apps/app-info-schema.json` (config) and `@apps/dynamic-compose-schema.json` (compose). Use `/appstore-patterns` for workflows, examples, and conventions.
 
 ## Key Rules
 
@@ -30,3 +32,10 @@ See `AGENTS.md` for full examples and templates.
 - **Random form fields**: must NOT have `required: true`
 - **New apps**: add a `customManager` entry in `renovate.json` (skip for `version: "latest"`)
 - **Validate**: always `make test` + `make renovate-test` before committing
+
+## Conventions
+
+- **Branch naming**: `feat/`, `fix/`, `chore/` prefix (conventional)
+- **Commits**: conventional commits format (`feat(app): description`, `fix(app): description`)
+- **Approach**: always propose a plan before implementing. For complex tasks, wait for confirmation
+- **Language**: all communication and documentation in English
