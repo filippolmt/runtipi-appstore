@@ -1,6 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "automerge": false,
   "prHourlyLimit": 20,
   "extends": ["config:recommended", ":dependencyDashboard"],
   "rebaseWhen": "conflicted",
@@ -103,7 +102,10 @@
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
-      "addLabels": ["automerge"]
+      "addLabels": ["automerge"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
     },
     {
       "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
