@@ -10,7 +10,7 @@
       "environment": [
         {
           "key": "SERVER_URL",
-          "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}"
+          "value": "${TWENTY_SERVER_URL}"
         },
         {
           "key": "APP_SECRET",
@@ -55,7 +55,7 @@
       "environment": [
         {
           "key": "SERVER_URL",
-          "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}"
+          "value": "${TWENTY_SERVER_URL}"
         },
         {
           "key": "APP_SECRET",

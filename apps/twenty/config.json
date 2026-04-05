@@ -5,7 +5,7 @@
   "dynamic_config": true,
   "port": 3000,
   "id": "twenty",
-  "tipi_version": 2,
+  "tipi_version": 3,
   "version": "v1.20",
   "categories": ["automation"],
   "description": "Twenty is a modern, open-source CRM platform that gives you full control of your customer relationship data. It offers a clean interface inspired by Notion and Figma, with powerful features like pipeline management, contact tracking, task automation, and API-first extensibility.",
@@ -14,6 +14,13 @@
   "source": "https://github.com/twentyhq/twenty",
   "website": "https://twenty.com/",
   "form_fields": [
+    {
+      "type": "text",
+      "label": "Server URL",
+      "hint": "Full URL to access Twenty (e.g., https://twenty.example.com). Must match the domain you use in the browser.",
+      "env_variable": "TWENTY_SERVER_URL",
+      "default": "https://${APP_LOCAL_DOMAIN}"
+    },
     {
       "type": "random",
       "label": "App Secret",
@@ -35,5 +42,5 @@
   ],
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1743116400000,
-  "updated_at": 1774989431269
+  "updated_at": 1775570400000
 }

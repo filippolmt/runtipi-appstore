@@ -1,5 +1,20 @@
 {
   "enabledPlugins": {
     "claude-mem@thedotmack": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; root=\"$(git rev-parse --show-toplevel)\"; rel=\"${f#$root/}\"; img=\"$(sed -n 's/^BUN_IMAGE ?= //p' \"$root/Makefile\")\"; docker run --rm -v \"$root:/app\" -w /app \"$img\" bunx biome check --write \"$rel\"; } 2>/dev/null || true",
+            "timeout": 15,
+            "statusMessage": "Formatting with Biome..."
+          }
+        ]
+      }
+    ]
   }
 }
