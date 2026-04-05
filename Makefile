@@ -2,10 +2,13 @@ BUN_IMAGE ?= oven/bun:1.3.11
 DOCKER_RUN := docker run --rm -v $(PWD):/app -w /app
 RENOVATE_IMAGE ?= renovate/renovate:latest
 RENOVATE_LOG_LEVEL ?= debug
-.PHONY: test renovate-test readme bun-shell
+.PHONY: test ci renovate-test readme bun-shell
 
 test:
 	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint && bun test"
+
+ci:
+	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint:ci && bun test"
 
 readme:
 	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun .github/scripts/readme-generator.ts"

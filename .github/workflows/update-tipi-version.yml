@@ -43,10 +43,12 @@ jobs:
           repo=${{ github.event_name == 'workflow_dispatch' && github.repository || github.event.pull_request.head.repo.full_name }}
           git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${repo}.git"
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Read BUN_IMAGE from Makefile
+        id: bun
+        run: echo "image=$(sed -n 's/^BUN_IMAGE ?= //p' Makefile)" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
-        run: bun install --ignore-scripts
+        run: docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun install --ignore-scripts
 
       - name: Get changed files
         id: changed
@@ -73,7 +75,7 @@ jobs:
 
                 if [[ -n "$new_version" ]]; then
                   echo "Updating $config_file: version=$new_version, package=$package_name"
-                  bun run scripts/update-config.ts "$file" "$new_version" "$package_name"
+                  docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun run scripts/update-config.ts "$file" "$new_version" "$package_name"
                   echo "Updated tipi_version and updated_at in $config_file"
                 fi
               fi
@@ -82,7 +84,7 @@ jobs:
 
       - name: Format updated files
         if: steps.changed.outputs.files != ''
-        run: bun run lint
+        run: docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun run lint
 
       - name: Commit and push changes
         if: steps.changed.outputs.files != ''
