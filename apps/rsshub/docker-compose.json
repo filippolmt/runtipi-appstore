@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "rsshub",
-      "image": "diygod/rsshub:2026-04-04",
+      "image": "diygod/rsshub:2026-04-06",
       "isMain": true,
       "internalPort": 1200,
       "environment": [
