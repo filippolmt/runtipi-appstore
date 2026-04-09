@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "twenty",
-      "image": "twentycrm/twenty:v1.20",
+      "image": "twentycrm/twenty:v1.21",
       "isMain": true,
       "internalPort": 3000,
       "environment": [
@@ -50,7 +50,7 @@
     },
     {
       "name": "twenty-worker",
-      "image": "twentycrm/twenty:v1.20",
+      "image": "twentycrm/twenty:v1.21",
       "command": "yarn worker:prod",
       "environment": [
         {
