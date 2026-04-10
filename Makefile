@@ -1,4 +1,4 @@
-BUN_IMAGE ?= oven/bun:1.3.11
+BUN_IMAGE ?= oven/bun:1.3.12
 DOCKER_RUN := docker run --rm -v $(PWD):/app -w /app
 RENOVATE_IMAGE ?= renovate/renovate:latest
 RENOVATE_LOG_LEVEL ?= debug
