@@ -5,6 +5,8 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - 'apps/**/docker-compose.json'
+      - 'apps/**/config.json'
+      - 'apps/**/metadata/**'
   workflow_dispatch:
     inputs:
       pr_number:
@@ -86,16 +88,18 @@ jobs:
         if: steps.changed.outputs.files != ''
         run: docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun run lint
 
+      - name: Regenerate README
+        run: make readme
+
       - name: Commit and push changes
-        if: steps.changed.outputs.files != ''
         run: |
           head_ref=${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/*/config.json
+          git add apps/*/config.json README.md
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: bump tipi_version for updated dependencies"
+            git commit -m "chore: sync renovate metadata and readme"
             git push origin "HEAD:${head_ref}"
           fi
