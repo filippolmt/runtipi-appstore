@@ -99,12 +99,24 @@
       "addLabels": ["automerge"]
     },
     {
-      "matchPackageNames": ["mariadb", "mysql", "mongodb", "postgres", "redis"],
+      "matchDepNames": ["mariadb", "mysql", "postgres", "redis"],
       "enabled": false
     },
     {
-      "matchPackageNames": ["rssbridge/rss-bridge"],
+      "matchCategories": ["docker"],
+      "pinDigests": false
+    },
+    {
+      "matchDepNames": ["rssbridge/rss-bridge"],
       "pinDigests": true
+    },
+    {
+      "matchDepNames": ["diygod/rsshub"],
+      "versioning": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$"
+    },
+    {
+      "matchDepNames": ["nocobase/nocobase"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<build>-full)?$"
     }
   ]
 }
