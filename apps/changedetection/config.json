@@ -1,0 +1,28 @@
+{
+  "name": "ChangeDetection.io",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 5000,
+  "id": "changedetection",
+  "tipi_version": 1,
+  "version": "0.54.9",
+  "categories": ["automation"],
+  "description": "Self-hosted website change detection and notification service with Playwright browser support for JavaScript-rendered pages.",
+  "short_desc": "Website change detection with Playwright browser support",
+  "author": "dgtlmoon",
+  "source": "https://github.com/dgtlmoon/changedetection.io",
+  "website": "https://changedetection.io/",
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Base URL",
+      "required": false,
+      "env_variable": "CHANGEDETECTION_BASE_URL",
+      "hint": "Public URL for notifications (e.g. https://changedetection.example.com)"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1776432464051,
+  "updated_at": 1776432464051
+}
