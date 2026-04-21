@@ -11,7 +11,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.17.3 | 5678 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.18.0 | 5678 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/twenty/metadata/logo.jpg" width="24" height="24"> | [Twenty CRM](https://github.com/twentyhq/twenty) | Open-source CRM. Modern alternative to Salesforce | v1.23 | 3000 | `arm64` `amd64` |
 
 ### 🛠️ Development
