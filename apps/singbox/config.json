@@ -10,7 +10,7 @@
   "author": "SagerNet",
   "source": "https://github.com/SagerNet/sing-box",
   "website": "https://sing-box.sagernet.org/",
-  "version": "v1.13.9",
+  "version": "v1.13.11",
   "tipi_version": 13,
   "supported_architectures": ["amd64", "arm64"],
   "dynamic_config": false,
