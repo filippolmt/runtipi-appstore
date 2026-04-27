@@ -9,7 +9,7 @@
   "categories": ["utilities"],
   "description": "KitchenOwl keeps grocery lists and recipes organized with shared access, meal planning, and a responsive web UI.",
   "tipi_version": 4,
-  "version": "v0.7.7",
+  "version": "v0.7.8",
   "source": "https://github.com/TomBursch/kitchenowl",
   "website": "https://kitchenowl.org/",
   "exposable": true,
