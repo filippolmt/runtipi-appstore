@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "prHourlyLimit": 20,
+  "prConcurrentLimit": 0,
+  "branchConcurrentLimit": 0,
+  "platformAutomerge": true,
   "extends": ["config:recommended", ":dependencyDashboard"],
   "rebaseWhen": "conflicted",
   "enabledManagers": ["custom.regex"],
@@ -101,7 +104,7 @@
       "addLabels": ["major"]
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
       "addLabels": ["automerge"],
       "automerge": true,
       "automergeType": "pr",
