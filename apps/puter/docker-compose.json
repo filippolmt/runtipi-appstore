@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "puter",
-      "image": "ghcr.io/heyputer/puter:2.5.1",
+      "image": "ghcr.io/heyputer/puter:26.05.3",
       "isMain": true,
       "user": "root",
       "internalPort": 4100,
