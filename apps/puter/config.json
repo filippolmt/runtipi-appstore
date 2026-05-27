@@ -9,7 +9,7 @@
   "categories": ["utilities"],
   "description": "Puter is a self-hosted cloud computer that brings desktop-like file management, apps, and sharing to your browser.",
   "tipi_version": 3,
-  "version": "26.05.3",
+  "version": "26.05.4",
   "source": "https://github.com/HeyPuter/puter",
   "website": "https://puter.com/",
   "exposable": true,
