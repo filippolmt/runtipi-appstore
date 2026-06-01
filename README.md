@@ -19,7 +19,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/budibase/metadata/logo.jpg" width="24" height="24"> | [Budibase](https://github.com/Budibase/budibase) | Internal tools made easy. | 3.39.5 | 8268 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.0.57-full | 13000 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.0.60-full | 13000 | `arm64` `amd64` |
 
 ### 🧰 Utilities
 
@@ -32,4 +32,4 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rss-bridge/metadata/logo.jpg" width="24" height="24"> | [RSS-Bridge](https://github.com/RSS-Bridge/rss-bridge) | Generate RSS feeds for websites that don't have one | latest | 3001 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-05-30 | 8223 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/singbox/metadata/logo.jpg" width="24" height="24"> | [sing-box](https://github.com/SagerNet/sing-box) | Universal proxy platform for bypassing network restrictions | v1.13.12 | 8081 | `amd64` `arm64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/traccar/metadata/logo.jpg" width="24" height="24"> | [Traccar](https://github.com/traccar/traccar-docker) | GPS tracking platform | 6.13.3 | 8082 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/traccar/metadata/logo.jpg" width="24" height="24"> | [Traccar](https://github.com/traccar/traccar-docker) | GPS tracking platform | 6.14.1 | 8082 | `arm64` `amd64` |
