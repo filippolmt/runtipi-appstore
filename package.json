@@ -20,6 +20,6 @@
     "zod-validation-error": "^5.0.0"
   },
   "peerDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3 || ^6.0.0"
   }
 }
