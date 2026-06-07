@@ -16,7 +16,9 @@
     "module": "NodeNext",
     "outDir": "dist",
     "sourceMap": true,
-    "lib": ["es2022"]
+    "lib": ["es2022"],
+    /* TypeScript 6 no longer auto-includes node_modules/@types */
+    "types": ["bun", "node"]
   },
   "include": ["apps/**/*.ts"]
 }
