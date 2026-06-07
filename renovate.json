@@ -1,12 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "prHourlyLimit": 20,
+  "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "branchConcurrentLimit": 0,
   "platformAutomerge": true,
+  "gitIgnoredAuthors": ["github-actions[bot]@users.noreply.github.com"],
   "extends": ["config:recommended", ":dependencyDashboard"],
   "rebaseWhen": "conflicted",
-  "enabledManagers": ["custom.regex"],
+  "enabledManagers": ["custom.regex", "bun", "github-actions"],
   "customManagers": [
     {
       "customType": "regex",

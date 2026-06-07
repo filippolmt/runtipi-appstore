@@ -13,3 +13,11 @@ github.secrets
 app.png
 
 .cursorrules
+
+# >>> sdd-managed/openspec (toolbox)
+.claude/skills/openspec-*/
+.claude/commands/opsx/
+.codex/skills/openspec-*/
+openspec/config.yaml
+# <<< sdd-managed/openspec (toolbox)
+.toolbox.yaml

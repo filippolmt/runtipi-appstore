@@ -23,6 +23,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write
     steps:
       - name: Get PR info for workflow_dispatch
         id: pr
@@ -92,6 +93,7 @@ jobs:
         run: make readme
 
       - name: Commit and push changes
+        id: commit
         run: |
           head_ref=${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
           git config user.name "github-actions[bot]"
@@ -99,7 +101,19 @@ jobs:
           git add apps/*/config.json README.md
           if git diff --staged --quiet; then
             echo "No changes to commit"
+            echo "pushed=false" >> $GITHUB_OUTPUT
           else
             git commit -m "chore: sync renovate metadata and readme"
             git push origin "HEAD:${head_ref}"
+            echo "pushed=true" >> $GITHUB_OUTPUT
           fi
+
+      # Pushes made with GITHUB_TOKEN never trigger other workflows (anti-recursion),
+      # but GITHUB_TOKEN CAN trigger workflow_dispatch: explicitly run CI on the bump
+      # commit so the PR head carries the required `ci` status check.
+      - name: Trigger CI on bump commit
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_REF: ${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
+        run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$HEAD_REF"
