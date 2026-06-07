@@ -33,8 +33,8 @@
 ## 5. Validation end-to-end
 
 - [x] 5.1 Run `make test` and `make renovate-test` locally → 97 pass / 0 fail, lint clean, renovate config valid (only preexisting env warnings)
-- [ ] 5.2 Commit and merge this change (conventional commit, e.g. `fix(ci): restore renovate automerge chain`)
+- [x] 5.2 Commit and merge this change → PR #422, auto-merged alone via the new ruleset (`ci` green → squash-merge, zero clicks) — first real proof of Bug 3 fix
 - [ ] 5.3 Wait for / force the next Renovate PR (tick a checkbox on the Dependency Dashboard if needed)
 - [ ] 5.4 Verify on that PR: bump commit present → `ci` check runs on it → PR not "edited/blocked" on dashboard → auto-merge enabled → PR merges alone when green
 - [ ] 5.5 Verify README freshness path post-ruleset: bump commit on next Renovate PR includes regenerated README (weekly `readme-generator.yml` deleted)
-- [ ] 5.6 Verify the Dependency Dashboard shows no "rate-limited" section
+- [x] 5.6 Verify the Dependency Dashboard shows no "rate-limited" section → clean post-merge; new `bun`/`github-actions` managers detected (8 npm deps + checkout v6); only `typescript v6` major in Pending Approval (manual by design)
