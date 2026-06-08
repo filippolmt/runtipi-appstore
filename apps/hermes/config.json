@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Hermes Agent",
+  "id": "hermes",
+  "available": true,
+  "short_desc": "Self-hosted AI agent gateway by Nous Research",
+  "author": "Nous Research",
+  "port": 9119,
+  "categories": ["ai"],
+  "description": "Hermes Agent is a self-hosted AI agent by Nous Research. It runs as a persistent gateway that connects large language models to chat platforms (Telegram, Discord, Slack, WhatsApp) and exposes an OpenAI-compatible API server. A built-in web dashboard lets you manage sessions, memories, skills and configuration from the browser. All state (config, API keys, sessions, memories, skills) lives in a single data directory.",
+  "tipi_version": 1,
+  "version": "v2026.6.5",
+  "source": "https://github.com/NousResearch/hermes-agent",
+  "website": "https://hermes-agent.nousresearch.com",
+  "exposable": true,
+  "dynamic_config": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1780942001462,
+  "updated_at": 1780942001462,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Anthropic API Key",
+      "required": false,
+      "env_variable": "ANTHROPIC_API_KEY",
+      "hint": "Optional. Forwarded to the container and stored in /opt/data/.env"
+    },
+    {
+      "type": "password",
+      "label": "OpenAI API Key",
+      "required": false,
+      "env_variable": "OPENAI_API_KEY",
+      "hint": "Optional. Forwarded to the container and stored in /opt/data/.env"
+    },
+    {
+      "type": "password",
+      "label": "OpenRouter API Key",
+      "required": false,
+      "env_variable": "OPENROUTER_API_KEY",
+      "hint": "Optional. Forwarded to the container and stored in /opt/data/.env"
+    }
+  ]
+}

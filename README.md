@@ -1,7 +1,7 @@
 # Tipi App Store ⛺
 
-![Apps](https://img.shields.io/badge/apps-12-blue)
-![Categories](https://img.shields.io/badge/categories-3-green)
+![Apps](https://img.shields.io/badge/apps-13-blue)
+![Categories](https://img.shields.io/badge/categories-4-green)
 
 A curated collection of self-hosted applications for [Runtipi](https://runtipi.io/).
 
@@ -30,6 +30,12 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nginx/metadata/logo.jpg" width="24" height="24"> | [Nginx](https://github.com/nginx/nginx) | Open-source simple and fast web server. | 1.31.1 | 8754 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/puter/metadata/logo.jpg" width="24" height="24"> | [Puter](https://github.com/HeyPuter/puter) | Self-hosted cloud computer | 26.05.5 | 4100 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rss-bridge/metadata/logo.jpg" width="24" height="24"> | [RSS-Bridge](https://github.com/RSS-Bridge/rss-bridge) | Generate RSS feeds for websites that don't have one | latest | 3001 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-06-06 | 8223 | `amd64` `arm64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-06-08 | 8223 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/singbox/metadata/logo.jpg" width="24" height="24"> | [sing-box](https://github.com/SagerNet/sing-box) | Universal proxy platform for bypassing network restrictions | v1.13.13 | 8081 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/traccar/metadata/logo.jpg" width="24" height="24"> | [Traccar](https://github.com/traccar/traccar-docker) | GPS tracking platform | 6.14.4 | 8082 | `arm64` `amd64` |
+
+### 📦 ai
+
+| | Name | Description | Version | Port | Arch |
+|-|------|-------------|---------|------|------|
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/hermes/metadata/logo.jpg" width="24" height="24"> | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Self-hosted AI agent gateway by Nous Research | v2026.6.5 | 9119 | `arm64` `amd64` |
