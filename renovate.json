@@ -4,6 +4,7 @@
   "prConcurrentLimit": 0,
   "branchConcurrentLimit": 0,
   "platformAutomerge": true,
+  "dependencyDashboardApproval": false,
   "gitIgnoredAuthors": ["github-actions[bot]@users.noreply.github.com"],
   "extends": ["config:recommended", ":dependencyDashboard"],
   "rebaseWhen": "conflicted",
