@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-  # Dispatched by update-tipi-version.yml after pushing the bump commit:
-  # GITHUB_TOKEN pushes don't trigger pull_request events, but they can
-  # trigger workflow_dispatch, so CI still runs on the bump commit.
-  workflow_dispatch:
 
 jobs:
   ci:
