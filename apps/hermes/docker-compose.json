@@ -52,7 +52,7 @@
         }
       ],
       "healthCheck": {
-        "test": "wget --no-verbose --tries=1 --spider http://localhost:9119/ || exit 1",
+        "test": "curl -fsS http://localhost:9119/api/status || exit 1",
         "interval": "30s",
         "timeout": "5s",
         "retries": 5,
