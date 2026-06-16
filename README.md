@@ -11,15 +11,15 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.26.4 | 5678 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/twenty/metadata/logo.jpg" width="24" height="24"> | [Twenty CRM](https://github.com/twentyhq/twenty) | Open-source CRM. Modern alternative to Salesforce | v2.13 | 3000 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.27.0 | 5678 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/twenty/metadata/logo.jpg" width="24" height="24"> | [Twenty CRM](https://github.com/twentyhq/twenty) | Open-source CRM. Modern alternative to Salesforce | v2.14 | 3000 | `arm64` `amd64` |
 
 ### 🛠️ Development
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/budibase/metadata/logo.jpg" width="24" height="24"> | [Budibase](https://github.com/Budibase/budibase) | Internal tools made easy. | 3.39.16 | 8268 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.4-full | 13000 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.6-full | 13000 | `arm64` `amd64` |
 
 ### 🧰 Utilities
 
