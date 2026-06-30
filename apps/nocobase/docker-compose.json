@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "nocobase",
-      "image": "nocobase/nocobase:2.1.14-full",
+      "image": "nocobase/nocobase:2.1.15-full",
       "isMain": true,
       "internalPort": 80,
       "dependsOn": {
