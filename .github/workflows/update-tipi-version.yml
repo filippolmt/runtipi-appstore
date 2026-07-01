@@ -120,7 +120,6 @@ jobs:
       # so re-arm it here for automerge-labelled PRs. GitHub then merges (squash)
       # once the required `ci` check goes green. GITHUB_TOKEN suffices (PR write).
       - name: Re-enable auto-merge on automerge PRs
-        if: steps.commit.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number || github.event.pull_request.number }}
