@@ -106,6 +106,13 @@
       "depNameTemplate": "nousresearch/hermes-agent",
       "datasourceTemplate": "docker",
       "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/changedetection/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/dgtlmoon/changedetection.io",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
