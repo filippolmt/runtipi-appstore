@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "changedetection",
+      "image": "ghcr.io/dgtlmoon/changedetection.io:0.55.7",
+      "isMain": true,
+      "internalPort": 5000,
+      "environment": [
+        {
+          "key": "PLAYWRIGHT_DRIVER_URL",
+          "value": "ws://changedetection-sockpuppetbrowser:3000"
+        },
+        {
+          "key": "DEFAULT_FETCH_BACKEND",
+          "value": "html_webdriver"
+        }
+      ],
+      "dependsOn": {
+        "changedetection-sockpuppetbrowser": {
+          "condition": "service_started"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/datastore"
+        }
+      ]
+    },
+    {
+      "name": "changedetection-sockpuppetbrowser",
+      "image": "dgtlmoon/sockpuppetbrowser:0.0.3",
+      "capAdd": ["SYS_ADMIN"],
+      "environment": [
+        {
+          "key": "SCREEN_WIDTH",
+          "value": "1920"
+        },
+        {
+          "key": "SCREEN_HEIGHT",
+          "value": "1024"
+        },
+        {
+          "key": "SCREEN_DEPTH",
+          "value": "16"
+        },
+        {
+          "key": "MAX_CONCURRENT_CHROME_PROCESSES",
+          "value": "10"
+        }
+      ]
+    }
+  ]
+}
