@@ -13,7 +13,7 @@
     "@types/bun": "^1.3.14",
     "@types/node": "^26.0.0",
     "ajv": "^8.20.0",
-    "typescript": "^6.0.0"
+    "typescript": "^7.0.0"
   },
   "dependencies": {
     "@runtipi/common": "^1.1.3",
