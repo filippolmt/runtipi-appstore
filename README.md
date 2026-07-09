@@ -19,7 +19,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/budibase/metadata/logo.jpg" width="24" height="24"> | [Budibase](https://github.com/Budibase/budibase) | Internal tools made easy. | 3.39.29 | 8268 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/forgejo/metadata/logo.jpg" width="24" height="24"> | [Forgejo](https://codeberg.org/forgejo/forgejo/) | Beyond coding. We forge. · Lightweight software forge with built-in Actions CI/CD | 15.0.3 | 8195 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/forgejo/metadata/logo.jpg" width="24" height="24"> | [Forgejo](https://codeberg.org/forgejo/forgejo/) | Beyond coding. We forge. · Lightweight software forge with built-in Actions CI/CD | 15.0.4 | 8195 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.22-full | 13000 | `arm64` `amd64` |
 
 ### 🧰 Utilities
