@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "forgejo",
-      "image": "codeberg.org/forgejo/forgejo:15.0.3",
+      "image": "codeberg.org/forgejo/forgejo:15.0.4",
       "isMain": true,
       "internalPort": 3000,
       "addPorts": [{ "hostPort": 222, "containerPort": 22 }],
@@ -56,7 +56,7 @@
     },
     {
       "name": "forgejo-runner-register",
-      "image": "codeberg.org/forgejo/forgejo:15.0.3",
+      "image": "codeberg.org/forgejo/forgejo:15.0.4",
       "user": "git",
       "entrypoint": "/bin/sh",
       "command": [
