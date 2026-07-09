@@ -11,7 +11,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.30.1 | 5678 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/n8n/metadata/logo.jpg" width="24" height="24"> | [n8n](https://github.com/n8n-io/n8n) | Workflow Automation Tool. Alternative to Zapier | 2.30.2 | 5678 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/twenty/metadata/logo.jpg" width="24" height="24"> | [Twenty CRM](https://github.com/twentyhq/twenty) | Open-source CRM. Modern alternative to Salesforce | v2.19 | 3000 | `arm64` `amd64` |
 
 ### 🛠️ Development
@@ -31,7 +31,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nginx/metadata/logo.jpg" width="24" height="24"> | [Nginx](https://github.com/nginx/nginx) | Open-source simple and fast web server. | 1.31.2 | 8754 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/puter/metadata/logo.jpg" width="24" height="24"> | [Puter](https://github.com/HeyPuter/puter) | Self-hosted cloud computer | 26.06.2 | 4100 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rss-bridge/metadata/logo.jpg" width="24" height="24"> | [RSS-Bridge](https://github.com/RSS-Bridge/rss-bridge) | Generate RSS feeds for websites that don't have one | latest | 3001 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-07-08 | 8223 | `amd64` `arm64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-07-09 | 8223 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/singbox/metadata/logo.jpg" width="24" height="24"> | [sing-box](https://github.com/SagerNet/sing-box) | Universal proxy platform for bypassing network restrictions | v1.13.14 | 8081 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/traccar/metadata/logo.jpg" width="24" height="24"> | [Traccar](https://github.com/traccar/traccar-docker) | GPS tracking platform | 6.14.5 | 8082 | `arm64` `amd64` |
 
