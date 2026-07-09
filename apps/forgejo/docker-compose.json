@@ -48,7 +48,7 @@
     },
     {
       "name": "forgejo-dind",
-      "image": "docker:dind",
+      "image": "docker:29.6.1-dind",
       "privileged": true,
       "command": ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false"],
       "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/dind", "containerPath": "/var/lib/docker" }]
@@ -58,7 +58,10 @@
       "image": "codeberg.org/forgejo/forgejo:15.0.3",
       "user": "git",
       "entrypoint": "/bin/sh",
-      "command": ["-c", "forgejo forgejo-cli actions register --name tipi-runner --secret ${FORGEJO_RUNNER_SECRET} || true"],
+      "command": [
+        "-c",
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\" || true"
+      ],
       "environment": [
         { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
         { "key": "FORGEJO__database__HOST", "value": "forgejo-db:5432" },
@@ -69,7 +72,6 @@
       "dependsOn": {
         "forgejo": { "condition": "service_healthy" }
       },
-      "restart": "no",
       "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/forgejo", "containerPath": "/data" }]
     },
     {
@@ -78,7 +80,7 @@
       "entrypoint": "/bin/sh",
       "command": [
         "-c",
-        "if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret ${FORGEJO_RUNNER_SECRET}; fi; exec forgejo-runner daemon"
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; exec forgejo-runner daemon"
       ],
       "environment": [{ "key": "DOCKER_HOST", "value": "tcp://forgejo-dind:2375" }],
       "dependsOn": {
