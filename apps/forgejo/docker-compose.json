@@ -1,0 +1,95 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "forgejo",
+      "image": "codeberg.org/forgejo/forgejo:15.0.3",
+      "isMain": true,
+      "internalPort": 3000,
+      "addPorts": [{ "hostPort": 222, "containerPort": 22 }],
+      "environment": [
+        { "key": "USER_UID", "value": "1000" },
+        { "key": "USER_GID", "value": "1000" },
+        { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
+        { "key": "FORGEJO__database__HOST", "value": "forgejo-db:5432" },
+        { "key": "FORGEJO__database__NAME", "value": "forgejo" },
+        { "key": "FORGEJO__database__USER", "value": "forgejo" },
+        { "key": "FORGEJO__database__PASSWD", "value": "${FORGEJO_DB_PASSWORD}" },
+        { "key": "FORGEJO__actions__ENABLED", "value": "true" },
+        { "key": "FORGEJO__server__ROOT_URL", "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}/" }
+      ],
+      "dependsOn": {
+        "forgejo-db": { "condition": "service_healthy" }
+      },
+      "healthCheck": {
+        "test": "wget -qO- http://localhost:3000/api/healthz || exit 1",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 10,
+        "startPeriod": "30s"
+      },
+      "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/forgejo", "containerPath": "/data" }]
+    },
+    {
+      "name": "forgejo-db",
+      "image": "postgres:14",
+      "environment": [
+        { "key": "POSTGRES_USER", "value": "forgejo" },
+        { "key": "POSTGRES_PASSWORD", "value": "${FORGEJO_DB_PASSWORD}" },
+        { "key": "POSTGRES_DB", "value": "forgejo" }
+      ],
+      "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/postgres", "containerPath": "/var/lib/postgresql/data" }],
+      "healthCheck": {
+        "test": "pg_isready -h localhost -U $$POSTGRES_USER -d $$POSTGRES_DB",
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 10
+      }
+    },
+    {
+      "name": "forgejo-dind",
+      "image": "docker:29.6.1-dind",
+      "privileged": true,
+      "command": ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false"],
+      "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/dind", "containerPath": "/var/lib/docker" }]
+    },
+    {
+      "name": "forgejo-runner-register",
+      "image": "codeberg.org/forgejo/forgejo:15.0.3",
+      "user": "git",
+      "entrypoint": "/bin/sh",
+      "command": [
+        "-c",
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\" || true"
+      ],
+      "environment": [
+        { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
+        { "key": "FORGEJO__database__HOST", "value": "forgejo-db:5432" },
+        { "key": "FORGEJO__database__NAME", "value": "forgejo" },
+        { "key": "FORGEJO__database__USER", "value": "forgejo" },
+        { "key": "FORGEJO__database__PASSWD", "value": "${FORGEJO_DB_PASSWORD}" }
+      ],
+      "dependsOn": {
+        "forgejo": { "condition": "service_healthy" }
+      },
+      "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/forgejo", "containerPath": "/data" }]
+    },
+    {
+      "name": "forgejo-runner",
+      "image": "data.forgejo.org/forgejo/runner:12.13.0",
+      "entrypoint": "/bin/sh",
+      "command": [
+        "-c",
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; exec forgejo-runner daemon"
+      ],
+      "environment": [{ "key": "DOCKER_HOST", "value": "tcp://forgejo-dind:2375" }],
+      "dependsOn": {
+        "forgejo-runner-register": { "condition": "service_completed_successfully" },
+        "forgejo-dind": { "condition": "service_started" }
+      },
+      "workingDir": "/data",
+      "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/runner", "containerPath": "/data" }]
+    }
+  ]
+}
