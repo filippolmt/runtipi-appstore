@@ -89,7 +89,7 @@
       "entrypoint": "/bin/sh",
       "command": [
         "-c",
-        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; exec forgejo-runner daemon --label \"ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:act-22.04\" --label \"ubuntu-22.04:docker://ghcr.io/catthehacker/ubuntu:act-22.04\" --label \"docker:docker://data.forgejo.org/oci/alpine:3.20\""
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; printf '%s\\n' 'runner:' '  labels:' '    - \"ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"ubuntu-22.04:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"docker:docker://data.forgejo.org/oci/alpine:3.20\"' > /data/config.yaml; exec forgejo-runner daemon --config /data/config.yaml"
       ],
       "environment": [{ "key": "DOCKER_HOST", "value": "tcp://forgejo-dind:2375" }],
       "dependsOn": {
