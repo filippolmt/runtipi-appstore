@@ -62,7 +62,7 @@
       "entrypoint": "/bin/sh",
       "command": [
         "-c",
-        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\" || true"
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); until forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\"; do echo 'runner register failed, retrying in 3s'; sleep 3; done; touch /tmp/registered; echo 'runner registered'; while true; do sleep 3600; done"
       ],
       "environment": [
         { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
@@ -73,6 +73,13 @@
       ],
       "dependsOn": {
         "forgejo": { "condition": "service_healthy" }
+      },
+      "healthCheck": {
+        "test": "test -f /tmp/registered || exit 1",
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 30,
+        "startPeriod": "5s"
       },
       "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/forgejo", "containerPath": "/data" }]
     },
@@ -86,7 +93,7 @@
       ],
       "environment": [{ "key": "DOCKER_HOST", "value": "tcp://forgejo-dind:2375" }],
       "dependsOn": {
-        "forgejo-runner-register": { "condition": "service_completed_successfully" },
+        "forgejo-runner-register": { "condition": "service_healthy" },
         "forgejo-dind": { "condition": "service_started" }
       },
       "workingDir": "/data",
