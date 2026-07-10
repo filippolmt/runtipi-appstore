@@ -64,6 +64,8 @@
         "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\" || true"
       ],
       "environment": [
+        { "key": "GITEA_WORK_DIR", "value": "/data" },
+        { "key": "GITEA_CUSTOM", "value": "/data/gitea" },
         { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
         { "key": "FORGEJO__database__HOST", "value": "forgejo-db:5432" },
         { "key": "FORGEJO__database__NAME", "value": "forgejo" },
