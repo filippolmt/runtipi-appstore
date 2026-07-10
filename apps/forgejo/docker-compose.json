@@ -16,6 +16,7 @@
         { "key": "FORGEJO__database__NAME", "value": "forgejo" },
         { "key": "FORGEJO__database__USER", "value": "forgejo" },
         { "key": "FORGEJO__database__PASSWD", "value": "${FORGEJO_DB_PASSWORD}" },
+        { "key": "FORGEJO__security__INSTALL_LOCK", "value": "true" },
         { "key": "FORGEJO__actions__ENABLED", "value": "true" },
         { "key": "FORGEJO__server__ROOT_URL", "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}/" }
       ],
@@ -64,8 +65,6 @@
         "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); forgejo forgejo-cli actions register --name tipi-runner --secret \"$$S\" || true"
       ],
       "environment": [
-        { "key": "GITEA_WORK_DIR", "value": "/data" },
-        { "key": "GITEA_CUSTOM", "value": "/data/gitea" },
         { "key": "FORGEJO__database__DB_TYPE", "value": "postgres" },
         { "key": "FORGEJO__database__HOST", "value": "forgejo-db:5432" },
         { "key": "FORGEJO__database__NAME", "value": "forgejo" },
