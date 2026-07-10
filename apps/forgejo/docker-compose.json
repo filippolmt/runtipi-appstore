@@ -19,6 +19,7 @@
         { "key": "FORGEJO__security__INSTALL_LOCK", "value": "true" },
         { "key": "FORGEJO__actions__ENABLED", "value": "true" },
         { "key": "FORGEJO__server__DOMAIN", "value": "${APP_DOMAIN}" },
+        { "key": "FORGEJO__server__SSH_DOMAIN", "value": "${APP_DOMAIN}" },
         { "key": "FORGEJO__server__ROOT_URL", "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}/" },
         { "key": "FORGEJO__server__SSH_PORT", "value": "222" }
       ],
