@@ -18,7 +18,8 @@
         { "key": "FORGEJO__database__PASSWD", "value": "${FORGEJO_DB_PASSWORD}" },
         { "key": "FORGEJO__security__INSTALL_LOCK", "value": "true" },
         { "key": "FORGEJO__actions__ENABLED", "value": "true" },
-        { "key": "FORGEJO__server__ROOT_URL", "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}/" }
+        { "key": "FORGEJO__server__ROOT_URL", "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}/" },
+        { "key": "FORGEJO__server__SSH_PORT", "value": "222" }
       ],
       "dependsOn": {
         "forgejo-db": { "condition": "service_healthy" }
