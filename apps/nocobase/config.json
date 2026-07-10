@@ -9,7 +9,7 @@
   "categories": ["development"],
   "description": "NocoBase is the most extensible open-source no-code/low-code platform for building business applications and enterprise solutions. Create forms, dashboards, workflows, and more without writing code.",
   "tipi_version": 54,
-  "version": "2.1.22-full",
+  "version": "2.1.23-full",
   "source": "https://github.com/nocobase/nocobase",
   "website": "https://www.nocobase.com",
   "exposable": true,
