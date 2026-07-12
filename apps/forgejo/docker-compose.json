@@ -55,7 +55,7 @@
       "name": "forgejo-dind",
       "image": "docker:29.6.1-dind",
       "privileged": true,
-      "command": ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false"],
+      "command": ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false", "--insecure-registry", "forgejo:3000"],
       "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/dind", "containerPath": "/var/lib/docker" }]
     },
     {
