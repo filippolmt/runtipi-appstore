@@ -55,15 +55,9 @@
       "name": "forgejo-dind",
       "image": "docker:29.6.1-dind",
       "privileged": true,
+      "entrypoint": ["/bin/sh", "-c"],
       "command": [
-        "dockerd",
-        "-H",
-        "tcp://0.0.0.0:2375",
-        "--tls=false",
-        "--insecure-registry",
-        "forgejo:3000",
-        "--insecure-registry",
-        "${APP_DOMAIN}"
+        "GW=$$(ip route | awk '/^default/{print $$3; exit}'); echo \"$$GW ${APP_DOMAIN}\" >> /etc/hosts; exec dockerd-entrypoint.sh dockerd -H tcp://0.0.0.0:2375 --tls=false --insecure-registry forgejo:3000 --insecure-registry ${APP_DOMAIN}"
       ],
       "volumes": [{ "hostPath": "${APP_DATA_DIR}/data/dind", "containerPath": "/var/lib/docker" }]
     },
@@ -101,7 +95,7 @@
       "entrypoint": "/bin/sh",
       "command": [
         "-c",
-        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; GW=$$(ip route | awk '/^default/{print $$3; exit}'); printf '%s\\n' 'runner:' '  labels:' '    - \"ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"ubuntu-22.04:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"docker:docker://data.forgejo.org/oci/alpine:3.20\"' 'container:' '  network: host' \"  options: \\\"--add-host=${APP_DOMAIN}:$$GW\\\"\" > /data/config.yaml; exec forgejo-runner daemon --config /data/config.yaml"
+        "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; printf '%s\\n' 'runner:' '  envs:' '    DOCKER_HOST: tcp://localhost:2375' '  labels:' '    - \"ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"ubuntu-22.04:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"docker:docker://data.forgejo.org/oci/alpine:3.20\"' 'container:' '  network: host' > /data/config.yaml; exec forgejo-runner daemon --config /data/config.yaml"
       ],
       "environment": [{ "key": "DOCKER_HOST", "value": "tcp://forgejo-dind:2375" }],
       "dependsOn": {
