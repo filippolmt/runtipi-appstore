@@ -8,14 +8,14 @@
   "port": 8257,
   "categories": ["utilities"],
   "description": "The best and simplest free open source website change detection, restock monitor and notification service. Bundled with a sockpuppetbrowser sidecar for JavaScript rendering, the Visual Selector and Browser Steps.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "0.55.8",
   "source": "https://github.com/dgtlmoon/changedetection.io",
   "website": "https://changedetection.io/",
   "exposable": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1691943801422,
-  "updated_at": 1783283374000,
+  "updated_at": 1783954560696,
   "dynamic_config": true,
   "min_tipi_version": "4.5.0"
 }
