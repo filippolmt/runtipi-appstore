@@ -7,7 +7,7 @@
   "dynamic_config": true,
   "id": "forgejo",
   "tipi_version": 14,
-  "version": "15.0.4",
+  "version": "15.0.5",
   "categories": ["development"],
   "description": "Forgejo is a self-hosted lightweight software forge. Easy to install and low maintenance, it just does the job. This package ships Forgejo Actions enabled with a self-hosted runner that auto-registers on first boot (Docker-in-Docker executor), giving you built-in CI/CD without any manual setup.",
   "short_desc": "Beyond coding. We forge. · Lightweight software forge with built-in Actions CI/CD",
