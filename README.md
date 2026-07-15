@@ -20,7 +20,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/budibase/metadata/logo.jpg" width="24" height="24"> | [Budibase](https://github.com/Budibase/budibase) | Internal tools made easy. | 3.39.31 | 8268 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/forgejo/metadata/logo.jpg" width="24" height="24"> | [Forgejo](https://codeberg.org/forgejo/forgejo/) | Beyond coding. We forge. · Lightweight software forge with built-in Actions CI/CD | 15.0.5 | 8195 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.24-full | 13000 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.25-full | 13000 | `arm64` `amd64` |
 
 ### 🧰 Utilities
 
@@ -30,7 +30,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/kitchenowl/metadata/logo.jpg" width="24" height="24"> | [KitchenOwl](https://github.com/TomBursch/kitchenowl) | Self-hosted grocery list and recipe manager | v0.7.9 | 8080 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/mailpit/metadata/logo.jpg" width="24" height="24"> | [Mailpit](https://github.com/axllent/mailpit) | Email testing sandbox | v1.30.4 | 8025 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nginx/metadata/logo.jpg" width="24" height="24"> | [Nginx](https://github.com/nginx/nginx) | Open-source simple and fast web server. | 1.31.2 | 8754 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/puter/metadata/logo.jpg" width="24" height="24"> | [Puter](https://github.com/HeyPuter/puter) | Self-hosted cloud computer | 26.06.2 | 4100 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/puter/metadata/logo.jpg" width="24" height="24"> | [Puter](https://github.com/HeyPuter/puter) | Self-hosted cloud computer | 26.07.1 | 4100 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rss-bridge/metadata/logo.jpg" width="24" height="24"> | [RSS-Bridge](https://github.com/RSS-Bridge/rss-bridge) | Generate RSS feeds for websites that don't have one | latest | 3001 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/rsshub/metadata/logo.jpg" width="24" height="24"> | [RSSHub](https://github.com/DIYgod/RSSHub) | Everything is RSSible with RSSHub | 2026-07-14 | 8223 | `amd64` `arm64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/singbox/metadata/logo.jpg" width="24" height="24"> | [sing-box](https://github.com/SagerNet/sing-box) | Universal proxy platform for bypassing network restrictions | v1.13.14 | 8081 | `amd64` `arm64` |
