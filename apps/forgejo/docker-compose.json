@@ -53,7 +53,7 @@
     },
     {
       "name": "forgejo-dind",
-      "image": "docker:29.6.1-dind",
+      "image": "docker:29.6.2-dind",
       "privileged": true,
       "entrypoint": ["/bin/sh", "-c"],
       "command": [
