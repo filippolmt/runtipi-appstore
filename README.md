@@ -40,4 +40,4 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/hermes/metadata/logo.jpg" width="24" height="24"> | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Self-hosted AI agent gateway by Nous Research | v2026.7.7.2 | 9119 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/hermes/metadata/logo.jpg" width="24" height="24"> | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Self-hosted AI agent gateway by Nous Research | v2026.7.20 | 9119 | `arm64` `amd64` |
