@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "SonarQube",
+  "id": "sonarqube",
+  "available": true,
+  "short_desc": "Self-hosted static code analysis for code quality and security",
+  "author": "SonarSource",
+  "port": 9000,
+  "categories": ["development"],
+  "description": "SonarQube Community Build is a self-hosted platform for continuous inspection of code quality and security. It detects bugs, vulnerabilities and code smells across many programming languages and integrates with your CI pipeline.",
+  "tipi_version": 1,
+  "version": "26.5.0.122743-community",
+  "source": "https://github.com/SonarSource/sonarqube",
+  "website": "https://www.sonarsource.com/products/sonarqube/",
+  "exposable": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1784615445000,
+  "updated_at": 1784615445000,
+  "dynamic_config": true,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Database Password",
+      "env_variable": "DB_PASSWORD",
+      "min": 24
+    }
+  ]
+}

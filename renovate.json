@@ -101,6 +101,14 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/sonarqube/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "mc1arke/sonarqube-with-community-branch-plugin",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/hermes/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "nousresearch/hermes-agent",
