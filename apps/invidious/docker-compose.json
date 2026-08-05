@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "invidious",
+      "image": "quay.io/invidious/invidious:latest",
+      "isMain": true,
+      "internalPort": 3000,
+      "environment": [
+        {
+          "key": "INVIDIOUS_CONFIG",
+          "value": "db:\n  dbname: invidious\n  user: tipi\n  password: ${INVIDIOUS_DB_PASSWORD}\n  host: invidious-db\n  port: 5432\ncheck_tables: true\nuse_innertube_for_captions: true\ninvidious_companion:\n- private_url: \"http://invidious-companion:8282/companion\"\ninvidious_companion_key: ${INVIDIOUS_COMPANION_KEY}\nhmac_key: ${INVIDIOUS_HMAC_KEY}\ndomain: ${INVIDIOUS_DOMAIN}\nexternal_port: ${INVIDIOUS_EXTERNAL_PORT:-${APP_PORT}}\nhttps_only: ${INVIDIOUS_HTTPS_ONLY}"
+        }
+      ],
+      "dependsOn": {
+        "invidious-db": {
+          "condition": "service_healthy"
+        },
+        "invidious-companion": {
+          "condition": "service_started"
+        }
+      }
+    },
+    {
+      "name": "invidious-companion",
+      "image": "quay.io/invidious/invidious-companion:latest",
+      "environment": [
+        {
+          "key": "SERVER_SECRET_KEY",
+          "value": "${INVIDIOUS_COMPANION_KEY}"
+        }
+      ],
+      "capDrop": ["ALL"],
+      "securityOpt": ["no-new-privileges:true"],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/companion-cache",
+          "containerPath": "/var/tmp/youtubei.js"
+        }
+      ]
+    },
+    {
+      "name": "invidious-db",
+      "image": "postgres:18.2",
+      "environment": [
+        {
+          "key": "POSTGRES_DB",
+          "value": "invidious"
+        },
+        {
+          "key": "POSTGRES_USER",
+          "value": "tipi"
+        },
+        {
+          "key": "POSTGRES_PASSWORD",
+          "value": "${INVIDIOUS_DB_PASSWORD}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/postgres",
+          "containerPath": "/var/lib/postgresql"
+        }
+      ],
+      "healthCheck": {
+        "test": "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB",
+        "interval": "5s",
+        "timeout": "5s",
+        "retries": 10
+      }
+    }
+  ],
+  "overrides": [
+    {
+      "architecture": "arm64",
+      "services": [
+        {
+          "name": "invidious",
+          "image": "quay.io/invidious/invidious:latest-arm64"
+        }
+      ]
+    }
+  ]
+}

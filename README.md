@@ -1,7 +1,7 @@
 # Tipi App Store ⛺
 
-![Apps](https://img.shields.io/badge/apps-16-blue)
-![Categories](https://img.shields.io/badge/categories-4-green)
+![Apps](https://img.shields.io/badge/apps-17-blue)
+![Categories](https://img.shields.io/badge/categories-5-green)
 
 A curated collection of self-hosted applications for [Runtipi](https://runtipi.io/).
 
@@ -22,6 +22,12 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/forgejo/metadata/logo.jpg" width="24" height="24"> | [Forgejo](https://codeberg.org/forgejo/forgejo/) | Beyond coding. We forge. · Lightweight software forge with built-in Actions CI/CD | 16.0.2 | 8195 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nocobase/metadata/logo.jpg" width="24" height="24"> | [NocoBase](https://github.com/nocobase/nocobase) | Extensible open-source no-code/low-code platform for building business applications | 2.1.34-full | 13000 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/sonarqube/metadata/logo.jpg" width="24" height="24"> | [SonarQube](https://github.com/SonarSource/sonarqube) | Self-hosted static code analysis for code quality and security | 26.5.0.122743-community | 9000 | `arm64` `amd64` |
+
+### 📺 Media
+
+| | Name | Description | Version | Port | Arch |
+|-|------|-------------|---------|------|------|
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/invidious/metadata/logo.jpg" width="24" height="24"> | [Invidious](https://github.com/iv-org/invidious) | An alternative front-end to YouTube | latest | 8095 | `arm64` `amd64` |
 
 ### 🧰 Utilities
 
