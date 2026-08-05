@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Invidious",
+  "id": "invidious",
+  "available": true,
+  "exposable": true,
+  "dynamic_config": true,
+  "port": 8095,
+  "tipi_version": 3,
+  "version": "2.20260804.1",
+  "categories": ["media", "social"],
+  "description": "Invidious is an open source alternative front-end to YouTube. It lets you watch, search and subscribe to channels without ads, without tracking and without a Google account. Playback is handled by Invidious Companion, which fetches the video streams from YouTube on the server side.",
+  "short_desc": "An alternative front-end to YouTube",
+  "author": "iv-org",
+  "source": "https://github.com/iv-org/invidious",
+  "website": "https://invidious.io",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "HMAC Key",
+      "min": 20,
+      "max": 20,
+      "env_variable": "INVIDIOUS_HMAC_KEY"
+    },
+    {
+      "type": "random",
+      "label": "Companion Key",
+      "min": 16,
+      "max": 16,
+      "env_variable": "INVIDIOUS_COMPANION_KEY"
+    },
+    {
+      "type": "random",
+      "label": "Database Password",
+      "min": 32,
+      "env_variable": "INVIDIOUS_DB_PASSWORD"
+    },
+    {
+      "type": "fqdnip",
+      "label": "Domain",
+      "required": false,
+      "env_variable": "INVIDIOUS_DOMAIN",
+      "hint": "Domain or IP used to reach the instance (leave empty when accessing it locally)"
+    },
+    {
+      "type": "number",
+      "label": "External Port",
+      "required": false,
+      "min": 1,
+      "max": 65535,
+      "placeholder": "8095",
+      "env_variable": "INVIDIOUS_EXTERNAL_PORT",
+      "hint": "Port used in generated links when behind a reverse proxy (default: the app port)"
+    },
+    {
+      "type": "boolean",
+      "label": "HTTPS Only",
+      "required": false,
+      "default": false,
+      "env_variable": "INVIDIOUS_HTTPS_ONLY",
+      "hint": "Enable when the instance is served over HTTPS"
+    }
+  ],
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1785918578936,
+  "updated_at": 1785919537711,
+  "min_tipi_version": "4.5.0"
+}
