@@ -128,6 +128,13 @@
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "codeberg.org/forgejo/forgejo",
       "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/invidious/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "quay.io/invidious/invidious",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -149,6 +156,14 @@
     {
       "matchPackageNames": ["rssbridge/rss-bridge"],
       "pinDigests": true
+    },
+    {
+      "matchPackageNames": ["quay.io/invidious/invidious-companion"],
+      "versioning": "regex:^(?<major>\\d{4})\\.(?<minor>\\d{2})\\.(?<patch>\\d{2})-[0-9a-f]{7}$"
+    },
+    {
+      "matchPackageNames": ["quay.io/invidious/invidious"],
+      "versioning": "regex:^2\\.(?<major>\\d{4})(?<minor>\\d{2})(?<patch>\\d{2})\\.(?<build>\\d+)(?<compatibility>-arm64)?$"
     },
     {
       "matchPackageNames": ["diygod/rsshub"],

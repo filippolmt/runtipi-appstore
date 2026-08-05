@@ -19,5 +19,5 @@ Registrations are open by default: create an account from the login page to keep
 
 ## Notes
 
-- YouTube regularly changes its APIs. If playback breaks, update the app to pull the latest Invidious and Companion images.
+- YouTube regularly changes its APIs. If playback breaks, update the app to get the latest Invidious and Companion release.
 - Database tables are created automatically on first start (`check_tables`).
