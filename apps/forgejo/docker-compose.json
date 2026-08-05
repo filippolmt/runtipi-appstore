@@ -91,8 +91,8 @@
     },
     {
       "name": "forgejo-runner",
-      "image": "data.forgejo.org/forgejo/runner:12.13.2",
-      "entrypoint": "/bin/sh",
+      "image": "data.forgejo.org/forgejo/runner:13.0.0",
+      "entrypoint": ["/usr/bin/dumb-init", "/bin/sh"],
       "command": [
         "-c",
         "S=$$(printf '%s' \"${FORGEJO_RUNNER_SECRET}\" | sha1sum | cut -c1-40); if [ ! -f /data/.runner ]; then forgejo-runner create-runner-file --instance http://forgejo:3000 --secret \"$$S\"; fi; printf '%s\\n' 'runner:' '  envs:' '    DOCKER_HOST: tcp://localhost:2375' '  labels:' '    - \"ubuntu-latest:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"ubuntu-22.04:docker://ghcr.io/catthehacker/ubuntu:act-22.04\"' '    - \"docker:docker://data.forgejo.org/oci/alpine:3.20\"' 'container:' '  network: host' > /data/config.yaml; exec forgejo-runner daemon --config /data/config.yaml"
