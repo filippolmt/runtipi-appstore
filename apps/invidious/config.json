@@ -6,7 +6,7 @@
   "exposable": true,
   "dynamic_config": true,
   "port": 8095,
-  "tipi_version": 4,
+  "tipi_version": 5,
   "version": "2.20260804.1",
   "categories": ["media", "social"],
   "description": "Invidious is an open source alternative front-end to YouTube. It lets you watch, search and subscribe to channels without ads, without tracking and without a Google account. Playback is handled by Invidious Companion, which fetches the video streams from YouTube on the server side.",
@@ -63,6 +63,6 @@
   ],
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1785918578936,
-  "updated_at": 1786027332863,
+  "updated_at": 1786111798422,
   "min_tipi_version": "4.5.0"
 }
