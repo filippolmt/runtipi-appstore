@@ -1,0 +1,52 @@
+{
+  "id": "netbird",
+  "name": "NetBird",
+  "available": true,
+  "exposable": true,
+  "force_expose": true,
+  "port": 8083,
+  "categories": ["network", "security"],
+  "description": "Self-hosted NetBird control plane: management, signal, relay, STUN and embedded identity provider in a single server, plus the management dashboard.",
+  "short_desc": "Self-hosted WireGuard-based overlay network control plane",
+  "author": "NetBird",
+  "source": "https://github.com/netbirdio/netbird",
+  "website": "https://netbird.io",
+  "version": "0.77.1",
+  "tipi_version": 1,
+  "supported_architectures": ["amd64", "arm64"],
+  "dynamic_config": true,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Relay auth secret",
+      "env_variable": "NETBIRD_AUTH_SECRET",
+      "encoding": "base64",
+      "min": 32
+    },
+    {
+      "type": "random",
+      "label": "Session cookie encryption key",
+      "env_variable": "NETBIRD_SESSION_KEY",
+      "encoding": "base64",
+      "min": 32
+    },
+    {
+      "type": "random",
+      "label": "Datastore encryption key",
+      "env_variable": "NETBIRD_DATASTORE_KEY",
+      "encoding": "base64",
+      "min": 32
+    },
+    {
+      "type": "text",
+      "label": "External PostgreSQL DSN (optional)",
+      "env_variable": "NETBIRD_POSTGRES_DSN",
+      "required": false,
+      "placeholder": "host=db.example.com user=netbird password=secret dbname=netbird port=5432",
+      "hint": "Leave empty to use the bundled SQLite store. Set a DSN to use an external PostgreSQL server instead."
+    }
+  ],
+  "created_at": 1788297423499,
+  "updated_at": 1788297423499
+}

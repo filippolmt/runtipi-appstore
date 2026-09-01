@@ -1,0 +1,150 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "netbird-init",
+      "image": "alpine:3.22.5",
+      "entrypoint": ["/bin/sh", "-c"],
+      "command": [
+        "set -e\nmkdir -p /config\nSTORE_ENGINE=sqlite\nif [ -n \"$$NETBIRD_POSTGRES_DSN\" ]; then STORE_ENGINE=postgres; fi\ncat > /config/config.yaml <<EOF\nserver:\n  listenAddress: \":80\"\n  exposedAddress: \"$$NETBIRD_URL:443\"\n  stunPorts:\n    - 3478\n  metricsPort: 9090\n  healthcheckAddress: \":9000\"\n  logLevel: \"info\"\n  logFile: \"console\"\n  authSecret: \"$$NETBIRD_AUTH_SECRET\"\n  dataDir: \"/var/lib/netbird\"\n  auth:\n    issuer: \"$$NETBIRD_URL/oauth2\"\n    signKeyRefreshEnabled: true\n    sessionCookieEncryptionKey: \"$$NETBIRD_SESSION_KEY\"\n    dashboardRedirectURIs:\n      - \"$$NETBIRD_URL/nb-auth\"\n      - \"$$NETBIRD_URL/nb-silent-auth\"\n    cliRedirectURIs:\n      - \"http://localhost:53000/\"\n  reverseProxy:\n    trustedHTTPProxies:\n      - \"10.0.0.0/8\"\n      - \"172.16.0.0/12\"\n      - \"192.168.0.0/16\"\n  store:\n    engine: \"$$STORE_ENGINE\"\n    encryptionKey: \"$$NETBIRD_DATASTORE_KEY\"\nEOF\nif [ \"$$STORE_ENGINE\" = postgres ]; then\n  printf '    dsn: \"%s\"\\n' \"$$NETBIRD_POSTGRES_DSN\" >> /config/config.yaml\nfi\n"
+      ],
+      "environment": [
+        {
+          "key": "NETBIRD_URL",
+          "value": "${APP_PROTOCOL:-https}://${APP_DOMAIN}"
+        },
+        {
+          "key": "NETBIRD_AUTH_SECRET",
+          "value": "${NETBIRD_AUTH_SECRET}"
+        },
+        {
+          "key": "NETBIRD_SESSION_KEY",
+          "value": "${NETBIRD_SESSION_KEY}"
+        },
+        {
+          "key": "NETBIRD_DATASTORE_KEY",
+          "value": "${NETBIRD_DATASTORE_KEY}"
+        },
+        {
+          "key": "NETBIRD_POSTGRES_DSN",
+          "value": "${NETBIRD_POSTGRES_DSN:-}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/config",
+          "containerPath": "/config"
+        }
+      ]
+    },
+    {
+      "name": "netbird-server",
+      "image": "netbirdio/netbird-server:0.77.1",
+      "addToMainNetwork": true,
+      "addPorts": [
+        {
+          "hostPort": 3478,
+          "containerPort": 3478,
+          "udp": true
+        }
+      ],
+      "dependsOn": {
+        "netbird-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/config",
+          "containerPath": "/etc/netbird"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/netbird",
+          "containerPath": "/var/lib/netbird"
+        }
+      ],
+      "extraLabels": {
+        "traefik.enable": true,
+        "traefik.docker.network": "runtipi_tipi_main_network",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-grpc.rule": "Host(`${APP_DOMAIN}`) && (PathPrefix(`/signalexchange.SignalExchange/`) || PathPrefix(`/management.ManagementService/`))",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-grpc.entrypoints": "websecure",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-grpc.tls.certresolver": "myresolver",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-grpc.priority": "100",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-grpc.service": "{{ RUNTIPI_APP_ID }}-h2c",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-backend.rule": "Host(`${APP_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/relay`) || PathPrefix(`/ws-proxy/`) || PathPrefix(`/oauth2`))",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-backend.entrypoints": "websecure",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-backend.tls.certresolver": "myresolver",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-backend.priority": "100",
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}-backend.service": "{{ RUNTIPI_APP_ID }}-backend",
+        "traefik.http.services.{{ RUNTIPI_APP_ID }}-backend.loadbalancer.server.port": "80",
+        "traefik.http.services.{{ RUNTIPI_APP_ID }}-h2c.loadbalancer.server.port": "80",
+        "traefik.http.services.{{ RUNTIPI_APP_ID }}-h2c.loadbalancer.server.scheme": "h2c"
+      }
+    },
+    {
+      "name": "netbird-dashboard",
+      "image": "netbirdio/dashboard:v2.91.1",
+      "isMain": true,
+      "internalPort": 80,
+      "dependsOn": {
+        "netbird-server": {
+          "condition": "service_started"
+        }
+      },
+      "environment": [
+        {
+          "key": "NETBIRD_MGMT_API_ENDPOINT",
+          "value": "${APP_PROTOCOL:-https}://${APP_DOMAIN}"
+        },
+        {
+          "key": "NETBIRD_MGMT_GRPC_API_ENDPOINT",
+          "value": "${APP_PROTOCOL:-https}://${APP_DOMAIN}"
+        },
+        {
+          "key": "AUTH_AUDIENCE",
+          "value": "netbird-dashboard"
+        },
+        {
+          "key": "AUTH_CLIENT_ID",
+          "value": "netbird-dashboard"
+        },
+        {
+          "key": "AUTH_CLIENT_SECRET",
+          "value": "${NETBIRD_AUTH_CLIENT_SECRET:-}"
+        },
+        {
+          "key": "AUTH_AUTHORITY",
+          "value": "${APP_PROTOCOL:-https}://${APP_DOMAIN}/oauth2"
+        },
+        {
+          "key": "USE_AUTH0",
+          "value": "false"
+        },
+        {
+          "key": "AUTH_SUPPORTED_SCOPES",
+          "value": "openid profile email groups"
+        },
+        {
+          "key": "AUTH_REDIRECT_URI",
+          "value": "/nb-auth"
+        },
+        {
+          "key": "AUTH_SILENT_REDIRECT_URI",
+          "value": "/nb-silent-auth"
+        },
+        {
+          "key": "NGINX_SSL_PORT",
+          "value": "443"
+        },
+        {
+          "key": "LETSENCRYPT_DOMAIN",
+          "value": "none"
+        }
+      ],
+      "extraLabels": {
+        "traefik.http.routers.{{ RUNTIPI_APP_ID }}.priority": "1"
+      }
+    }
+  ]
+}
