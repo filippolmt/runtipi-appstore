@@ -7,7 +7,7 @@
       "image": "alpine:3.24.1",
       "entrypoint": ["/bin/sh", "-c"],
       "command": [
-        "set -e\nmkdir -p /config\nSTORE_ENGINE=sqlite\nif [ -n \"$$NETBIRD_POSTGRES_DSN\" ]; then STORE_ENGINE=postgres; fi\ncat > /config/config.yaml <<EOF\nserver:\n  listenAddress: \":80\"\n  exposedAddress: \"$$NETBIRD_URL:443\"\n  stunPorts:\n    - 3478\n  metricsPort: 9090\n  healthcheckAddress: \":9000\"\n  logLevel: \"info\"\n  logFile: \"console\"\n  authSecret: \"$$NETBIRD_AUTH_SECRET\"\n  dataDir: \"/var/lib/netbird\"\n  auth:\n    issuer: \"$$NETBIRD_URL/oauth2\"\n    signKeyRefreshEnabled: true\n    sessionCookieEncryptionKey: \"$$NETBIRD_SESSION_KEY\"\n    dashboardRedirectURIs:\n      - \"$$NETBIRD_URL/nb-auth\"\n      - \"$$NETBIRD_URL/nb-silent-auth\"\n    cliRedirectURIs:\n      - \"http://localhost:53000/\"\n  reverseProxy:\n    trustedHTTPProxies:\n      - \"10.0.0.0/8\"\n      - \"172.16.0.0/12\"\n      - \"192.168.0.0/16\"\n  store:\n    engine: \"$$STORE_ENGINE\"\n    encryptionKey: \"$$NETBIRD_DATASTORE_KEY\"\nEOF\nif [ \"$$STORE_ENGINE\" = postgres ]; then\n  printf '    dsn: \"%s\"\\n' \"$$NETBIRD_POSTGRES_DSN\" >> /config/config.yaml\nfi\n"
+        "set -e\nmkdir -p /config\nSTORE_ENGINE=sqlite\nif [ -n \"$$NETBIRD_POSTGRES_DSN\" ]; then STORE_ENGINE=postgres; fi\ncat > /config/config.yaml <<EOF\nserver:\n  listenAddress: \":80\"\n  exposedAddress: \"$$NETBIRD_URL:443\"\n  stunPorts:\n    - 3478\n  metricsPort: 9090\n  healthcheckAddress: \":9000\"\n  logLevel: \"info\"\n  logFile: \"console\"\n  authSecret: \"$$NETBIRD_AUTH_SECRET\"\n  dataDir: \"/var/lib/netbird\"\n  auth:\n    issuer: \"$$NETBIRD_URL/oauth2\"\n    signKeyRefreshEnabled: true\n    sessionCookieEncryptionKey: \"$$NETBIRD_SESSION_KEY\"\n    dashboardRedirectURIs:\n      - \"$$NETBIRD_URL/nb-auth\"\n      - \"$$NETBIRD_URL/nb-silent-auth\"\n    cliRedirectURIs:\n      - \"http://localhost:53000/\"\n  reverseProxy:\n    trustedHTTPProxies:\n      - \"10.0.0.0/8\"\n      - \"172.16.0.0/12\"\n      - \"192.168.0.0/16\"\n  store:\n    engine: \"$$STORE_ENGINE\"\n    encryptionKey: \"$$NETBIRD_DATASTORE_KEY\"\nEOF\nif [ \"$$STORE_ENGINE\" = postgres ]; then\n  printf '    dsn: \"%s\"\\n' \"$$NETBIRD_POSTGRES_DSN\" >> /config/config.yaml\nfi\ntouch /tmp/rendered\necho \"config.yaml rendered\"\nwhile true; do sleep 3600; done\n"
       ],
       "environment": [
         {
@@ -36,7 +36,14 @@
           "hostPath": "${APP_DATA_DIR}/data/config",
           "containerPath": "/config"
         }
-      ]
+      ],
+      "healthCheck": {
+        "test": "test -f /tmp/rendered",
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 20,
+        "startPeriod": "2s"
+      }
     },
     {
       "name": "netbird-server",
@@ -51,7 +58,7 @@
       ],
       "dependsOn": {
         "netbird-init": {
-          "condition": "service_completed_successfully"
+          "condition": "service_healthy"
         }
       },
       "volumes": [
