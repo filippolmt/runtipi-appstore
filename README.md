@@ -1,7 +1,7 @@
 # Tipi App Store ⛺
 
-![Apps](https://img.shields.io/badge/apps-17-blue)
-![Categories](https://img.shields.io/badge/categories-5-green)
+![Apps](https://img.shields.io/badge/apps-18-blue)
+![Categories](https://img.shields.io/badge/categories-6-green)
 
 A curated collection of self-hosted applications for [Runtipi](https://runtipi.io/).
 
@@ -48,3 +48,9 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/hermes/metadata/logo.jpg" width="24" height="24"> | [Hermes Agent](https://github.com/NousResearch/hermes-agent) | Self-hosted AI agent gateway by Nous Research | v2026.8.31 | 9119 | `arm64` `amd64` |
+
+### 📦 network
+
+| | Name | Description | Version | Port | Arch |
+|-|------|-------------|---------|------|------|
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/netbird/metadata/logo.jpg" width="24" height="24"> | [NetBird](https://github.com/netbirdio/netbird) | Self-hosted WireGuard-based overlay network control plane | 0.77.1 | 8083 | `amd64` `arm64` |
