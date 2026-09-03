@@ -126,7 +126,7 @@
       "customType": "regex",
       "managerFilePatterns": ["apps/forgejo/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
-      "depNameTemplate": "codeberg.org/forgejo/forgejo",
+      "depNameTemplate": "data.forgejo.org/forgejo/forgejo",
       "datasourceTemplate": "docker"
     },
     {
