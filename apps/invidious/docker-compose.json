@@ -24,7 +24,7 @@
     },
     {
       "name": "invidious-companion",
-      "image": "quay.io/invidious/invidious-companion:2026.08.10-0b9b9ea",
+      "image": "quay.io/invidious/invidious-companion:2026.09.05-6049c32",
       "environment": [
         {
           "key": "SERVER_SECRET_KEY",
