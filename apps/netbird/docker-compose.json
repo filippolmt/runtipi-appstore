@@ -47,7 +47,7 @@
     },
     {
       "name": "netbird-server",
-      "image": "netbirdio/netbird-server:0.78.2",
+      "image": "netbirdio/netbird-server:0.79.0",
       "addToMainNetwork": true,
       "addPorts": [
         {
