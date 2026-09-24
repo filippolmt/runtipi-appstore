@@ -91,7 +91,7 @@
     },
     {
       "name": "netbird-dashboard",
-      "image": "netbirdio/dashboard:v2.92.0",
+      "image": "netbirdio/dashboard:v2.93.0",
       "isMain": true,
       "internalPort": 80,
       "dependsOn": {
