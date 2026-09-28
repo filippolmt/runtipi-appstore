@@ -2,6 +2,12 @@
 
 To enable OAUTH integrations you will need to enable the "expose app" option and configure a URL in Tipi. This setting can be changed at a later date if an integration is identified that needs it.
 
+### n8n Assistant
+
+The app bundles n8n's self-hosted sandbox (`n8n-sandbox`), which n8n Assistant needs to run code. To turn the Assistant on, add your model API key (Anthropic, OpenAI or OpenRouter) in the instance's AI settings. Web search is optional: configure a Brave Search or SearXNG credential in the same settings (a separate SearXNG instance must have the `json` format enabled).
+
+The sandbox runner is a **privileged** Docker-in-Docker container and needs at least 4 GB of RAM and 2 vCPUs in total. n8n recommends this sandbox for development and testing only.
+
 ## Easily automate tasks across different services.
 
 n8n is an extendable workflow automation tool. With a fair-code distribution model, n8n will always have visible source code, be available to self-host, and allow you to add your own custom functions, logic and apps. n8n's node-based approach makes it highly

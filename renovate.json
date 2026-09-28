@@ -24,6 +24,12 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/n8n/docker-compose.json"],
+      "matchStrings": ["\"value\":\\s*\"(?<depName>ghcr\\.io/n8n-io/n8n-sandbox-service-sandbox):(?<currentValue>[^\"]+)\""],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/budibase/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "budibase/budibase",
@@ -172,6 +178,10 @@
     {
       "matchPackageNames": ["n8nio/n8n", "n8nio/runners"],
       "groupName": "n8n"
+    },
+    {
+      "matchPackageNames": ["/^ghcr\\.io/n8n-io/n8n-sandbox-service-/"],
+      "groupName": "n8n-sandbox"
     },
     {
       "matchPackageNames": ["netbirdio/netbird-server", "netbirdio/dashboard"],
