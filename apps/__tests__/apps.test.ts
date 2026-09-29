@@ -50,8 +50,9 @@ const getFile = (app: string, file: string): string | null => {
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 ajv.addMetaSchema(draft7MetaSchema);
 const localDynamicSchemaPath = path.join(process.cwd(), "apps", "dynamic-compose-schema.json");
-const localSchema = JSON.parse(fs.readFileSync(localDynamicSchemaPath, "utf-8"));
-const validateDynamic = ajv.compile(localSchema);
+const localAppSchemaPath = path.join(process.cwd(), "apps", "app-info-schema.json");
+const validateDynamic = ajv.compile(JSON.parse(fs.readFileSync(localDynamicSchemaPath, "utf-8")));
+const validateApp = ajv.compile(JSON.parse(fs.readFileSync(localAppSchemaPath, "utf-8")));
 
 describe("each app should have the required files", () => {
   const apps = getApps();
@@ -75,14 +76,12 @@ describe("each app should have a valid config.json", () => {
     test(`app ${app} should have a valid config.json`, () => {
       const config = getAppConfig(app);
 
-      expect(config.id).toBeDefined();
-      expect(config.name).toBeDefined();
-      expect(config.available).toBeDefined();
-      expect(config.tipi_version).toBeDefined();
+      const schemaValid = validateApp(config);
+      if (!schemaValid) {
+        console.error(`Schema validation failed for app ${app}:`, validateApp.errors);
+      }
+      expect(schemaValid).toBe(true);
       expect(config.tipi_version).toBeGreaterThan(0);
-      expect(config.short_desc).toBeDefined();
-      expect(config.author).toBeDefined();
-      expect(config.source).toBeDefined();
     });
   }
 });

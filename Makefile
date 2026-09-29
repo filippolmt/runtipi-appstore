@@ -5,10 +5,10 @@ RENOVATE_LOG_LEVEL ?= debug
 .PHONY: test ci renovate-test readme bun-shell
 
 test:
-	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint && bun test"
+	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint && bun run typecheck && bun test"
 
 ci:
-	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint:ci && bun test"
+	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun run lint:ci && bun run typecheck && bun test"
 
 readme:
 	$(DOCKER_RUN) $(BUN_IMAGE) sh -lc "bun install --ignore-scripts && bun .github/scripts/readme-generator.ts"

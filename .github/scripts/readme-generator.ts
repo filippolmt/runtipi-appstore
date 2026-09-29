@@ -87,7 +87,7 @@ function main() {
     return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
   });
 
-  const sections = sortedCategories.map((cat) => buildCategorySection(cat, grouped[cat]));
+  const sections = sortedCategories.map((cat) => buildCategorySection(cat, grouped[cat] ?? []));
   const appsList = sections.join("\n\n");
 
   const template = fs.readFileSync(templatePath, "utf8");
