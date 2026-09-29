@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Paperclip",
+  "id": "paperclip",
+  "available": true,
+  "short_desc": "Open-source orchestration for teams of AI agents",
+  "author": "Paperclip Labs",
+  "port": 3100,
+  "categories": ["ai", "automation"],
+  "description": "Paperclip is an open-source control plane for orchestrating teams of AI agents. It provides task management, organizational structure, budgets, governance, scheduled heartbeats, persistent workspaces, and an audit trail from a single web dashboard.",
+  "tipi_version": 1,
+  "version": "2026.916.1",
+  "source": "https://github.com/paperclipai/paperclip",
+  "website": "https://paperclip.ing/",
+  "exposable": false,
+  "dynamic_config": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1790709415258,
+  "updated_at": 1790709671200,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Authentication Secret",
+      "env_variable": "BETTER_AUTH_SECRET",
+      "min": 64,
+      "encoding": "hex"
+    },
+    {
+      "type": "random",
+      "label": "Tool Action Signing Secret",
+      "env_variable": "PAPERCLIP_TOOL_ACTION_SIGNING_SECRET",
+      "min": 64,
+      "encoding": "hex"
+    },
+    {
+      "type": "password",
+      "label": "Anthropic API Key",
+      "required": false,
+      "env_variable": "ANTHROPIC_API_KEY",
+      "hint": "Optional. Enables local Claude agent runs. It can also be configured later in Paperclip."
+    },
+    {
+      "type": "password",
+      "label": "OpenAI API Key",
+      "required": false,
+      "env_variable": "OPENAI_API_KEY",
+      "hint": "Optional. Enables local Codex agent runs. It can also be configured later in Paperclip."
+    }
+  ]
+}
