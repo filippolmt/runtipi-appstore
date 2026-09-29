@@ -20,5 +20,5 @@
     /* TypeScript 6 no longer auto-includes node_modules/@types */
     "types": ["bun", "node"]
   },
-  "include": ["apps/**/*.ts"]
+  "include": ["apps/**/*.ts", "scripts/**/*.ts", ".github/scripts/**/*.ts"]
 }
