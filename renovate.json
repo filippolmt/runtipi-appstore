@@ -59,6 +59,14 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/paperclip/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/paperclipai/paperclip",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/traccar/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "traccar/traccar",
