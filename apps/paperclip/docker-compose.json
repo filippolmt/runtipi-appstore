@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "paperclip",
-      "image": "ghcr.io/paperclipai/paperclip:2026.916.1",
+      "image": "ghcr.io/paperclipai/paperclip:2026.1001.0",
       "isMain": true,
       "internalPort": 3100,
       "environment": [
