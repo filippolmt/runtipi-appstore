@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Tasterr",
+  "id": "tasterr",
+  "available": true,
+  "short_desc": "Personalized media discovery for TMDB and Seerr",
+  "author": "Zachary Arthur",
+  "port": 8000,
+  "categories": ["media"],
+  "description": "Tasterr is a self-hosted, Netflix-style discovery interface for household media stacks. It combines the TMDB catalog with Seerr authentication, library availability, and requests, then learns a separate taste profile for each user.",
+  "tipi_version": 1,
+  "version": "2.1.1",
+  "source": "https://github.com/ZacharyArthur/tasterr",
+  "website": "https://github.com/ZacharyArthur/tasterr",
+  "exposable": true,
+  "dynamic_config": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1791143530283,
+  "updated_at": 1791143530283,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "TMDB API Key",
+      "required": true,
+      "env_variable": "TMDB_API_KEY",
+      "hint": "TMDB v3 API key used to browse the movie and TV catalog."
+    },
+    {
+      "type": "url",
+      "label": "Seerr Internal URL",
+      "required": true,
+      "env_variable": "SEERR_INTERNAL_URL",
+      "placeholder": "http://192.168.1.10:5055",
+      "hint": "URL Tasterr can use from inside its container to reach Seerr. Do not use localhost unless Seerr runs in this container."
+    },
+    {
+      "type": "url",
+      "label": "Seerr External URL",
+      "required": true,
+      "env_variable": "SEERR_EXTERNAL_URL",
+      "placeholder": "https://requests.example.com",
+      "hint": "Public or LAN URL that household browsers use to open Seerr."
+    },
+    {
+      "type": "password",
+      "label": "Seerr API Key",
+      "required": true,
+      "env_variable": "SEERR_API_KEY",
+      "hint": "Available in Seerr under Settings > General."
+    },
+    {
+      "type": "random",
+      "label": "Tasterr Secret Key",
+      "min": 32,
+      "encoding": "base64",
+      "env_variable": "TASTERR_SECRET_KEY",
+      "hint": "Encrypts stored Plex tokens. Keep this value stable across upgrades."
+    }
+  ]
+}

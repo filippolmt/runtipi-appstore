@@ -67,6 +67,13 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/tasterr/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/zacharyarthur/tasterr",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/traccar/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "traccar/traccar",
