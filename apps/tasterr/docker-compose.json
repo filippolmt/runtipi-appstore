@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "tasterr",
+      "image": "ghcr.io/zacharyarthur/tasterr:2.1.1",
+      "isMain": true,
+      "internalPort": 8000,
+      "environment": [
+        {
+          "key": "TMDB_API_KEY",
+          "value": "${TMDB_API_KEY}"
+        },
+        {
+          "key": "SEERR_INTERNAL_URL",
+          "value": "${SEERR_INTERNAL_URL}"
+        },
+        {
+          "key": "SEERR_EXTERNAL_URL",
+          "value": "${SEERR_EXTERNAL_URL}"
+        },
+        {
+          "key": "SEERR_API_KEY",
+          "value": "${SEERR_API_KEY}"
+        },
+        {
+          "key": "TASTERR_SECRET_KEY",
+          "value": "${TASTERR_SECRET_KEY}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/tasterr",
+          "containerPath": "/data"
+        }
+      ],
+      "healthCheck": {
+        "test": "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3)\"",
+        "interval": "30s",
+        "timeout": "5s",
+        "retries": 5,
+        "startPeriod": "15s"
+      }
+    }
+  ]
+}
