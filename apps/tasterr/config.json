@@ -9,7 +9,7 @@
   "categories": ["media"],
   "description": "Tasterr is a self-hosted, Netflix-style discovery interface for household media stacks. It combines the TMDB catalog with Seerr authentication, library availability, and requests, then learns a separate taste profile for each user.",
   "tipi_version": 1,
-  "version": "2.1.1",
+  "version": "2.2.0",
   "source": "https://github.com/ZacharyArthur/tasterr",
   "website": "https://github.com/ZacharyArthur/tasterr",
   "exposable": true,
