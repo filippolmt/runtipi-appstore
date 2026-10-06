@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "karakeep",
+      "image": "ghcr.io/karakeep-app/karakeep:0.33.2",
+      "isMain": true,
+      "internalPort": 3000,
+      "environment": [
+        {
+          "key": "NEXTAUTH_URL",
+          "value": "${APP_PROTOCOL:-http}://${APP_DOMAIN}"
+        },
+        {
+          "key": "NEXTAUTH_SECRET",
+          "value": "${KARAKEEP_NEXTAUTH_SECRET}"
+        },
+        {
+          "key": "MEILI_ADDR",
+          "value": "http://karakeep-meilisearch:7700"
+        },
+        {
+          "key": "MEILI_MASTER_KEY",
+          "value": "${KARAKEEP_MEILI_MASTER_KEY}"
+        },
+        {
+          "key": "BROWSER_WEB_URL",
+          "value": "http://karakeep-chrome:9222"
+        },
+        {
+          "key": "DATA_DIR",
+          "value": "/data"
+        },
+        {
+          "key": "OPENAI_API_KEY",
+          "value": "${KARAKEEP_OPENAI_API_KEY}"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/karakeep",
+          "containerPath": "/data"
+        }
+      ]
+    },
+    {
+      "name": "karakeep-chrome",
+      "image": "ghcr.io/karakeep-app/karakeep-chrome:release",
+      "command": [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--hide-scrollbars",
+        "--disable-blink-features=AutomationControlled",
+        "--window-size=1440,900"
+      ]
+    },
+    {
+      "name": "karakeep-meilisearch",
+      "image": "getmeili/meilisearch:v1.41.0",
+      "environment": [
+        {
+          "key": "MEILI_MASTER_KEY",
+          "value": "${KARAKEEP_MEILI_MASTER_KEY}"
+        },
+        {
+          "key": "MEILI_NO_ANALYTICS",
+          "value": "true"
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/meilisearch",
+          "containerPath": "/meili_data"
+        }
+      ]
+    }
+  ]
+}
