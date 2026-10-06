@@ -8,7 +8,7 @@
   "port": 3002,
   "categories": ["utilities"],
   "description": "Karakeep is a self-hosted bookmark manager for saving links, notes, and images. It includes full-text search, automatic content fetching, and optional AI-powered tagging.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "0.33.2",
   "source": "https://github.com/karakeep-app/karakeep",
   "website": "https://karakeep.app/",
@@ -16,7 +16,7 @@
   "dynamic_config": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1791290876000,
-  "updated_at": 1791290876000,
+  "updated_at": 1791291917000,
   "min_tipi_version": "4.5.0",
   "form_fields": [
     {
@@ -35,10 +35,50 @@
     },
     {
       "type": "password",
-      "label": "OpenAI API Key",
+      "label": "AI API Key",
       "required": false,
       "env_variable": "KARAKEEP_OPENAI_API_KEY",
-      "hint": "Optional. Enables AI-powered automatic tagging."
+      "hint": "Optional. OpenAI or OpenAI-compatible provider API key."
+    },
+    {
+      "type": "url",
+      "label": "AI API Base URL",
+      "required": false,
+      "default": "https://api.openai.com/v1",
+      "env_variable": "KARAKEEP_OPENAI_BASE_URL",
+      "hint": "Use https://ollama.com/v1 for Ollama Cloud."
+    },
+    {
+      "type": "text",
+      "label": "AI Text Model",
+      "required": false,
+      "default": "gpt-5.6-luna",
+      "env_variable": "KARAKEEP_INFERENCE_TEXT_MODEL",
+      "hint": "Model used for text tagging and summarization."
+    },
+    {
+      "type": "text",
+      "label": "AI Image Model",
+      "required": false,
+      "default": "gpt-4o-mini",
+      "env_variable": "KARAKEEP_INFERENCE_IMAGE_MODEL",
+      "hint": "Vision-capable model used for image tagging."
+    },
+    {
+      "type": "boolean",
+      "label": "Use Max Completion Tokens",
+      "required": false,
+      "default": true,
+      "env_variable": "KARAKEEP_INFERENCE_USE_MAX_COMPLETION_TOKENS",
+      "hint": "Disable for Ollama Cloud, which supports max_tokens instead."
+    },
+    {
+      "type": "boolean",
+      "label": "Automatic Embedding Indexing",
+      "required": false,
+      "default": true,
+      "env_variable": "KARAKEEP_EMBEDDING_ENABLE_AUTO_INDEXING",
+      "hint": "Disable for Ollama Cloud unless a compatible embedding model is configured."
     }
   ]
 }

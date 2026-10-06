@@ -111,8 +111,9 @@ gh api repos/runtipi/runtipi-appstore/contents/apps/<app-id>/data --jq '.[].name
 3. Verify image versions are current (check Docker Hub)
 4. Add per-app customManager to `renovate.json` (match `depNameTemplate` to Docker image name)
 5. Ensure `form_fields` with `type: "random"` do NOT have `required: true`
-6. Run `make test` to validate
-7. Run `make readme` to update README
+6. For OpenAI-compatible integrations, expose the API key, base URL, model names, and provider-specific protocol toggles together. Use `${VAR:-upstream-default}` in Compose for optional validated values so existing installs never receive an invalid empty string.
+7. Run `make test` to validate
+8. Run `make readme` to update README
 
 **Service naming convention:** When renaming an app (e.g., `n8n-2` → `n8n`), update ALL references:
 - `config.json`: `id`, `name`
