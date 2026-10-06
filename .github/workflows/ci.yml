@@ -16,3 +16,6 @@ jobs:
 
       - name: Run lint and tests
         run: make ci
+
+      - name: Validate Renovate configuration
+        run: make renovate-config-test

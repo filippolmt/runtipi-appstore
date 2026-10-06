@@ -63,11 +63,10 @@ Confirm that Renovate also extracts every image from `docker-compose.json`. Pres
 
 1. Run `make readme`.
 2. Run `make test`.
-3. Run `make renovate-test`.
-4. Confirm the Renovate output contains both the new config and Compose files with the expected package names and versions.
-5. Run `git diff --check` and inspect the complete diff.
-6. Recheck the upstream latest stable release and verify `updated_at` is not in the future.
+3. Run `make renovate-config-test`.
+4. Run `make renovate-test`; its disposable copy stages untracked files before Renovate scans the repository.
+5. If dependency extraction needs inspection, run `make renovate-debug > /tmp/renovate.log 2>&1` and search that file for the app paths and expected packages.
+6. Run `git diff --check` and inspect the complete diff.
+7. Recheck the upstream latest stable release and verify `updated_at` is not in the future.
 
-Renovate local mode may ignore untracked files. Stage a new app for the dry run when necessary, preserving any pre-existing index state.
-
-The app is complete only when all required files exist, both schemas pass, both validation commands pass, Renovate detects the pinned application version, README lists the app, and no upstream deployment requirement is unaccounted for.
+The app is complete only when all required files exist, both schemas pass, all validation commands pass, Renovate detects the pinned application version, README lists the app, and no upstream deployment requirement is unaccounted for.

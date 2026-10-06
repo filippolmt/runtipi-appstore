@@ -5,6 +5,14 @@ import { parseComposeJson } from "@runtipi/common/schemas";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" with { type: "json" };
 
+interface DynamicCompose {
+  services: Array<{ name: string; image: string; isMain?: boolean }>;
+}
+
+interface RenovateConfig {
+  customManagers?: Array<{ managerFilePatterns?: string[]; depNameTemplate?: string }>;
+}
+
 interface AppConfig {
   id: string;
   name: string;
@@ -36,6 +44,11 @@ const getApps = (): string[] => {
 const getAppConfig = (app: string): AppConfig => {
   const configPath = path.join(process.cwd(), "apps", app, "config.json");
   return JSON.parse(fs.readFileSync(configPath, "utf-8"));
+};
+
+const getComposeConfig = (app: string): DynamicCompose => {
+  const composePath = path.join(process.cwd(), "apps", app, "docker-compose.json");
+  return JSON.parse(fs.readFileSync(composePath, "utf-8"));
 };
 
 const getFile = (app: string, file: string): string | null => {
@@ -114,11 +127,40 @@ describe("each app should have a valid docker-compose.json", () => {
   }
 });
 
+describe("each app should use prefixed service names", () => {
+  const apps = getApps();
+
+  for (const app of apps) {
+    test(`app ${app} should prefix every service name`, () => {
+      const invalidNames = getComposeConfig(app)
+        .services.map((service) => service.name)
+        .filter((name) => name !== app && !name.startsWith(`${app}-`));
+      expect(invalidNames).toEqual([]);
+    });
+  }
+});
+
+describe("each app should have a JPEG logo", () => {
+  const apps = getApps();
+
+  for (const app of apps) {
+    test(`app ${app} logo.jpg should contain JPEG data`, () => {
+      const logo = fs.readFileSync(path.join(process.cwd(), "apps", app, "metadata", "logo.jpg"));
+      expect([...logo.subarray(0, 3)]).toEqual([0xff, 0xd8, 0xff]);
+    });
+  }
+});
+
 describe("each app should have unique ports", () => {
   test("no duplicate ports", () => {
-    const apps = getApps();
-    const ports = apps.map((app) => getAppConfig(app).port).filter(Boolean);
-    expect(new Set(ports).size).toBe(ports.length);
+    const ports = new Map<number, string[]>();
+    for (const app of getApps()) {
+      const port = getAppConfig(app).port;
+      if (port) ports.set(port, [...(ports.get(port) ?? []), app]);
+    }
+
+    const duplicates = [...ports].filter(([, apps]) => apps.length > 1).map(([port, apps]) => `${port}: ${apps.join(", ")}`);
+    expect(duplicates).toEqual([]);
   });
 });
 
@@ -142,6 +184,24 @@ describe("each app should have timestamps", () => {
       expect(config.updated_at).toBeGreaterThan(0);
       expect(config.updated_at).toBeLessThanOrEqual(Date.now());
     });
+  }
+});
+
+describe("versioned apps should have a Renovate custom manager", () => {
+  const renovate: RenovateConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), "renovate.json"), "utf-8"));
+  const managersByFile = new Map(
+    renovate.customManagers?.flatMap((manager) => (manager.managerFilePatterns ?? []).map((file) => [file, manager.depNameTemplate] as const)),
+  );
+
+  for (const app of getApps()) {
+    const version = getAppConfig(app).version;
+    if (version && version !== "latest") {
+      test(`app ${app} should have a config version manager for its main image`, () => {
+        const mainImage = getComposeConfig(app).services.find((service) => service.isMain)?.image;
+        const packageName = mainImage?.replace(/@.*$/, "").replace(/:[^/]+$/, "");
+        expect(managersByFile.get(`apps/${app}/config.json`)).toBe(packageName);
+      });
+    }
   }
 });
 
