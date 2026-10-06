@@ -1,6 +1,6 @@
 # Tipi App Store ⛺
 
-![Apps](https://img.shields.io/badge/apps-20-blue)
+![Apps](https://img.shields.io/badge/apps-21-blue)
 ![Categories](https://img.shields.io/badge/categories-6-green)
 
 A curated collection of self-hosted applications for [Runtipi](https://runtipi.io/).
@@ -35,6 +35,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/changedetection/metadata/logo.jpg" width="24" height="24"> | [ChangeDetection](https://github.com/dgtlmoon/changedetection.io) | Website change detection, monitoring and notification. | 0.60.8 | 8257 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/karakeep/metadata/logo.jpg" width="24" height="24"> | [Karakeep](https://github.com/karakeep-app/karakeep) | Bookmark everything and keep it organized | 0.33.2 | 3002 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/kitchenowl/metadata/logo.jpg" width="24" height="24"> | [KitchenOwl](https://github.com/TomBursch/kitchenowl) | Self-hosted grocery list and recipe manager | v0.7.10 | 8080 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/mailpit/metadata/logo.jpg" width="24" height="24"> | [Mailpit](https://github.com/axllent/mailpit) | Email testing sandbox | v1.31.4 | 8025 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/nginx/metadata/logo.jpg" width="24" height="24"> | [Nginx](https://github.com/nginx/nginx) | Open-source simple and fast web server. | 1.31.6 | 8754 | `arm64` `amd64` |

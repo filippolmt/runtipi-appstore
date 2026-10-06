@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Karakeep",
+  "id": "karakeep",
+  "available": true,
+  "short_desc": "Bookmark everything and keep it organized",
+  "author": "Karakeep",
+  "port": 3002,
+  "categories": ["utilities"],
+  "description": "Karakeep is a self-hosted bookmark manager for saving links, notes, and images. It includes full-text search, automatic content fetching, and optional AI-powered tagging.",
+  "tipi_version": 1,
+  "version": "0.33.2",
+  "source": "https://github.com/karakeep-app/karakeep",
+  "website": "https://karakeep.app/",
+  "exposable": true,
+  "dynamic_config": true,
+  "supported_architectures": ["arm64", "amd64"],
+  "created_at": 1791290876000,
+  "updated_at": 1791290876000,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "random",
+      "label": "Authentication Secret",
+      "min": 36,
+      "encoding": "base64",
+      "env_variable": "KARAKEEP_NEXTAUTH_SECRET"
+    },
+    {
+      "type": "random",
+      "label": "Meilisearch Master Key",
+      "min": 36,
+      "encoding": "base64",
+      "env_variable": "KARAKEEP_MEILI_MASTER_KEY"
+    },
+    {
+      "type": "password",
+      "label": "OpenAI API Key",
+      "required": false,
+      "env_variable": "KARAKEEP_OPENAI_API_KEY",
+      "hint": "Optional. Enables AI-powered automatic tagging."
+    }
+  ]
+}
