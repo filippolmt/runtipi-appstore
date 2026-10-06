@@ -9,7 +9,7 @@
   "categories": ["ai", "automation"],
   "description": "Paperclip is an open-source control plane for orchestrating teams of AI agents. It provides task management, organizational structure, budgets, governance, scheduled heartbeats, persistent workspaces, and an audit trail from a single web dashboard.",
   "tipi_version": 2,
-  "version": "2026.1001.0",
+  "version": "2026.1005.0",
   "source": "https://github.com/paperclipai/paperclip",
   "website": "https://paperclip.ing/",
   "exposable": false,
