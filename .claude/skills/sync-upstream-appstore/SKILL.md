@@ -90,35 +90,11 @@ make test
 
 ## Adding an App from Upstream
 
-```bash
-# 1. List app files
-gh api repos/runtipi/runtipi-appstore/contents/apps/<app-id> --jq '.[].name'
+1. Use `gh repo read-dir` and `gh repo read-file` to retrieve the official app directory, including optional `data/` files.
+2. Treat the official definition as a candidate rather than a guaranteed current release; verify its image versions and deployment assumptions against the application's own upstream sources.
+3. Follow `/appstore-patterns` for packaging, local conventions, metadata, update configuration, and completion checks.
 
-# 2. Fetch each file
-gh api repos/runtipi/runtipi-appstore/contents/apps/<app-id>/config.json --jq '.content' | base64 -d
-
-# 3. For binary files (logo.jpg)
-gh api repos/runtipi/runtipi-appstore/contents/apps/<app-id>/metadata/logo.jpg --jq '.content' | base64 -d > apps/<app-id>/metadata/logo.jpg
-
-# 4. Check for data/ directory with init scripts
-gh api repos/runtipi/runtipi-appstore/contents/apps/<app-id>/data --jq '.[].name' 2>/dev/null
-```
-
-**After fetching:**
-
-1. Review and customize `config.json` (rename if desired, update `id` and `name`)
-2. Update `docker-compose.json` service names to match new `id`
-3. Verify image versions are current (check Docker Hub)
-4. Add per-app customManager to `renovate.json` (match `depNameTemplate` to Docker image name)
-5. Ensure `form_fields` with `type: "random"` do NOT have `required: true`
-6. For OpenAI-compatible integrations, expose the API key, base URL, model names, and provider-specific protocol toggles together. Use `${VAR:-upstream-default}` in Compose for optional validated values so existing installs never receive an invalid empty string.
-7. Run `make test` to validate
-8. Run `make readme` to update README
-
-**Service naming convention:** When renaming an app (e.g., `n8n-2` → `n8n`), update ALL references:
-- `config.json`: `id`, `name`
-- `docker-compose.json`: all service `name` fields, `dependsOn` keys, environment variable values referencing service names (e.g., `DB_POSTGRESDB_HOST`)
-- `renovate.json`: `managerFilePatterns` path
+This branch is complete when the local app passes every `/appstore-patterns` completion criterion and all intentional differences from the official definition are understood.
 
 ## Common Upstream Patterns to Watch
 
