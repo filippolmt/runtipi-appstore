@@ -15,7 +15,7 @@ Karakeep is a self-hosted bookmark manager that lets you save links, notes, and 
 
 Open Karakeep after installation and create your account. The first registered user becomes an administrator.
 
-The OpenAI API key is optional. Without it, all core bookmarking, search, and organization features remain available.
+AI configuration is optional. OpenAI works with the default settings. For Ollama Cloud, use your Ollama API key, set the base URL to `https://ollama.com/v1`, choose compatible text and image models, and disable **Use Max Completion Tokens** and **Automatic Embedding Indexing**. Without an AI provider, all core bookmarking, search, and organization features remain available.
 
 ## Links
 
