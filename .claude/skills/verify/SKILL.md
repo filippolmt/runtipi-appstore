@@ -10,8 +10,9 @@ Run the complete validation pipeline for this appstore repository.
 ## Steps
 
 1. Run `make test` (lint + unit tests in Docker)
-2. Run `make renovate-test` (Renovate config dry-run)
-3. Report results — if anything fails, show the error and suggest a fix
+2. Run `make renovate-config-test` (fast Renovate configuration validation)
+3. Run `make renovate-test` (full Renovate dry-run)
+4. Report results — if anything fails, show the error and suggest a fix
 
 ## When to Use
 
@@ -22,7 +23,7 @@ Run the complete validation pipeline for this appstore repository.
 
 ## Important
 
-- Both commands MUST pass before considering changes ready to commit
-- `make test` runs Biome lint + Jest tests inside Docker
+- All three commands MUST pass before considering changes ready to commit
+- `make test` runs Biome lint + Bun tests inside Docker
 - `make renovate-test` validates Renovate customManager regex patterns
 - If `make test` fails on formatting, run `make bun-shell` and `biome check --write .` to auto-fix
