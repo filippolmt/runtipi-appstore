@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "tasterr",
-      "image": "ghcr.io/zacharyarthur/tasterr:2.3.0",
+      "image": "ghcr.io/zacharyarthur/tasterr:2.3.1",
       "isMain": true,
       "internalPort": 8000,
       "environment": [
