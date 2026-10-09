@@ -28,7 +28,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/invidious/metadata/logo.jpg" width="24" height="24"> | [Invidious](https://github.com/iv-org/invidious) | An alternative front-end to YouTube | 2.20260804.1 | 8095 | `arm64` `amd64` |
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/tasterr/metadata/logo.jpg" width="24" height="24"> | [Tasterr](https://github.com/ZacharyArthur/tasterr) | Personalized media discovery for TMDB and Seerr | 2.3.0 | 8000 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/tasterr/metadata/logo.jpg" width="24" height="24"> | [Tasterr](https://github.com/ZacharyArthur/tasterr) | Personalized media discovery for TMDB and Seerr | 2.3.1 | 8000 | `arm64` `amd64` |
 
 ### 🧰 Utilities
 
