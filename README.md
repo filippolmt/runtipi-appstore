@@ -34,7 +34,7 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/changedetection/metadata/logo.jpg" width="24" height="24"> | [ChangeDetection](https://github.com/dgtlmoon/changedetection.io) | Website change detection, monitoring and notification. | 0.60.8 | 8257 | `arm64` `amd64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/changedetection/metadata/logo.jpg" width="24" height="24"> | [ChangeDetection](https://github.com/dgtlmoon/changedetection.io) | Website change detection, monitoring and notification. | 0.60.9 | 8257 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/karakeep/metadata/logo.jpg" width="24" height="24"> | [Karakeep](https://github.com/karakeep-app/karakeep) | Bookmark everything and keep it organized | 0.33.2 | 3002 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/kitchenowl/metadata/logo.jpg" width="24" height="24"> | [KitchenOwl](https://github.com/TomBursch/kitchenowl) | Self-hosted grocery list and recipe manager | v0.7.10 | 8080 | `arm64` `amd64` |
 | <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/mailpit/metadata/logo.jpg" width="24" height="24"> | [Mailpit](https://github.com/axllent/mailpit) | Email testing sandbox | v1.31.5 | 8025 | `arm64` `amd64` |
