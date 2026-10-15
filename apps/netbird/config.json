@@ -11,7 +11,7 @@
   "author": "NetBird",
   "source": "https://github.com/netbirdio/netbird",
   "website": "https://netbird.io",
-  "version": "v2.94.0",
+  "version": "v2.95.0",
   "tipi_version": 11,
   "supported_architectures": ["amd64", "arm64"],
   "dynamic_config": true,
