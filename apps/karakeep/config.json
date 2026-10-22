@@ -8,7 +8,7 @@
   "port": 3002,
   "categories": ["utilities"],
   "description": "Karakeep is a self-hosted bookmark manager for saving links, notes, and images. It includes full-text search, automatic content fetching, and optional AI-powered tagging.",
-  "tipi_version": 5,
+  "tipi_version": 6,
   "version": "0.34.1",
   "source": "https://github.com/karakeep-app/karakeep",
   "website": "https://karakeep.app/",
@@ -16,7 +16,7 @@
   "dynamic_config": true,
   "supported_architectures": ["arm64", "amd64"],
   "created_at": 1791290876000,
-  "updated_at": 1792274619197,
+  "updated_at": 1792674875793,
   "min_tipi_version": "4.5.0",
   "form_fields": [
     {
