@@ -12,7 +12,7 @@
   "source": "https://github.com/netbirdio/netbird",
   "website": "https://netbird.io",
   "version": "v2.95.0",
-  "tipi_version": 15,
+  "tipi_version": 16,
   "supported_architectures": ["amd64", "arm64"],
   "dynamic_config": true,
   "min_tipi_version": "4.5.0",
@@ -48,5 +48,5 @@
     }
   ],
   "created_at": 1788297423499,
-  "updated_at": 1792501244391
+  "updated_at": 1792636738629
 }
