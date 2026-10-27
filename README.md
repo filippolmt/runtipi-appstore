@@ -56,4 +56,4 @@ A curated collection of self-hosted applications for [Runtipi](https://runtipi.i
 
 | | Name | Description | Version | Port | Arch |
 |-|------|-------------|---------|------|------|
-| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/netbird/metadata/logo.jpg" width="24" height="24"> | [NetBird](https://github.com/netbirdio/netbird) | Self-hosted WireGuard-based overlay network control plane | v2.95.0 | 8083 | `amd64` `arm64` |
+| <img src="https://raw.githubusercontent.com/filippolmt/runtipi-appstore/main/apps/netbird/metadata/logo.jpg" width="24" height="24"> | [NetBird](https://github.com/netbirdio/netbird) | Self-hosted WireGuard-based overlay network control plane | v2.96.0 | 8083 | `amd64` `arm64` |
