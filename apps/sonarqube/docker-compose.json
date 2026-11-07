@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "sonarqube",
-      "image": "mc1arke/sonarqube-with-community-branch-plugin:26.6.0.123539-community",
+      "image": "mc1arke/sonarqube-with-community-branch-plugin:26.7.0.124771-community",
       "isMain": true,
       "internalPort": 9000,
       "dependsOn": {
