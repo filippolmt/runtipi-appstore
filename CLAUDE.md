@@ -12,6 +12,7 @@ All commands run via Makefile (Docker). Never use bare `bun` commands.
 make test             # Lint + test (CI equivalent)
 make readme           # Regenerate README.md
 make renovate-test    # Dry-run Renovate config
+make check-tipi-version  # tipi_version/updated_at bumped vs BASE (default origin/main)
 make bun-shell        # Interactive shell in container
 ```
 
@@ -27,10 +28,11 @@ Schemas: `@apps/app-info-schema.json` (config) and `@apps/dynamic-compose-schema
 
 ## Key Rules
 
-- **tipi_version**: any manual change to `apps/<app-id>/` requires `tipi_version` +1 and `updated_at` = `Date.now()` in config.json. **`updated_at` must never be in the future** — Runtipi rejects the entire app if it is
+- **tipi_version**: any manual change to `apps/<app-id>/` requires `tipi_version` +1 and `updated_at` = `Date.now()` in config.json; `make check-tipi-version` enforces it in CI (exemptions are in `scripts/check-tipi-version.sh`). **`updated_at` must never be in the future** — Runtipi rejects the entire app if it is
 - **Service names**: prefix with app-id (e.g., `n8n-db`, `twenty-redis`)
 - **Random form fields**: must NOT have `required: true`
 - **New apps**: add a `customManager` entry in `renovate.json` (skip for `version: "latest"`)
+- **Renovate exceptions**: before editing an app's `renovate.json` entries, read `apps/<app-id>/CLAUDE.md` if it exists
 - **Validate**: always `make test` + `make renovate-test` before committing
 
 ## Conventions

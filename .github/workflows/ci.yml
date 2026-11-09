@@ -19,3 +19,7 @@ jobs:
 
       - name: Validate Renovate configuration
         run: make renovate-config-test
+
+      # Renovate PRs fail here until update-tipi-version.yml pushes its bump commit.
+      - name: Check tipi_version bump
+        run: make check-tipi-version BASE="${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}"
