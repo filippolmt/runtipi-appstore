@@ -91,7 +91,17 @@
       "managerFilePatterns": ["apps/n8n/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "n8nio/n8n",
-      "datasourceTemplate": "docker"
+      "packageNameTemplate": "n8n-io/n8n",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^n8n@(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["apps/n8n/docker-compose.json"],
+      "matchStrings": ["\"image\":\\s*\"(?<depName>n8nio/(?:n8n|runners)):(?<currentValue>[^@\"]+)\""],
+      "packageNameTemplate": "n8n-io/n8n",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^n8n@(?<version>.+)$"
     },
     {
       "customType": "regex",
@@ -200,6 +210,11 @@
     },
     {
       "matchPackageNames": ["n8nio/n8n", "n8nio/runners"],
+      "matchDatasources": ["docker"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["n8n-io/n8n"],
       "groupName": "n8n"
     },
     {
