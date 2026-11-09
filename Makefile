@@ -24,6 +24,7 @@ renovate-config-test:
 # phase) and GITHUB_COM_TOKEN for github-tags/release-notes lookups.
 # extends is kept: config:recommended and :dependencyDashboard are internal
 # presets, resolved offline — local run matches production config.
+# In a git worktree .git is a file pointing outside the mount: re-init the copy.
 renovate-test:
 	docker run --rm \
 	  -u "0:0" \
@@ -33,7 +34,7 @@ renovate-test:
 	  -e GITHUB_COM_TOKEN \
 	  -v "$(PWD)":/tmp/app \
 	  --entrypoint bash \
-	  $(RENOVATE_IMAGE) -lc "set -eo pipefail; cp -a /tmp/app /usr/src; cd /usr/src/app; git config --global --add safe.directory \"\$$PWD\"; git add -A; renovate --platform=local --dry-run=full"
+	  $(RENOVATE_IMAGE) -lc "set -eo pipefail; cp -a /tmp/app /usr/src; cd /usr/src/app; if [ -f .git ]; then rm .git; git init -q; fi; git config --global --add safe.directory \"\$$PWD\"; git add -A; renovate --platform=local --dry-run=full"
 
 renovate-debug:
 	$(MAKE) RENOVATE_LOG_LEVEL=debug renovate-test
