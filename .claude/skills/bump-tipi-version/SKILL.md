@@ -1,6 +1,6 @@
 ---
 name: bump-tipi-version
-description: Use when modifying ANY file inside an app directory (apps/<app-id>/). Triggers on edits to docker-compose.json, config.json, metadata files, or data files of any app. Must increment tipi_version in config.json for every app change, no exceptions.
+description: Use when modifying files inside an app directory (apps/<app-id>/) — docker-compose.json, config.json, metadata, data files. Bumps tipi_version and updated_at in config.json; apps/<app-id>/CLAUDE.md is exempt. CI enforces it via scripts/check-tipi-version.sh.
 ---
 
 # Bump tipi_version
@@ -11,7 +11,7 @@ Every modification to an app's files MUST be accompanied by a `tipi_version` inc
 
 ## The Rule
 
-**If you touch any file in `apps/<app-id>/`, you MUST increment `tipi_version` by 1 in `apps/<app-id>/config.json` and update `updated_at` to the current timestamp.**
+**If you touch any file in `apps/<app-id>/` other than its `CLAUDE.md`, you MUST increment `tipi_version` by 1 in `apps/<app-id>/config.json` and update `updated_at` to the current timestamp.**
 
 ```
 tipi_version: N  →  tipi_version: N + 1
@@ -20,7 +20,7 @@ updated_at: old  →  updated_at: Date.now()
 
 ## When to Bump
 
-ANY change inside `apps/<app-id>/`:
+Any change inside `apps/<app-id>/` except its `CLAUDE.md`:
 
 - `docker-compose.json` - image version, environment variables, volumes, services, health checks
 - `config.json` - description, form fields, categories, port, any field except `tipi_version` and `updated_at` themselves
@@ -31,6 +31,7 @@ ANY change inside `apps/<app-id>/`:
 ## When NOT to Bump
 
 - Changes outside app directories (workflows, scripts, renovate.json, package.json, CLAUDE.md)
+- `apps/<app-id>/CLAUDE.md` (agent notes, not shipped to Runtipi)
 - Renovate automated PRs (the `update-tipi-version.yml` workflow handles this)
 - Reading files without modifying them
 
