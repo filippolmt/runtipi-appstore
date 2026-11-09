@@ -27,10 +27,11 @@ Schemas: `@apps/app-info-schema.json` (config) and `@apps/dynamic-compose-schema
 
 ## Key Rules
 
-- **tipi_version**: any manual change to `apps/<app-id>/` requires `tipi_version` +1 and `updated_at` = `Date.now()` in config.json. **`updated_at` must never be in the future** — Runtipi rejects the entire app if it is
+- **tipi_version**: any manual change to `apps/<app-id>/` (except its `CLAUDE.md`) requires `tipi_version` +1 and `updated_at` = `Date.now()` in config.json. CI enforces the bump; check locally with `scripts/check-tipi-version.sh main`. **`updated_at` must never be in the future** — Runtipi rejects the entire app if it is
 - **Service names**: prefix with app-id (e.g., `n8n-db`, `twenty-redis`)
 - **Random form fields**: must NOT have `required: true`
 - **New apps**: add a `customManager` entry in `renovate.json` (skip for `version: "latest"`)
+- **Renovate exceptions**: before editing an app's `renovate.json` entries, read `apps/<app-id>/CLAUDE.md` if it exists (n8n tracks GitHub Releases, not Docker tags)
 - **Validate**: always `make test` + `make renovate-test` before committing
 
 ## Conventions

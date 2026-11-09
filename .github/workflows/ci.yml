@@ -19,3 +19,8 @@ jobs:
 
       - name: Validate Renovate configuration
         run: make renovate-config-test
+
+      # Renovate PRs get their bump from update-tipi-version.yml in a follow-up commit.
+      - name: Check tipi_version bump
+        if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'renovate[bot]'
+        run: scripts/check-tipi-version.sh "origin/${{ github.base_ref }}"
