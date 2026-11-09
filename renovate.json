@@ -88,7 +88,6 @@
     },
     {
       "customType": "regex",
-      "description": "n8n follows GitHub Releases: prereleases (beta, early access) are unstable and skipped; Docker tags cannot tell them apart",
       "managerFilePatterns": ["apps/n8n/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "n8nio/n8n",
@@ -98,7 +97,6 @@
     },
     {
       "customType": "regex",
-      "description": "n8n images, same source as the config.json version above",
       "managerFilePatterns": ["apps/n8n/docker-compose.json"],
       "matchStrings": ["\"image\":\\s*\"(?<depName>n8nio/(?:n8n|runners)):(?<currentValue>[^@\"]+)\""],
       "packageNameTemplate": "n8n-io/n8n",
@@ -211,9 +209,8 @@
       "versioning": "regex:^(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})$"
     },
     {
-      "description": "Drop the generic Docker lookup for n8n images, tracked via GitHub Releases instead",
-      "matchDatasources": ["docker"],
       "matchPackageNames": ["n8nio/n8n", "n8nio/runners"],
+      "matchDatasources": ["docker"],
       "enabled": false
     },
     {
