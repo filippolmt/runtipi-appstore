@@ -31,7 +31,7 @@
     },
     {
       "name": "changedetection-sockpuppetbrowser",
-      "image": "dgtlmoon/sockpuppetbrowser:0.0.3",
+      "image": "dgtlmoon/sockpuppetbrowser:0.0.4",
       "capAdd": ["SYS_ADMIN"],
       "environment": [
         {
