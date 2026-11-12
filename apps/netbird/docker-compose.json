@@ -47,7 +47,7 @@
     },
     {
       "name": "netbird-server",
-      "image": "netbirdio/netbird-server:0.82.1",
+      "image": "netbirdio/netbird-server:0.83.0",
       "addToMainNetwork": true,
       "addPorts": [
         {
@@ -91,7 +91,7 @@
     },
     {
       "name": "netbird-dashboard",
-      "image": "netbirdio/dashboard:v2.96.1",
+      "image": "netbirdio/dashboard:v2.97.0",
       "isMain": true,
       "internalPort": 80,
       "dependsOn": {
