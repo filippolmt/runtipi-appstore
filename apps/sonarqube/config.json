@@ -9,7 +9,7 @@
   "categories": ["development"],
   "description": "SonarQube Community Build is a self-hosted platform for continuous inspection of code quality and security. It detects bugs, vulnerabilities and code smells across many programming languages and integrates with your CI pipeline.",
   "tipi_version": 5,
-  "version": "26.9.0.129388-community",
+  "version": "26.10.0.133078-community",
   "source": "https://github.com/SonarSource/sonarqube",
   "website": "https://www.sonarsource.com/products/sonarqube/",
   "exposable": true,
