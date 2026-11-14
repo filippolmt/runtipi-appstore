@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "invidious",
-      "image": "quay.io/invidious/invidious:2.20261113.0",
+      "image": "quay.io/invidious/invidious:2.20261114.0",
       "isMain": true,
       "internalPort": 3000,
       "environment": [
@@ -77,7 +77,7 @@
       "services": [
         {
           "name": "invidious",
-          "image": "quay.io/invidious/invidious:2.20261113.0-arm64"
+          "image": "quay.io/invidious/invidious:2.20261114.0-arm64"
         }
       ]
     }
