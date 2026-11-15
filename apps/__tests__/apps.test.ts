@@ -10,7 +10,6 @@ interface DynamicCompose {
     name: string;
     image: string;
     isMain?: boolean;
-    restart?: string;
     dependsOn?: Record<string, { condition?: string }> | string[];
   }>;
 }
@@ -228,23 +227,16 @@ describe("random form fields should not be required", () => {
   }
 });
 
-describe("one-shot services should not restart", () => {
+describe("services should not depend on a container that exits", () => {
   for (const app of getApps()) {
-    const services = getComposeConfig(app).services;
-    const oneShot = new Set(
-      services.flatMap((service) =>
-        Array.isArray(service.dependsOn) || !service.dependsOn
-          ? []
-          : Object.entries(service.dependsOn)
-              .filter(([, dependency]) => dependency.condition === "service_completed_successfully")
-              .map(([name]) => name),
-      ),
-    );
-    for (const service of services.filter((candidate) => oneShot.has(candidate.name))) {
-      // Runtipi defaults restart to unless-stopped, which re-runs a completed one-shot service forever
-      test(`app ${app} service ${service.name} should set restart to no or on-failure`, () => {
-        expect(["no", "on-failure"]).toContain(service.restart ?? "unless-stopped");
-      });
+    for (const service of getComposeConfig(app).services) {
+      if (!service.dependsOn || Array.isArray(service.dependsOn)) continue;
+      for (const [name, dependency] of Object.entries(service.dependsOn)) {
+        // Runtipi's status sync marks the app stopped unless every container runs: keep init alive and use service_healthy
+        test(`app ${app} service ${service.name} should not wait for ${name} to complete`, () => {
+          expect(dependency.condition).not.toBe("service_completed_successfully");
+        });
+      }
     }
   }
 });

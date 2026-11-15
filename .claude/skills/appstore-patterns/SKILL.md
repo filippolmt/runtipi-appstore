@@ -24,13 +24,16 @@ Map the upstream deployment into dynamic Compose v2:
 
 - Prefix every service name and internal hostname with the app id.
 - Mark exactly one primary web service with `"isMain": true` and set its `internalPort`.
-- Store persistent data under `${APP_DATA_DIR}/data/<component>`.
+- No web UI: set `no_gui: true` and `exposable: false`, keep a unique placeholder `port`, and mark the worker `isMain` without `internalPort` (upstream `tailscale` pattern).
+- Store persistent data under `${APP_DATA_DIR}/data`; use `data/<component>` when the app has more than one persistent component.
+- Non-root image with a bind mount: add a `<app-id>-init` service running the same image as `root` that chowns the mount, then stays alive (`exec sleep infinity`) with a `healthCheck` on a ready file and `stopGracePeriod: "1s"`; gate the main service on `service_healthy`. Never let an init container exit: Runtipi's status sync marks the app `stopped` unless every container is running (see `apps/netbird`).
 - Translate environment variables, commands, dependencies, health checks, capabilities, and volumes only when upstream requires them.
 - Generate secrets with `random` form fields; keep those fields free of `required: true`.
 - Use required form fields only for user-supplied values without which the app cannot start.
 - Keep optional validated values valid on existing installs with `${VAR:-upstream-default}` rather than passing empty strings.
 - For OpenAI-compatible integrations, expose the API key, base URL, model names, and provider-specific protocol toggles together.
 - Keep credentials in form fields and substitutions; never place literal secrets in Compose.
+- Runtipi fills service defaults (e.g. `restart: unless-stopped`) in `runtipi/runtipi:packages/backend/src/modules/docker/builders/compose.builder.ts`; read it when a service must deviate from them.
 
 This step is complete when the local definition can reproduce upstream's minimal supported deployment without speculative services or settings.
 
@@ -52,6 +55,7 @@ For a new app:
 - Pin the main image to the latest stable release unless upstream only publishes a rolling tag.
 - Write first-run, optional-integration, storage, and security guidance that changes how the user operates the app.
 - Use an upstream project logo where available and store a real JPEG at `metadata/logo.jpg`; prefer a square image of at least 512×512.
+- Without an upstream logo, generate a plain one in a throwaway container: `docker run --rm alpine:3.20 sh -c 'apk add -q imagemagick imagemagick-jpeg font-dejavu >/dev/null && magick -size 512x512 xc:"#<hex>" -fill white -font DejaVu-Sans-Bold -pointsize 150 -gravity center -annotate +0+0 "<glyph>" -quality 90 jpg:-' > apps/<app-id>/metadata/logo.jpg`.
 
 ## 4. Configure updates
 
