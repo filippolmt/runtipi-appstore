@@ -6,9 +6,16 @@
       "name": "telegram-find-prices-init",
       "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.1",
       "user": "root",
-      "restart": "no",
-      "entrypoint": "chown",
-      "command": ["1000:1000", "/app/data"],
+      "entrypoint": ["/bin/sh", "-c"],
+      "command": ["chown 1000:1000 /app/data && : > /tmp/ready && exec sleep infinity"],
+      "stopGracePeriod": "1s",
+      "healthCheck": {
+        "test": "test -f /tmp/ready",
+        "interval": "5s",
+        "timeout": "3s",
+        "retries": 20,
+        "startPeriod": "2s"
+      },
       "volumes": [
         {
           "hostPath": "${APP_DATA_DIR}/data/bot",
@@ -22,7 +29,7 @@
       "isMain": true,
       "dependsOn": {
         "telegram-find-prices-init": {
-          "condition": "service_completed_successfully"
+          "condition": "service_healthy"
         }
       },
       "environment": [
