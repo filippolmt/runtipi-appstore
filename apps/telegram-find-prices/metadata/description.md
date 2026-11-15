@@ -19,7 +19,7 @@ It is a background worker: there is no web UI and no open port.
 
    Type the code when asked, then paste the printed `CLIENT_SESSION_STRING` value into the install form. Use the same image version as the app.
 
-**Do not start the app without a valid session string.**
+If the session string is missing or invalid, the app logs `User session not authorized: set CLIENT_SESSION_STRING ...` and exits.
 
 ## One instance only
 
