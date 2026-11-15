@@ -156,6 +156,14 @@
     },
     {
       "customType": "regex",
+      "managerFilePatterns": ["apps/telegram-find-prices/config.json"],
+      "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "ghcr.io/filippolmt/telegram-find-prices",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "loose"
+    },
+    {
+      "customType": "regex",
       "managerFilePatterns": ["apps/changedetection/config.json"],
       "matchStrings": ["\"version\":\\s*\"(?<currentValue>[^\"]+)\""],
       "depNameTemplate": "ghcr.io/dgtlmoon/changedetection.io",
