@@ -6,7 +6,13 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import draft7MetaSchema from "ajv/dist/refs/json-schema-draft-07.json" with { type: "json" };
 
 interface DynamicCompose {
-  services: Array<{ name: string; image: string; isMain?: boolean }>;
+  services: Array<{
+    name: string;
+    image: string;
+    isMain?: boolean;
+    restart?: string;
+    dependsOn?: Record<string, { condition?: string }> | string[];
+  }>;
 }
 
 interface RenovateConfig {
@@ -25,7 +31,7 @@ interface AppConfig {
   port?: number;
   categories?: string[];
   description?: string;
-  form_fields?: Array<{ type: string; required?: boolean }>;
+  form_fields?: Array<{ type: string; required?: boolean; env_variable: string; regex?: string }>;
   supported_architectures?: string[];
   dynamic_config?: boolean;
   created_at?: number;
@@ -217,6 +223,39 @@ describe("random form fields should not be required", () => {
             expect(Boolean(field.required)).toBe(false);
           });
         }
+      }
+    }
+  }
+});
+
+describe("one-shot services should not restart", () => {
+  for (const app of getApps()) {
+    const services = getComposeConfig(app).services;
+    const oneShot = new Set(
+      services.flatMap((service) =>
+        Array.isArray(service.dependsOn) || !service.dependsOn
+          ? []
+          : Object.entries(service.dependsOn)
+              .filter(([, dependency]) => dependency.condition === "service_completed_successfully")
+              .map(([name]) => name),
+      ),
+    );
+    for (const service of services.filter((candidate) => oneShot.has(candidate.name))) {
+      // Runtipi defaults restart to unless-stopped, which re-runs a completed one-shot service forever
+      test(`app ${app} service ${service.name} should set restart to no or on-failure`, () => {
+        expect(["no", "on-failure"]).toContain(service.restart ?? "unless-stopped");
+      });
+    }
+  }
+});
+
+describe("form field regexes should compile", () => {
+  for (const app of getApps()) {
+    for (const field of getAppConfig(app).form_fields ?? []) {
+      if (field.regex !== undefined) {
+        test(`app ${app} field ${field.env_variable} regex should compile`, () => {
+          expect(() => new RegExp(field.regex as string)).not.toThrow();
+        });
       }
     }
   }
