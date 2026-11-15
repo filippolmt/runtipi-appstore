@@ -1,0 +1,96 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/app-info.json",
+  "name": "Telegram Find Prices",
+  "id": "telegram-find-prices",
+  "available": true,
+  "short_desc": "Telegram bot that watches channels for product price offers",
+  "author": "filippolmt",
+  "port": 8096,
+  "categories": ["utilities"],
+  "description": "Telegram bot that monitors Telegram channels for product price offers and notifies allowed users. It runs a bot and a user account in one background worker, with no web UI. State (SQLite database and bot session) lives in a single data directory.",
+  "tipi_version": 1,
+  "version": "1.1.1",
+  "source": "https://github.com/filippolmt/telegram-find-prices",
+  "exposable": false,
+  "no_gui": true,
+  "dynamic_config": true,
+  "supported_architectures": ["amd64", "arm64"],
+  "created_at": 1794744777825,
+  "updated_at": 1794744777825,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Telegram API ID",
+      "required": true,
+      "env_variable": "API_ID",
+      "hint": "From https://my.telegram.org"
+    },
+    {
+      "type": "password",
+      "label": "Telegram API hash",
+      "required": true,
+      "env_variable": "API_HASH",
+      "hint": "From https://my.telegram.org"
+    },
+    {
+      "type": "password",
+      "label": "Bot token",
+      "required": true,
+      "env_variable": "BOT_TOKEN",
+      "hint": "From @BotFather. Use a token that no other instance (e.g. local dev) runs with"
+    },
+    {
+      "type": "password",
+      "label": "Phone number",
+      "required": true,
+      "env_variable": "PHONE_NUMBER",
+      "hint": "Phone number of the Telegram user account that reads the channels, international format"
+    },
+    {
+      "type": "password",
+      "label": "Client session string",
+      "required": true,
+      "env_variable": "CLIENT_SESSION_STRING",
+      "hint": "Telethon StringSession of the user account. See the app description for how to generate it"
+    },
+    {
+      "type": "text",
+      "label": "Allowed user IDs",
+      "required": true,
+      "env_variable": "ALLOWED_USERS",
+      "hint": "Comma-separated numeric Telegram user IDs allowed to use the bot"
+    },
+    {
+      "type": "text",
+      "label": "Username",
+      "required": false,
+      "env_variable": "USERNAME",
+      "hint": "Optional. Telegram username of the user account"
+    },
+    {
+      "type": "text",
+      "label": "Channel folder",
+      "required": false,
+      "env_variable": "CHANNEL_FOLDER",
+      "hint": "Optional. Name of a Telegram folder of the user account whose channels are monitored"
+    },
+    {
+      "type": "text",
+      "label": "Timezone",
+      "required": false,
+      "env_variable": "TIMEZONE",
+      "placeholder": "Europe/Rome",
+      "hint": "IANA timezone for the daily summary. Default: UTC"
+    },
+    {
+      "type": "number",
+      "label": "Daily summary hour",
+      "required": false,
+      "min": 0,
+      "max": 23,
+      "env_variable": "DAILY_SUMMARY_HOUR",
+      "hint": "Hour (0-23) of the daily summary. Default: 21"
+    }
+  ]
+}

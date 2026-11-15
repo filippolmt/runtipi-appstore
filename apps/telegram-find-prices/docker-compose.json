@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.runtipi.io/v2/dynamic-compose.json",
+  "schemaVersion": 2,
+  "services": [
+    {
+      "name": "telegram-find-prices-init",
+      "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.1",
+      "user": "root",
+      "entrypoint": "chown",
+      "command": ["1000:1000", "/app/data"],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        }
+      ]
+    },
+    {
+      "name": "telegram-find-prices",
+      "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.1",
+      "isMain": true,
+      "dependsOn": {
+        "telegram-find-prices-init": {
+          "condition": "service_completed_successfully"
+        }
+      },
+      "environment": [
+        { "key": "API_ID", "value": "${API_ID}" },
+        { "key": "API_HASH", "value": "${API_HASH}" },
+        { "key": "BOT_TOKEN", "value": "${BOT_TOKEN}" },
+        { "key": "PHONE_NUMBER", "value": "${PHONE_NUMBER}" },
+        { "key": "CLIENT_SESSION_STRING", "value": "${CLIENT_SESSION_STRING}" },
+        { "key": "ALLOWED_USERS", "value": "${ALLOWED_USERS}" },
+        { "key": "USERNAME", "value": "${USERNAME:-}" },
+        { "key": "CHANNEL_FOLDER", "value": "${CHANNEL_FOLDER:-}" },
+        { "key": "TIMEZONE", "value": "${TIMEZONE:-UTC}" },
+        { "key": "DAILY_SUMMARY_HOUR", "value": "${DAILY_SUMMARY_HOUR:-21}" }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data",
+          "containerPath": "/app/data"
+        }
+      ]
+    }
+  ]
+}
