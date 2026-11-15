@@ -6,11 +6,12 @@
       "name": "telegram-find-prices-init",
       "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.1",
       "user": "root",
+      "restart": "no",
       "entrypoint": "chown",
       "command": ["1000:1000", "/app/data"],
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data",
+          "hostPath": "${APP_DATA_DIR}/data/bot",
           "containerPath": "/app/data"
         }
       ]
@@ -38,7 +39,7 @@
       ],
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data",
+          "hostPath": "${APP_DATA_DIR}/data/bot",
           "containerPath": "/app/data"
         }
       ]

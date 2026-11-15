@@ -13,11 +13,11 @@ It is a background worker: there is no web UI and no open port.
    ```
    docker run --rm -it \
      -e API_ID=... -e API_HASH=... -e PHONE_NUMBER=... \
-     ghcr.io/filippolmt/telegram-find-prices:<version> \
+     ghcr.io/filippolmt/telegram-find-prices:latest \
      python src/generate_string_session.py
    ```
 
-   Type the code when asked, then paste the printed `CLIENT_SESSION_STRING` value into the install form. Use the same image version as the app.
+   Type the code when asked, then paste the printed `CLIENT_SESSION_STRING` value into the install form. `latest` is multi-arch (amd64, arm64).
 
 If the session string is missing or invalid, the app logs `User session not authorized: set CLIENT_SESSION_STRING ...` and exits.
 
@@ -31,7 +31,7 @@ A user session must never run in two processes at once, and a bot token must hav
 
 ## Data and security
 
-`${APP_DATA_DIR}/data` holds the SQLite database and the bot session file. Back it up and never share it: it contains Telegram sessions. Schema migrations run automatically at startup.
+`${APP_DATA_DIR}/data/bot` holds the SQLite database and the bot session file. Back it up and never share it: it contains Telegram sessions. Schema migrations run automatically at startup. `BOT_SESSION_NAME`, `CLIENT_SESSION_NAME` and `DATABASE_URL` keep the image defaults, so everything stays inside that directory.
 
 ## Checking it works
 

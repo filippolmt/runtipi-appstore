@@ -59,6 +59,8 @@
       "label": "Allowed user IDs",
       "required": true,
       "env_variable": "ALLOWED_USERS",
+      "regex": "^\\s*\\d+\\s*(,\\s*\\d+\\s*)*$",
+      "pattern_error": "Comma-separated numeric Telegram user IDs, e.g. 12345678,87654321",
       "hint": "Comma-separated numeric Telegram user IDs allowed to use the bot"
     },
     {
