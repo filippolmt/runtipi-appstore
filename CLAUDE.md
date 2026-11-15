@@ -33,7 +33,7 @@ Schemas: `@apps/app-info-schema.json` (config) and `@apps/dynamic-compose-schema
 - **Random form fields**: must NOT have `required: true`
 - **New apps**: add a `customManager` entry in `renovate.json` (skip for `version: "latest"`)
 - **Renovate exceptions**: before editing an app's `renovate.json` entries, read `apps/<app-id>/CLAUDE.md` if it exists
-- **Validate**: always `make test` + `make renovate-test` before committing
+- **Validate**: run `/verify` before committing
 
 ## Conventions
 
