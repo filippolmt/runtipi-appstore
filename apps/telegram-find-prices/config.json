@@ -8,7 +8,7 @@
   "port": 8096,
   "categories": ["utilities"],
   "description": "Telegram bot that monitors Telegram channels for product price offers and notifies allowed users. It runs a bot and a user account in one background worker, with no web UI. State (SQLite database and bot session) lives in a single data directory.",
-  "tipi_version": 4,
+  "tipi_version": 5,
   "version": "1.2.0",
   "source": "https://github.com/filippolmt/telegram-find-prices",
   "exposable": false,
@@ -16,7 +16,7 @@
   "dynamic_config": true,
   "supported_architectures": ["amd64", "arm64"],
   "created_at": 1794744777825,
-  "updated_at": 1794756541347,
+  "updated_at": 1794821886958,
   "min_tipi_version": "4.5.0",
   "form_fields": [
     {
