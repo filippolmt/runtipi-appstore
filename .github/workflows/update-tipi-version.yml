@@ -1,7 +1,9 @@
 name: Update tipi_version on Renovate PR
 
 on:
-  pull_request_target:
+  # Not pull_request_target: GitHub blocks it by default on public repos from 2026-12-02.
+  # Renovate branches live in this repo, so pull_request still gets secrets and write permissions.
+  pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - 'apps/**/docker-compose.json'
