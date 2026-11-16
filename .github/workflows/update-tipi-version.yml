@@ -102,8 +102,11 @@ jobs:
 
       - name: Commit and push changes
         id: commit
+        env:
+          # Branch names are attacker-controllable: pass via env, never inline in the script.
+          HEAD_REF: ${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
         run: |
-          head_ref=${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
+          head_ref="$HEAD_REF"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add apps/*/config.json README.md
