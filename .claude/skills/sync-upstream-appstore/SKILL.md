@@ -60,7 +60,7 @@ Categorize each difference as:
 
 **Key constraints for this repo:**
 - We use **Renovate GitHub App (hosted)**, NOT self-hosted. `postUpgradeTasks` won't work.
-- We use `pull_request_target` workflow to update `config.json` on Renovate PRs instead.
+- We use the `update-tipi-version.yml` workflow (`pull_request` trigger) to update `config.json` on Renovate PRs instead.
 - Per-app `renovate.json` customManagers for `config.json` provide redundancy with the workflow.
 - We only use `docker-compose.json` (dynamic v2 schema), NOT `docker-compose.yml`.
 

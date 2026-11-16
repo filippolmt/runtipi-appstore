@@ -1,7 +1,11 @@
 name: Update tipi_version on Renovate PR
 
 on:
-  pull_request_target:
+  # Not pull_request_target: GitHub blocks it by default on public repos from 2026-12-02.
+  # Renovate branches live in this repo, so pull_request still gets secrets and write permissions.
+  # Trade-offs: no run while the PR has a merge conflict (Renovate's rebase re-fires it), and the
+  # workflow file comes from the PR head, so a renovate[bot] PR runs its own copy of it.
+  pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - 'apps/**/docker-compose.json'
@@ -14,6 +18,8 @@ on:
         required: true
         type: number
 
+# PR-derived values (branch names, file paths, Makefile contents) reach `run:` scripts only
+# through env vars, never as inline ${{ }} expressions, so they cannot inject shell code.
 jobs:
   update-tipi-version:
     if: >-
@@ -25,19 +31,38 @@ jobs:
       pull-requests: write
       actions: write
     steps:
-      - name: Get PR info for workflow_dispatch
+      - name: Resolve PR
         id: pr
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          pr_data=$(gh pr view ${{ inputs.pr_number }} --repo ${{ github.repository }} --json headRefName)
-          echo "head_ref=$(echo "$pr_data" | jq -r '.headRefName')" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_PR_NUMBER: ${{ inputs.pr_number }}
+          EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
+          EVENT_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          EVENT_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          EVENT_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          if [[ "$EVENT_NAME" == workflow_dispatch ]]; then
+            pr_data=$(gh pr view "$INPUT_PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json headRefName,baseRefName)
+            {
+              echo "number=$INPUT_PR_NUMBER"
+              echo "head_ref=$(jq -r '.headRefName' <<<"$pr_data")"
+              echo "base_ref=$(jq -r '.baseRefName' <<<"$pr_data")"
+              echo "repo=$GITHUB_REPOSITORY"
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo "number=$EVENT_PR_NUMBER"
+              echo "head_ref=$EVENT_HEAD_REF"
+              echo "base_ref=$EVENT_BASE_REF"
+              echo "repo=$EVENT_HEAD_REPO"
+            } >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
-          repository: ${{ github.event_name == 'workflow_dispatch' && github.repository || github.event.pull_request.head.repo.full_name }}
+          ref: ${{ steps.pr.outputs.head_ref }}
+          repository: ${{ steps.pr.outputs.repo }}
           fetch-depth: 0
           # Push the bump commit with a PAT, not GITHUB_TOKEN. GITHUB_TOKEN pushes
           # don't fire pull_request events, so CI never reports a PR-linked `ci`
@@ -48,30 +73,38 @@ jobs:
           token: ${{ secrets.BUMP_PAT }}
 
       - name: Setup git remote
-        run: |
-          repo=${{ github.event_name == 'workflow_dispatch' && github.repository || github.event.pull_request.head.repo.full_name }}
-          git remote set-url origin "https://x-access-token:${{ secrets.BUMP_PAT }}@github.com/${repo}.git"
+        env:
+          BUMP_PAT: ${{ secrets.BUMP_PAT }}
+          REPO: ${{ steps.pr.outputs.repo }}
+        run: git remote set-url origin "https://x-access-token:${BUMP_PAT}@github.com/${REPO}.git"
 
       - name: Read BUN_IMAGE from Makefile
         id: bun
-        run: echo "image=$(sed -n 's/^BUN_IMAGE ?= //p' Makefile)" >> $GITHUB_OUTPUT
+        run: echo "image=$(sed -n 's/^BUN_IMAGE ?= //p' Makefile)" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
-        run: docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun install --ignore-scripts
+        env:
+          BUN_IMAGE: ${{ steps.bun.outputs.image }}
+        run: docker run --rm -v "$PWD:/app" -w /app "$BUN_IMAGE" bun install --ignore-scripts
 
       - name: Get changed files
         id: changed
+        env:
+          BASE_REF: ${{ steps.pr.outputs.base_ref }}
         run: |
-          base_ref=${{ github.event_name == 'workflow_dispatch' && 'main' || github.event.pull_request.base.ref }}
-          git fetch origin "$base_ref"
-          files=$(git diff --name-only "origin/${base_ref}...HEAD" | grep 'docker-compose.json' | tr '\n' ' ')
-          echo "files=$files" >> $GITHUB_OUTPUT
+          git fetch origin "$BASE_REF"
+          files=$(git diff --name-only "origin/${BASE_REF}...HEAD" | grep 'docker-compose.json' | tr '\n' ' ')
+          echo "files=$files" >> "$GITHUB_OUTPUT"
           echo "Changed docker-compose.json files: $files"
 
       - name: Update config.json for each changed app
         if: steps.changed.outputs.files != ''
+        env:
+          BUN_IMAGE: ${{ steps.bun.outputs.image }}
+          FILES: ${{ steps.changed.outputs.files }}
         run: |
-          for file in ${{ steps.changed.outputs.files }}; do
+          # Paths are apps/<app-id>/docker-compose.json: no spaces, so word splitting is safe.
+          for file in $FILES; do
             if [[ -f "$file" ]]; then
               app_dir=$(dirname "$file")
               config_file="$app_dir/config.json"
@@ -84,7 +117,7 @@ jobs:
 
                 if [[ -n "$new_version" ]]; then
                   echo "Updating $config_file: version=$new_version, package=$package_name"
-                  docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun run scripts/update-config.ts "$file" "$new_version" "$package_name"
+                  docker run --rm -v "$PWD:/app" -w /app "$BUN_IMAGE" bun run scripts/update-config.ts "$file" "$new_version" "$package_name"
                   echo "Updated tipi_version and updated_at in $config_file"
                 fi
               fi
@@ -93,25 +126,28 @@ jobs:
 
       - name: Format updated files
         if: steps.changed.outputs.files != ''
-        run: docker run --rm -v "$PWD:/app" -w /app ${{ steps.bun.outputs.image }} bun run lint
+        env:
+          BUN_IMAGE: ${{ steps.bun.outputs.image }}
+        run: docker run --rm -v "$PWD:/app" -w /app "$BUN_IMAGE" bun run lint
 
       - name: Regenerate README
         run: make readme
 
       - name: Commit and push changes
         id: commit
+        env:
+          HEAD_REF: ${{ steps.pr.outputs.head_ref }}
         run: |
-          head_ref=${{ github.event_name == 'workflow_dispatch' && steps.pr.outputs.head_ref || github.event.pull_request.head.ref }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add apps/*/config.json README.md
           if git diff --staged --quiet; then
             echo "No changes to commit"
-            echo "pushed=false" >> $GITHUB_OUTPUT
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore: sync renovate metadata and readme"
-            git push origin "HEAD:${head_ref}"
-            echo "pushed=true" >> $GITHUB_OUTPUT
+            git push origin "HEAD:${HEAD_REF}"
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
 
       # The bump push fires a `synchronize` event, so ci.yml runs natively and its
@@ -122,7 +158,7 @@ jobs:
       - name: Re-enable auto-merge on automerge PRs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pr_number || github.event.pull_request.number }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
           if gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels \
                --jq '.labels[].name' | grep -qx 'automerge'; then

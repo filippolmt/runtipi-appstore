@@ -14,9 +14,5 @@ app.png
 
 .cursorrules
 
-.claude/skills/openspec*
-.claude/commands/opsx/
-.codex/skills/openspec*/
-openspec/config.yaml
 .toolbox.yaml
 CLAUDE.local.md
