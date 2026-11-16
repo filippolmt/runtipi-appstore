@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "telegram-find-prices-init",
-      "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.2",
+      "image": "ghcr.io/filippolmt/telegram-find-prices:1.2.0",
       "user": "root",
       "entrypoint": ["/bin/sh", "-c"],
       "command": ["chown 1000:1000 /app/data && : > /tmp/ready && exec sleep infinity"],
@@ -25,7 +25,7 @@
     },
     {
       "name": "telegram-find-prices",
-      "image": "ghcr.io/filippolmt/telegram-find-prices:1.1.2",
+      "image": "ghcr.io/filippolmt/telegram-find-prices:1.2.0",
       "isMain": true,
       "dependsOn": {
         "telegram-find-prices-init": {

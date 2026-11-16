@@ -9,7 +9,7 @@
   "categories": ["utilities"],
   "description": "Telegram bot that monitors Telegram channels for product price offers and notifies allowed users. It runs a bot and a user account in one background worker, with no web UI. State (SQLite database and bot session) lives in a single data directory.",
   "tipi_version": 4,
-  "version": "1.1.2",
+  "version": "1.2.0",
   "source": "https://github.com/filippolmt/telegram-find-prices",
   "exposable": false,
   "no_gui": true,
