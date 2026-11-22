@@ -17,6 +17,10 @@ Open Karakeep after installation and create your account. The first registered u
 
 AI configuration is optional. OpenAI works with the default settings. For Ollama Cloud, use your Ollama API key, set the base URL to `https://ollama.com/v1`, choose compatible text and image models, and disable **Use Max Completion Tokens** and **Automatic Embedding Indexing**. Without an AI provider, all core bookmarking, search, and organization features remain available.
 
+## Search Index Recovery
+
+Meilisearch migrates its database automatically after each version update. If a migration is interrupted and search stops working, stop the app, delete `data/meilisearch` in the app data folder, start the app, then open `Admin Settings > Background Jobs` and click `Reindex All Bookmarks`. If AI embeddings are enabled, also click `Regenerate Embeddings for All Bookmarks` (this sends every bookmark to your AI provider again).
+
 ## Links
 
 - [Website](https://karakeep.app/)

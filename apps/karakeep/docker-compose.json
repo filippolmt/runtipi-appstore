@@ -86,6 +86,10 @@
         {
           "key": "MEILI_NO_ANALYTICS",
           "value": "true"
+        },
+        {
+          "key": "MEILI_UPGRADE_DB",
+          "value": "true"
         }
       ],
       "volumes": [
