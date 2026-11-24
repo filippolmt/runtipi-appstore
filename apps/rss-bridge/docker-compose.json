@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "rss-bridge",
-      "image": "rssbridge/rss-bridge:latest@sha256:75b54eb27851ec9865e9d09cde14064cc7c9c92a1eb17f44b63ca98582485747",
+      "image": "rssbridge/rss-bridge:latest@sha256:a6e26d5bd0ed9a079520ba72ae91e122d2bd0181d235a78b64faa2999f3e2c75",
       "isMain": true,
       "internalPort": 80,
       "volumes": [
